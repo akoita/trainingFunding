@@ -136,7 +136,7 @@ var Chaincode = (function (_super) {
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        return [4, stub.getStateAsObject(this.name)];
+                        return [4, stub.getStateAsObject(this.firstName)];
                     case 2:
                         ledgerConfig = _a.sent();
                         if (ledgerConfig) {
@@ -151,7 +151,7 @@ var Chaincode = (function (_super) {
                         _a.trys.push([4, 6, , 7]);
                         config = config_1.Config.readFromFile();
                         console.log('Found config in package', config.dump());
-                        return [4, stub.putState(this.name, { controllers: config.dump() })];
+                        return [4, stub.putState(this.firstName, { controllers: config.dump() })];
                     case 5:
                         _a.sent();
                         return [2, config];
@@ -165,7 +165,7 @@ var Chaincode = (function (_super) {
                         _a.trys.push([7, 9, , 10]);
                         paramConfig = JSON.parse(refreshOrConfig);
                         console.log('Found config in param', paramConfig);
-                        return [4, stub.putState(this.name, paramConfig)];
+                        return [4, stub.putState(this.firstName, paramConfig)];
                     case 8:
                         _a.sent();
                         return [2, new config_1.Config(paramConfig)];

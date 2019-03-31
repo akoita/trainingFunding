@@ -31,7 +31,7 @@ var Config = (function () {
     Config.prototype.getPackages = function () {
         return this.config
             .reduce(function (result, config) {
-            return (tslib_1.__assign({}, result, (_a = {}, _a[config.name] = config.version, _a)));
+            return (tslib_1.__assign({}, result, (_a = {}, _a[config.firstName] = config.version, _a)));
             var _a;
         }, {});
     };
@@ -45,12 +45,12 @@ var Config = (function () {
                     var pkg, ctrl;
                     return tslib_1.__generator(this, function (_a) {
                         switch (_a.label) {
-                            case 0: return [4, Promise.resolve().then(function () { return require(config.name); }).catch(function (e) { throw new convector_core_1.ControllerImportError(e, config.name); })];
+                            case 0: return [4, Promise.resolve().then(function () { return require(config.firstName); }).catch(function (e) { throw new convector_core_1.ControllerImportError(e, config.firstName); })];
                             case 1:
                                 pkg = _a.sent();
                                 ctrl = pkg[config.controller];
                                 if (!ctrl) {
-                                    throw new convector_core_1.ControllerMissingError(config.name, config.controller);
+                                    throw new convector_core_1.ControllerMissingError(config.firstName, config.controller);
                                 }
                                 return [2, ctrl];
                         }
