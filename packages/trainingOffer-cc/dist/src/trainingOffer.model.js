@@ -17,12 +17,12 @@ var TrainingOffer = (function (_super) {
     tslib_1.__decorate([
         convector_core_model_1.Required(),
         convector_core_model_1.Validate(yup.string())
-    ], TrainingOffer.prototype, "name", void 0);
+    ], TrainingOffer.prototype, "title", void 0);
     tslib_1.__decorate([
         convector_core_model_1.ReadOnly(),
         convector_core_model_1.Required(),
         convector_core_model_1.Validate(yup.number())
-    ], TrainingOffer.prototype, "created", void 0);
+    ], TrainingOffer.prototype, "description", void 0);
     tslib_1.__decorate([
         convector_core_model_1.Required(),
         convector_core_model_1.Validate(yup.number())

@@ -6,38 +6,37 @@ import { MockControllerAdapter } from '@worldsibu/convector-adapter-mock';
 import { ClientFactory, ConvectorControllerClient } from '@worldsibu/convector-core';
 import 'mocha';
 
-import { TrainingOffer, TrainingOfferController } from '../src';
+import { Candidate, CandidateController } from '../src';
 
-describe('TrainingOffer', () => {
+describe('Candidate', () => {
   let adapter: MockControllerAdapter;
-  let trainingOfferCtrl: ConvectorControllerClient<TrainingOfferController>;
+  let candidateCtrl: ConvectorControllerClient<CandidateController>;
   
   before(async () => {
     // Mocks the blockchain execution environment
     adapter = new MockControllerAdapter();
-    trainingOfferCtrl = ClientFactory(TrainingOfferController, adapter);
+    candidateCtrl = ClientFactory(CandidateController, adapter);
 
     await adapter.init([
       {
         version: '*',
-        controller: 'TrainingOfferController',
+        controller: 'CandidateController',
         name: join(__dirname, '..')
       }
     ]);
   });
   
-  it('should createTrainingOffer a default model', async () => {
-    const modelSample = new TrainingOffer({
+  it('should createCandidate a default model', async () => {
+    const modelSample = new Candidate({
       id: uuid(),
-      title: 'Test',
-      description: 'Test',
+      name: 'Test',
       created: Date.now(),
       modified: Date.now()
     });
 
-    await trainingOfferCtrl.createTrainingOffer(modelSample);
+    await candidateCtrl.createCandidate(modelSample);
   
-    const justSavedModel = await adapter.getById<TrainingOffer>(modelSample.id);
+    const justSavedModel = await adapter.getById<Candidate>(modelSample.id);
   
     expect(justSavedModel.id).to.exist;
   });

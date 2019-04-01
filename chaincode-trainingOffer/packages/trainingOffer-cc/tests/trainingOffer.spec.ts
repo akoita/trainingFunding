@@ -26,7 +26,7 @@ describe('TrainingOffer', () => {
     ]);
   });
   
-  it('should create a default model', async () => {
+  it('should createTrainingOffer a default model', async () => {
     const modelSample = new TrainingOffer({
       id: uuid(),
       name: 'Test',

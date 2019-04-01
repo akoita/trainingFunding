@@ -22,7 +22,7 @@ var AbstractTrainingAsset = (function (_super) {
         convector_core_model_1.ReadOnly(),
         convector_core_model_1.Required(),
         convector_core_model_1.Validate(yup.number())
-    ], AbstractTrainingAsset.prototype, "created", void 0);
+    ], AbstractTrainingAsset.prototype, "description", void 0);
     tslib_1.__decorate([
         convector_core_model_1.Required(),
         convector_core_model_1.Validate(yup.number())

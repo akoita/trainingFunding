@@ -23,7 +23,7 @@ var TrainingOfferController = (function (_super) {
     tslib_1.__decorate([
         convector_core_1.Invokable(),
         tslib_1.__param(0, convector_core_1.Param(trainingOffer_model_1.TrainingOffer))
-    ], TrainingOfferController.prototype, "create", null);
+    ], TrainingOfferController.prototype, "createTrainingOffer", null);
     TrainingOfferController = tslib_1.__decorate([
         convector_core_1.Controller('trainingOffer')
     ], TrainingOfferController);
