@@ -3,12 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var convector_core_1 = require("@worldsibu/convector-core");
 var candidate_model_1 = require("./candidate.model");
+var src_1 = require("../../common-cc/dist/src");
 var CandidateController = (function (_super) {
     tslib_1.__extends(CandidateController, _super);
     function CandidateController() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    CandidateController.prototype.create = function (candidate) {
+    CandidateController.prototype.createCandidate = function (candidate) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
@@ -20,10 +21,66 @@ var CandidateController = (function (_super) {
             });
         });
     };
+    CandidateController.prototype.listCandidates = function () {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
+                return [2, candidate_model_1.Candidate.getAll()];
+            });
+        });
+    };
+    CandidateController.prototype.searchCandidate = function (namePart) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            var queryObject, candidates;
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        queryObject = {
+                            "selector": {
+                                "$or": [{ "firstName": namePart.toString() }, { "lastName": namePart.toString() }]
+                            },
+                            "sort": [{ "firstName": "asc" }]
+                        };
+                        return [4, candidate_model_1.Candidate.query(candidate_model_1.Candidate, JSON.stringify(queryObject))];
+                    case 1:
+                        candidates = _a.sent();
+                        return [2, candidates];
+                }
+            });
+        });
+    };
+    CandidateController.prototype.disableCandidate = function (candidate) {
+        return tslib_1.__awaiter(this, void 0, void 0, function () {
+            return tslib_1.__generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(candidate.status === src_1.TrainingAppLifecycleStatus.Closed)) return [3, 1];
+                        throw new Error("Candidate is already disabled");
+                    case 1:
+                        candidate.status = src_1.TrainingAppLifecycleStatus.Closed;
+                        return [4, candidate.save()];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3: return [2];
+                }
+            });
+        });
+    };
     tslib_1.__decorate([
         convector_core_1.Invokable(),
         tslib_1.__param(0, convector_core_1.Param(candidate_model_1.Candidate))
-    ], CandidateController.prototype, "create", null);
+    ], CandidateController.prototype, "createCandidate", null);
+    tslib_1.__decorate([
+        convector_core_1.Invokable()
+    ], CandidateController.prototype, "listCandidates", null);
+    tslib_1.__decorate([
+        convector_core_1.Invokable(),
+        tslib_1.__param(0, convector_core_1.Param(String))
+    ], CandidateController.prototype, "searchCandidate", null);
+    tslib_1.__decorate([
+        convector_core_1.Invokable(),
+        tslib_1.__param(0, convector_core_1.Param(candidate_model_1.Candidate))
+    ], CandidateController.prototype, "disableCandidate", null);
     CandidateController = tslib_1.__decorate([
         convector_core_1.Controller('candidate')
     ], CandidateController);

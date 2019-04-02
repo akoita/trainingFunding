@@ -1,7 +1,17 @@
-import { ConvectorModel } from '@worldsibu/convector-core-model';
-export declare class TrainingOffer extends ConvectorModel<TrainingOffer> {
+import { AbstractTrainingAsset } from "../../common-cc/dist/src";
+export declare class TrainingOffer extends AbstractTrainingAsset<TrainingOffer> {
     readonly type: string;
-    name: string;
-    created: number;
-    modified: number;
+    title: string;
+    description: string;
+    domain: Domain;
+    level: TrainingOfferLevel;
+}
+export declare enum TrainingOfferLevel {
+    Intermediate = 0,
+    Advanced = 1,
+}
+export declare enum Domain {
+    SoftwareDeveloper = 0,
+    ProjectManager = 1,
+    Language = 2,
 }
