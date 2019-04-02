@@ -8,13 +8,9 @@ import {
 } from '@worldsibu/convector-core-model';
 
 export abstract class AbstractTrainingParticipant<T extends AbstractTrainingParticipant<any>> extends ConvectorModel<T> {
-  @ReadOnly()
-  @Required()
-  public readonly type = 'io.worldsibu.abstractTrainingParticipant';
-
   @Required()
   @Validate(yup.string())
-  public name: string;
+  public id: string;
 
   @ReadOnly()
   @Required()
