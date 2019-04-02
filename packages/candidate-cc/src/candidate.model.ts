@@ -6,22 +6,19 @@ import {
   Required,
   Validate
 } from '@worldsibu/convector-core-model';
+import {AbstractTrainingAsset} from "../../common-cc/dist/src";
 
-export class Candidate extends ConvectorModel<Candidate> {
+
+export class Candidate extends AbstractTrainingAsset<Candidate> {
   @ReadOnly()
   @Required()
   public readonly type = 'io.worldsibu.candidate';
 
   @Required()
   @Validate(yup.string())
-  public name: string;
-
-  @ReadOnly()
-  @Required()
-  @Validate(yup.number())
-  public created: number;
+  public firstName: string;
 
   @Required()
-  @Validate(yup.number())
-  public modified: number;
+  @Validate(yup.string())
+  public lastName: string;
 }

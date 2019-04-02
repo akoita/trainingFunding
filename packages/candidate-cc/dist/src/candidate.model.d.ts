@@ -1,7 +1,6 @@
-import { ConvectorModel } from '@worldsibu/convector-core-model';
-export declare class Candidate extends ConvectorModel<Candidate> {
+import { AbstractTrainingAsset } from "../../common-cc/dist/src";
+export declare class Candidate extends AbstractTrainingAsset<Candidate> {
     readonly type: string;
-    name: string;
-    created: number;
-    modified: number;
+    firstName: string;
+    lastName: string;
 }
