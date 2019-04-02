@@ -1,7 +1,18 @@
-import { ConvectorModel } from '@worldsibu/convector-core-model';
-export declare class Training extends ConvectorModel<Training> {
+import { AbstractTrainingAsset } from 'common-cc';
+import { TrainingOffer } from 'trainingOffer-cc';
+import { Candidate } from 'candidate-cc';
+export declare class Training extends AbstractTrainingAsset<Training> {
     readonly type: string;
-    name: string;
-    created: number;
-    modified: number;
+    trainingOffer: TrainingOffer;
+    trainingProcessStatus: TrainingProcessStatus;
+    candidate: Candidate;
+}
+export declare enum TrainingProcessStatus {
+    NotSubmitted = 0,
+    Submitted = 1,
+    Funded = 2,
+    InProgress = 3,
+    Succeeded = 4,
+    Failed = 5,
+    Accepted = 6,
 }

@@ -6,7 +6,7 @@ import {
   Required,
   Validate
 } from '@worldsibu/convector-core-model';
-import {AbstractTrainingAsset} from "../../common-cc/dist/src";
+import {AbstractTrainingAsset} from "common-cc";
 
 export class TrainingOffer extends AbstractTrainingAsset<TrainingOffer> {
   @ReadOnly()

@@ -6,22 +6,38 @@ import {
   Required,
   Validate
 } from '@worldsibu/convector-core-model';
+import {AbstractTrainingAsset} from 'common-cc';
+import {TrainingOffer} from 'trainingOffer-cc';
+import {Candidate} from 'candidate-cc';
 
-export class Training extends ConvectorModel<Training> {
+export class Training extends AbstractTrainingAsset<Training> {
+
   @ReadOnly()
   @Required()
   public readonly type = 'io.worldsibu.training';
 
+  @ReadOnly()
   @Required()
-  @Validate(yup.string())
-  public name: string;
+  @Validate(TrainingOffer)
+  public trainingOffer: TrainingOffer;
+
+  @Required()
+  public trainingProcessStatus: TrainingProcessStatus;
 
   @ReadOnly()
   @Required()
-  @Validate(yup.number())
-  public created: number;
+  @Validate(Candidate)
+  public candidate: Candidate;
 
-  @Required()
-  @Validate(yup.number())
-  public modified: number;
+}
+
+
+export enum TrainingProcessStatus {
+  NotSubmitted,
+  Submitted,
+  Funded,
+  InProgress,
+  Succeeded,
+  Failed,
+  Accepted
 }

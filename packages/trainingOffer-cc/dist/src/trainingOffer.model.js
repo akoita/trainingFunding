@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var yup = require("yup");
 var convector_core_model_1 = require("@worldsibu/convector-core-model");
-var src_1 = require("../../common-cc/dist/src");
+var common_cc_1 = require("common-cc");
 var TrainingOffer = (function (_super) {
     tslib_1.__extends(TrainingOffer, _super);
     function TrainingOffer() {
@@ -30,7 +30,7 @@ var TrainingOffer = (function (_super) {
         convector_core_model_1.Required()
     ], TrainingOffer.prototype, "level", void 0);
     return TrainingOffer;
-}(src_1.AbstractTrainingAsset));
+}(common_cc_1.AbstractTrainingAsset));
 exports.TrainingOffer = TrainingOffer;
 var TrainingOfferLevel;
 (function (TrainingOfferLevel) {

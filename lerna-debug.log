@@ -1,0 +1,24 @@
+0 silly argv { _: [ 'add' ],
+0 silly argv   scope: 'candidate-cc',
+0 silly argv   globs: [],
+0 silly argv   lernaVersion: '3.13.1',
+0 silly argv   '$0': 'node_modules/.bin/lerna',
+0 silly argv   pkg: 'common-cc' }
+1 notice cli v3.13.1
+2 verbose rootPath /home/vmware/dev/trainingFunding
+3 info filter [ 'candidate-cc' ]
+4 error TypeError: Invalid comparator: latest
+4 error     at Comparator.parse (/home/vmware/dev/trainingFunding/node_modules/semver/semver.js:754:11)
+4 error     at new Comparator (/home/vmware/dev/trainingFunding/node_modules/semver/semver.js:737:8)
+4 error     at Range.<anonymous> (/home/vmware/dev/trainingFunding/node_modules/semver/semver.js:925:12)
+4 error     at Array.map (<anonymous>)
+4 error     at Range.parseRange (/home/vmware/dev/trainingFunding/node_modules/semver/semver.js:924:13)
+4 error     at Range.<anonymous> (/home/vmware/dev/trainingFunding/node_modules/semver/semver.js:867:17)
+4 error     at Array.map (<anonymous>)
+4 error     at new Range (/home/vmware/dev/trainingFunding/node_modules/semver/semver.js:866:40)
+4 error     at Function.intersects (/home/vmware/dev/trainingFunding/node_modules/semver/semver.js:1459:8)
+4 error     at getRangeToReference (/home/vmware/dev/trainingFunding/node_modules/@lerna/add/lib/get-range-to-reference.js:18:35)
+4 error     at result.filter.pkg (/home/vmware/dev/trainingFunding/node_modules/@lerna/add/index.js:135:14)
+4 error     at Array.filter (<anonymous>)
+4 error     at AddCommand.collectPackagesToChange (/home/vmware/dev/trainingFunding/node_modules/@lerna/add/index.js:127:21)
+4 error     at chain.then (/home/vmware/dev/trainingFunding/node_modules/@lerna/add/index.js:69:35)

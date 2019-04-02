@@ -1,4 +1,4 @@
-import { AbstractTrainingAsset } from "../../common-cc/dist/src";
+import { AbstractTrainingAsset } from "common-cc";
 export declare class TrainingOffer extends AbstractTrainingAsset<TrainingOffer> {
     readonly type: string;
     title: string;

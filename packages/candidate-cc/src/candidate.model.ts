@@ -6,7 +6,9 @@ import {
   Required,
   Validate
 } from '@worldsibu/convector-core-model';
-import {AbstractTrainingAsset} from "../../common-cc/dist/src";
+
+import {AbstractTrainingAsset} from 'common-cc';
+
 
 
 export class Candidate extends AbstractTrainingAsset<Candidate> {
