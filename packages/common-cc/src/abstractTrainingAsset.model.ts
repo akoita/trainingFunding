@@ -6,7 +6,6 @@ import {
   Required,
   Validate
 } from '@worldsibu/convector-core-model';
-import {AbstractTrainingParticipant} from "./abstractTrainingParticipant.model";
 
 export abstract class AbstractTrainingAsset<T extends AbstractTrainingAsset<any>> extends ConvectorModel<T> {
   @Required()
@@ -24,15 +23,24 @@ export abstract class AbstractTrainingAsset<T extends AbstractTrainingAsset<any>
 
 
   @Required()
+  @Validate(yup.string())
   public status: TrainingAppLifecycleStatus;
 
-  @Required()
-  @Validate(AbstractTrainingParticipant)
-  public owner: AbstractTrainingParticipant<any>;
+  // @Required()
+  // @Validate(AbstractTrainingParticipant)
+  // public owner: AbstractTrainingParticipant<any>;
+
+  constructor(object: {id: string, created: number, modified: number, status: TrainingAppLifecycleStatus}) {
+    super(object.id);
+    this.id= object.id;
+    this.created =object.created;
+    this.modified = object.modified;
+    this.status = object.status;
+  }
 }
 
 
 export enum TrainingAppLifecycleStatus {
-  Open,
-  Closed
+  Open = "Open",
+  Closed = "Closed"
 }

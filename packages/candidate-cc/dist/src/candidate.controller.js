@@ -13,7 +13,11 @@ var CandidateController = (function (_super) {
         return tslib_1.__awaiter(this, void 0, void 0, function () {
             return tslib_1.__generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, candidate.save()];
+                    case 0:
+                        if (candidate.status !== common_cc_1.TrainingAppLifecycleStatus.Open) {
+                            throw new Error('new candidate must be in open status');
+                        }
+                        return [4, candidate.save()];
                     case 1:
                         _a.sent();
                         return [2];

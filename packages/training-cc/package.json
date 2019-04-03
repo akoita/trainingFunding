@@ -14,9 +14,11 @@
     "test": "npm run build && mocha -r ts-node/register tests/*.spec.ts --reporter spec"
   },
   "dependencies": {
+    "@types/chai-as-promised": "^7.1.0",
     "@worldsibu/convector-core": "~1.3.0",
     "@worldsibu/convector-platform-fabric": "~1.3.0",
     "candidate-cc": "^0.1.0",
+    "chai-as-promised": "^7.1.1",
     "common-cc": "^0.1.0",
     "reflect-metadata": "^0.1.12",
     "trainingOffer-cc": "^0.1.0",

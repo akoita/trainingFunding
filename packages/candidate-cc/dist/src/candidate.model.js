@@ -6,9 +6,11 @@ var convector_core_model_1 = require("@worldsibu/convector-core-model");
 var common_cc_1 = require("common-cc");
 var Candidate = (function (_super) {
     tslib_1.__extends(Candidate, _super);
-    function Candidate() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
+    function Candidate(object) {
+        var _this = _super.call(this, { id: object.id, created: object.created, modified: object.modified, status: object.status }) || this;
         _this.type = 'io.worldsibu.candidate';
+        _this.firstName = object.firstName;
+        _this.lastName = object.lastName;
         return _this;
     }
     tslib_1.__decorate([

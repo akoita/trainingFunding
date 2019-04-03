@@ -1,18 +1,16 @@
-import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
-import {
-  Controller,
-  ConvectorController,
-  Invokable,
-  Param
-} from '@worldsibu/convector-core';
+import {ChaincodeTx} from '@worldsibu/convector-platform-fabric';
+import {Controller, ConvectorController, Invokable, Param} from '@worldsibu/convector-core';
 
-import { Candidate } from './candidate.model';
-import {TrainingAppLifecycleStatus} from "common-cc";
+import {Candidate} from './candidate.model';
+import {TrainingAppLifecycleStatus} from 'common-cc';
 
 @Controller('candidate')
 export class CandidateController extends ConvectorController<ChaincodeTx> {
   @Invokable()
   public async createCandidate(@Param(Candidate) candidate: Candidate) {
+    if(candidate.status!==TrainingAppLifecycleStatus.Open){
+      throw new Error('new candidate must be in open status');
+    }
     await candidate.save();
   }
 
