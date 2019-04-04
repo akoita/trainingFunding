@@ -5,13 +5,8 @@ var yup = require("yup");
 var convector_core_model_1 = require("@worldsibu/convector-core-model");
 var AbstractTrainingAsset = (function (_super) {
     tslib_1.__extends(AbstractTrainingAsset, _super);
-    function AbstractTrainingAsset(object) {
-        var _this = _super.call(this, object.id) || this;
-        _this.id = object.id;
-        _this.created = object.created;
-        _this.modified = object.modified;
-        _this.status = object.status;
-        return _this;
+    function AbstractTrainingAsset() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     tslib_1.__decorate([
         convector_core_model_1.Required(),

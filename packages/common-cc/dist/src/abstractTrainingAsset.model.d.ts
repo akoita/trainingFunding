@@ -4,12 +4,6 @@ export declare abstract class AbstractTrainingAsset<T extends AbstractTrainingAs
     created: number;
     modified: number;
     status: TrainingAppLifecycleStatus;
-    constructor(object: {
-        id: string;
-        created: number;
-        modified: number;
-        status: TrainingAppLifecycleStatus;
-    });
 }
 export declare enum TrainingAppLifecycleStatus {
     Open = "Open",

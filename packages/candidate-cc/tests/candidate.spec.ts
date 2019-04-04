@@ -16,7 +16,7 @@ describe('Candidate', () => {
     let adapter: MockControllerAdapter;
     let candidateCtrl: ConvectorControllerClient<CandidateController>;
 
-    before(async () => {
+    beforeEach(async () => {
         // Mocks the blockchain execution environment
         adapter = new MockControllerAdapter();
         candidateCtrl = ClientFactory(CandidateController, adapter);
@@ -30,15 +30,15 @@ describe('Candidate', () => {
         ]);
     });
 
+
     it('should create a default model', async () => {
-        const modelSample = new Candidate({
-            id: uuid(),
-            created: Date.now(),
-            modified: Date.now(),
-            firstName: 'Aboubakar',
-            lastName: 'Koïta',
-            status: TrainingAppLifecycleStatus.Open
-        });
+        const modelSample = new Candidate();
+        modelSample.id = uuid(),
+            modelSample.created = Date.now();
+        modelSample.modified = Date.now();
+        modelSample.firstName = 'Aboubakar';
+        modelSample.lastName = 'Koïta';
+        modelSample.status = TrainingAppLifecycleStatus.Open;
 
         await candidateCtrl.createCandidate(modelSample);
 
@@ -54,18 +54,66 @@ describe('Candidate', () => {
     });
 
     it('should fail to create a candidate with closed status', async () => {
-        const modelSample = new Candidate({
-            id: uuid(),
-            created: Date.now(),
-            modified: Date.now(),
-            firstName: 'Aboubakar',
-            lastName: 'Koïta',
-            status: TrainingAppLifecycleStatus.Closed
-        });
+        const modelSample = new Candidate();
+        modelSample.id = uuid(),
+            modelSample.created = Date.now();
+        modelSample.modified = Date.now();
+        modelSample.firstName = 'Aboubakar';
+        modelSample.lastName = 'Koïta';
+        modelSample.status = TrainingAppLifecycleStatus.Closed;
 
         await expect(candidateCtrl.createCandidate(modelSample).catch(ex => ex.responses[0].error.message))
             .to.be.eventually.equal('new candidate must be in open status');
 
     });
+
+
+    it('should get the list of all candidates', async () => {
+        const modelSample1 = new Candidate();
+        modelSample1.id = uuid();
+        modelSample1.created = Date.now();
+        modelSample1.modified = Date.now();
+        modelSample1.firstName = 'Aboubakar';
+        modelSample1.lastName = 'Koïta';
+        modelSample1.status = TrainingAppLifecycleStatus.Open;
+
+        const modelSample2 = new Candidate();
+        modelSample2.id = uuid();
+        modelSample2.created = Date.now();
+        modelSample2.modified = Date.now();
+        modelSample2.firstName = 'Aboubakar';
+        modelSample2.lastName = 'Koïta';
+        modelSample2.status = TrainingAppLifecycleStatus.Open;
+
+        const modelSample3 = new Candidate();2
+        modelSample3.id = uuid();
+        modelSample3.created = Date.now();
+        modelSample3.modified = Date.now();
+        modelSample3.firstName = 'Aboubakar';
+        modelSample3.lastName = 'Koïta';
+        modelSample3.status = TrainingAppLifecycleStatus.Open;
+
+        const modelSample4 = new Candidate();
+        modelSample4.id = uuid();
+        modelSample4.created = Date.now();
+        modelSample4.modified = Date.now();
+        modelSample4.firstName = 'Aboubakar';
+        modelSample4.lastName = 'Koïta';
+        modelSample4.status = TrainingAppLifecycleStatus.Open;
+4
+        await candidateCtrl.createCandidate(modelSample1);
+        await candidateCtrl.createCandidate(modelSample2);
+        await candidateCtrl.createCandidate(modelSample3);
+        await candidateCtrl.createCandidate(modelSample4);
+
+
+        const candidateList = await candidateCtrl.listCandidates().then(models => models.map(model => {
+            return new Candidate(model);
+        }));
+
+        await expect(candidateList).to.have.lengthOf(4);
+        expect(candidateList).to.have.same.deep.members([modelSample1, modelSample2, modelSample3, modelSample4]);
+    });
+
 
 });

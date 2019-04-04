@@ -19,9 +19,10 @@ export class Candidate extends AbstractTrainingAsset<Candidate> {
   @Validate(yup.string())
   lastName: string;
 
-  constructor(object: {id: string, created: number, modified: number, status: TrainingAppLifecycleStatus, firstName: string, lastName: string}){
-    super({id: object.id, created: object.created, modified: object.modified, status: object.status});
-    this.firstName = object.firstName;
-    this.lastName = object.lastName;
-  }
+  //
+  // constructor(object: {id: string, created: number, modified: number, status: TrainingAppLifecycleStatus, firstName: string, lastName: string}){
+  //   super({id: object.id, created: object.created, modified: object.modified, status: object.status});
+  //   this.firstName = object.firstName;
+  //   this.lastName = object.lastName;
+  // }
 }

@@ -25,18 +25,18 @@ export abstract class AbstractTrainingAsset<T extends AbstractTrainingAsset<any>
   @Required()
   @Validate(yup.string())
   public status: TrainingAppLifecycleStatus;
-
-  // @Required()
-  // @Validate(AbstractTrainingParticipant)
-  // public owner: AbstractTrainingParticipant<any>;
-
-  constructor(object: {id: string, created: number, modified: number, status: TrainingAppLifecycleStatus}) {
-    super(object.id);
-    this.id= object.id;
-    this.created =object.created;
-    this.modified = object.modified;
-    this.status = object.status;
-  }
+  //
+  // // @Required()
+  // // @Validate(AbstractTrainingParticipant)
+  // // public owner: AbstractTrainingParticipant<any>;
+  //
+  // constructor(object: {id: string, created: number, modified: number, status: TrainingAppLifecycleStatus}) {
+  //   super(object.id);
+  //   this.id= object.id;
+  //   this.created =object.created;
+  //   this.modified = object.modified;
+  //   this.status = object.status;
+  // }
 }
 
 

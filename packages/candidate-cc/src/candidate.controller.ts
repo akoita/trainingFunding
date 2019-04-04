@@ -17,6 +17,8 @@ export class CandidateController extends ConvectorController<ChaincodeTx> {
   @Invokable()
   public async listCandidates(): Promise<Candidate[]> {
     return Candidate.getAll();
+    // let promise = Candidate.getAll().then(models => models.map(model => model.toJSON()));
+    // return promise as any;
   }
 
   @Invokable()
