@@ -22,7 +22,6 @@
     "cc:install:debug": "f() { hurl install $1 node -P ./chaincode-$1 --debug; }; f",
     "lerna:test": "lerna exec npm run test",
     "copy:indexes": "f () { mkdir -p ./chaincode-$1/META-INF/statedb/couchdb/indexes; cp -a ./indexes/ ./chaincode-$1/META-INF/statedb/couchdb/indexes; }; f"
-
   },
   "devDependencies": {
     "lerna": "^3.13.0",

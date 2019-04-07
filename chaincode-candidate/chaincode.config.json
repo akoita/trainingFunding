@@ -1,0 +1,1 @@
+{"controllers":[{"name":"candidate-cc","version":"file:./packages/candidate-cc","controller":"CandidateController"},{"name":"common-cc","version":"file:./packages/common-cc","controller":"CommonController"}]}

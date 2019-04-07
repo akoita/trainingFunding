@@ -1,0 +1,12 @@
+{
+  "index": {
+    "fields": [
+      "lastName",
+      "type"
+    ]
+  },
+  "ddoc": "indexCandidateLastNameTypeDoc",
+  "name": "indexCandidateLastNameType",
+  "type": "json"
+}
+
