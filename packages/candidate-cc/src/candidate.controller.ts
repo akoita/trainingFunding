@@ -25,39 +25,14 @@ export class CandidateController extends ConvectorController<ChaincodeTx> {
     @Invokable()
     public async searchCandidate(@Param(yup.string()) namePart: string): Promise<Candidate[] | Candidate> {
         debugger;
-        // const queryObject = {
-        //     "selector": {
-        //         $and: [{"firstName": namePart}, {"type": new Candidate().type}]
-        //     },
-        //     "use_index": ["_design/indexCandidateDoc", "indexCandidate"],
-        //     fields: ["firstName", "lastName", "type"],
-        //     "sort":
-        //         [{"firstName": "asc"}]
-        // };
-        // const queryObject = {
-        //     "selector": {
-        //         $and: [{$or: [{"firstName": namePart}, {"lastName": namePart}]}, {"type": new Candidate().type}]
-        //     },
-        //     "use_index": ["_design/indexCandidateDoc", "indexCandidate"],
-        //     fields: ["firstName", "lastName", "type"],
-        //     "sort":
-        //         [{"firstName": "asc"}]
-        // };
         const queryObject = {
             "selector": {
                 $and: [{"type": new Candidate().type}, {$or: [{"firstName": {$regex: ".*?"+namePart+".*"}}, {"lastName": {$regex: ".*?"+namePart+".*"}}]}]
             },
-            "use_index": ["_design/indexCandidateDoc", "indexCandidate"],
+            "use_index": ["_design/indexCandidateFirstNameTypeDoc", "indexCandidateFirstNameType"],
             "sort":
                 [{"firstName": "asc"}]
         };
-        // const queryObject = {
-        //     "selector": {
-        //         $and: [{$or: [{"firstName": {$regex: ".*"}}, {"lastName": {$regex: ".*"}}]}, {"type": new Candidate().type}]
-        //     },
-        //     "sort":
-        //         [{"firstName": "asc"}]
-        // };
         debugger;
         const candidates = await Candidate.query(Candidate, JSON.stringify(queryObject));
         return candidates;
