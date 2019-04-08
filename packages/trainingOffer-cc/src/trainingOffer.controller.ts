@@ -7,8 +7,7 @@ import {
 } from '@worldsibu/convector-core';
 
 import {Domain, TrainingOffer, TrainingOfferLevel} from './trainingOffer.model';
-import {TrainingAppLifecycleStatus} from "../../common-cc/dist/src";
-
+import {TrainingAppLifecycleStatus} from 'common-cc';
 
 @Controller('trainingOffer')
 export class TrainingOfferController extends ConvectorController<ChaincodeTx> {

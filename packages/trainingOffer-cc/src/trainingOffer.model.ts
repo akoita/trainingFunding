@@ -1,42 +1,56 @@
 import * as yup from 'yup';
-import {
-  ConvectorModel,
-  Default,
-  ReadOnly,
-  Required,
-  Validate
-} from '@worldsibu/convector-core-model';
-import {AbstractTrainingAsset} from "common-cc";
+import {ReadOnly, Required, Validate} from '@worldsibu/convector-core-model';
+import {AbstractTrainingAsset, TrainingAppLifecycleStatus} from 'common-cc';
 
 export class TrainingOffer extends AbstractTrainingAsset<TrainingOffer> {
-  @ReadOnly()
-  @Required()
-  public readonly type = 'io.worldsibu.trainingOffer';
+    @ReadOnly()
+    @Required()
+    public readonly type = 'io.worldsibu.trainingOffer';
+    public static readonly staticType = 'io.worldsibu.trainingOffer';
 
-  @Required()
-  @Validate(yup.string())
-  public title: string;
+    @Required()
+    @Validate(yup.string())
+    public title: string;
 
-  @Required()
-  @Validate(yup.string())
-  public description: string;
+    @Required()
+    @Validate(yup.string())
+    public description: string;
 
-  @Required()
-  public domain: Domain
+    @Required()
+    @Validate(yup.string())
+    public domain: Domain;
 
-  @Required()
-  public level: TrainingOfferLevel
+    @Required()
+    @Validate(yup.string())
+    public level: TrainingOfferLevel
+
+
+    public static build(valueObject: {id: string, created: number, modified: number, status: TrainingAppLifecycleStatus,
+     title: string, description: string, domain: Domain, level: TrainingOfferLevel}): TrainingOffer {
+        let model = new TrainingOffer();
+        model.id = valueObject.id;
+        model.created = valueObject.created;
+        model.modified = valueObject.modified;
+        model.status = valueObject.status;
+        model.title=valueObject.title;
+        model.description = valueObject.description;
+        model.domain = valueObject.domain;
+        model.level = valueObject.level;
+
+        return model;
+    }
+
 
 }
 
 
 export enum TrainingOfferLevel {
-  Intermediate,
-  Advanced
+    Intermediate="Intermediate",
+    Advanced="Advanced"
 }
 
 export enum Domain {
-  SoftwareDeveloper,
-  ProjectManager,
-  Language
+    SoftwareDevelopment = "SoftwareDevelopment",
+    ProjectManagement = "ProjectManagement",
+    General = "General"
 }

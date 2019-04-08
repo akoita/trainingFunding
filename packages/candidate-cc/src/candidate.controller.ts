@@ -27,7 +27,7 @@ export class CandidateController extends ConvectorController<ChaincodeTx> {
         debugger;
         const queryObject = {
             "selector": {
-                $and: [{"type": new Candidate().type}, {$or: [{"firstName": {$regex: ".*?"+namePart+".*"}}, {"lastName": {$regex: ".*?"+namePart+".*"}}]}]
+                $and: [{"type": new Candidate().type}, {$or: [{"firstName": {$regex: ".*?" + namePart + ".*"}}, {"lastName": {$regex: ".*?" + namePart + ".*"}}]}]
             },
             "use_index": ["_design/indexCandidateFirstNameTypeDoc", "indexCandidateFirstNameType"],
             "sort":
@@ -39,12 +39,15 @@ export class CandidateController extends ConvectorController<ChaincodeTx> {
     }
 
     @Invokable()
-    public async disableCandidate(@Param(Candidate) candidate: Candidate) {
+    public async disableCandidate(@Param(yup.string()) candidateId: string) {
+        const candidate = await Candidate.getOne(candidateId);
+        if (!candidate || !candidate.id) {
+            throw new Error('no existing candidate found with the id: ' + candidateId)
+        }
         if (candidate.status === TrainingAppLifecycleStatus.Closed) {
             throw new Error("Candidate is already disabled");
-        } else {
-            candidate.status = TrainingAppLifecycleStatus.Closed;
-            await candidate.save();
         }
+        candidate.status = TrainingAppLifecycleStatus.Closed;
+        await candidate.save();
     }
 }
