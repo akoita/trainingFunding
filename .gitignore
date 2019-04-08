@@ -192,3 +192,4 @@ dist
 dist/**
 packages/**/dist
 packages/**/dist/**
+chaincode-*
