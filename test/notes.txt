@@ -1,10 +1,17 @@
 export MODEL1='{"type":"io.worldsibu.candidate","id":"9fff2e01-38c2-46f2-a25b-6902d18fde79","firstName":"Aboubakar","lastName":"Koïta","created":1554525542493,"modified":1554525542493,"status":"Open"}'
 
-export MODEL2='{"type":"io.worldsibu.candidate","id":"6e96cefb-4727-46e8-a983-48937a5670df","firstName":"Aboubakar","lastName":"Koïta","created":1554525542494,"modified":1554525542494,"status":"Open"}'
+export MODEL2='{"type":"io.worldsibu.candidate","id":"6e96cefb-4727-46e8-a983-48937a5670df","firstName":"Soumaya","lastName":"Koïta","created":1554525542494,"modified":1554525542494,"status":"Open"}'
 
-export MODEL3='{"type":"io.worldsibu.candidate","id":"ba378c9d-d1ec-40f4-93c0-b65d9e2d4113","firstName":"Aboubakar","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
+export MODEL3='{"type":"io.worldsibu.candidate","id":"ba378c9d-d1ec-40f4-93c0-b65d9e2d4113","firstName":"Dede","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
 
-export MODEL4='{"type":"io.worldsibu.candidate","id":"bf196039-55a3-4bb3-8928-f54e1d538eeb","firstName":"Aboubakar","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
+export MODEL4='{"type":"io.worldsibu.candidate","id":"bf196039-55a3-4bb3-8928-f54e1d538eeb","firstName":"Bafanta","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
+
+export function createCandidate() {
+hurl invoke candidate candidate_createCandidate "$MODEL1"
+hurl invoke candidate candidate_createCandidate "$MODEL2"
+hurl invoke candidate candidate_createCandidate "$MODEL3"
+hurl invoke candidate candidate_createCandidate "$MODEL4"
+}
 
 
 hurl new
