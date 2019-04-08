@@ -1,3 +1,4 @@
+import * as yup from 'yup';
 import { ChaincodeTx } from '@worldsibu/convector-platform-fabric';
 import {
   Controller,
@@ -21,7 +22,11 @@ export class TrainingOfferController extends ConvectorController<ChaincodeTx> {
   }
 
   @Invokable()
-  public async closeTrainingOffer(@Param(TrainingOffer) trainingOffer: TrainingOffer) {
+  public async closeTrainingOffer(@Param(yup.string()) trainingOfferId: string) {
+    const trainingOffer = await TrainingOffer.getOne(trainingOfferId);
+    if(!trainingOffer || !trainingOffer.id){
+      throw new Error("no existing training offer found with the id: "+trainingOfferId);
+    }
     if (trainingOffer.status == TrainingAppLifecycleStatus.Closed) {
       throw new Error("training offer's status is already closed");
     }

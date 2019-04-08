@@ -55,4 +55,19 @@ describe('TrainingOffer', () => {
         await expect(trainingOfferCtrl.createTrainingOffer(trainingOffer1).catch(ex => ex.responses[0].error.message))
             .to.be.eventually.equal("new Training offer status can\'t be closed");
     });
+
+
+    it("should close the training offer", async()=>{
+        await trainingOfferCtrl.createTrainingOffer(trainingOffer1);
+
+        await trainingOfferCtrl.closeTrainingOffer(trainingOffer1.id);
+        const saved = await TrainingOffer.getOne(trainingOffer1.id);
+        expect(saved.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
+
+        await expect(trainingOfferCtrl.closeTrainingOffer(trainingOffer1.id).catch(ex => ex.responses[0].error.message))
+            .to.be.eventually.equal("training offer's status is already closed");
+
+        await expect(trainingOfferCtrl.closeTrainingOffer("noExistingID").catch(ex => ex.responses[0].error.message))
+            .to.be.eventually.equal("no existing training offer found with the id: noExistingID");
+    });
 });
