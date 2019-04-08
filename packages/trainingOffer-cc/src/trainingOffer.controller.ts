@@ -57,7 +57,7 @@ export class TrainingOfferController extends ConvectorController<ChaincodeTx> {
             "selector": {
                 $and: [
                     {"type": TrainingOffer.staticType},
-                    {"domain": {$regex: ".*?"+domain.toString()+".*"}}
+                    {"domain": {$regex: ".*?" + domain.toString() + ".*"}}
                 ]
             },
             "sort": [{"title": "asc"}]
@@ -67,15 +67,16 @@ export class TrainingOfferController extends ConvectorController<ChaincodeTx> {
     }
 
     @Invokable()
-    public async searchTrainingOffersByDomainAndLevel(@Param(Domain) domain: Domain, @Param(TrainingOfferLevel) level: TrainingOfferLevel): Promise<TrainingOffer[] | TrainingOffer> {
+    public async searchTrainingOffersByDomainAndLevel(@Param(yup.string()) domain: Domain, @Param(yup.string()) level: TrainingOfferLevel): Promise<TrainingOffer[] | TrainingOffer> {
         const queryObject = {
             "selector": {
-                "$and": [{"domain": domain.toString()}, {"level": level.toString()}]
+                $and: [{"type": TrainingOffer.staticType},
+                    {$and: [{"domain": {$regex: ".*?" + domain.toString() + ".*"}}, {"level": {$regex: ".*?" + level.toString() + ".*"}}]}
+                ]
             },
             "sort":
                 [{"title": "asc"}]
         };
-
         const trainingOffers = await TrainingOffer.query(TrainingOffer, JSON.stringify(queryObject));
         return trainingOffers;
     }

@@ -170,33 +170,88 @@ describe('TrainingOffer', () => {
     });
 
 
-    it("should search the training offers by domain", async () =>{
+    it("should search the training offers by domain", async () => {
         let result = await trainingOfferCtrl.searchTrainingOffersByDomain(Domain.General);
-        if(Array.isArray(result)){
-            expect(result.map(model => { return model})).to.be.empty;
+        if (Array.isArray(result)) {
+            expect(result.map(model => {
+                return model
+            })).to.be.empty;
         }
 
         await trainingOfferCtrl.createTrainingOffer(englishOffer);
         result = await trainingOfferCtrl.searchTrainingOffersByDomain(Domain.General);
-        if(Array.isArray(result)){
-            expect(result.map(model => {return new TrainingOffer(model)})).to.have.same.deep.members([englishOffer]);
+        if (Array.isArray(result)) {
+            expect(result.map(model => {
+                return new TrainingOffer(model)
+            })).to.have.same.deep.members([englishOffer]);
         }
 
         result = await trainingOfferCtrl.searchTrainingOffersByDomain(Domain.SoftwareDevelopment);
-        if(Array.isArray(result)){
-            expect(result.map(model => { return new TrainingOffer(model)})).to.be.empty;
+        if (Array.isArray(result)) {
+            expect(result.map(model => {
+                return new TrainingOffer(model)
+            })).to.be.empty;
         }
 
         await trainingOfferCtrl.createTrainingOffer(microserviceOffer);
         result = await trainingOfferCtrl.searchTrainingOffersByDomain(Domain.SoftwareDevelopment);
-        if(Array.isArray(result)){
-            expect(result.map(model => { return new TrainingOffer(model)})).to.have.same.deep.members([microserviceOffer]);
+        if (Array.isArray(result)) {
+            expect(result.map(model => {
+                return new TrainingOffer(model)
+            })).to.have.same.deep.members([microserviceOffer]);
         }
 
         await trainingOfferCtrl.createTrainingOffer(blockchainOffer);
         result = await trainingOfferCtrl.searchTrainingOffersByDomain(Domain.SoftwareDevelopment);
+        if (Array.isArray(result)) {
+            expect(result.map(model => {
+                return new TrainingOffer(model)
+            })).to.have.same.deep.members([blockchainOffer, microserviceOffer]);
+        }
+
+    });
+
+
+    it("should search the training offers by domain and level", async () => {
+        let result = await trainingOfferCtrl.searchTrainingOffersByDomainAndLevel(Domain.SoftwareDevelopment, TrainingOfferLevel.Intermediate);
         if(Array.isArray(result)){
-            expect(result.map(model => { return new TrainingOffer(model)})).to.have.same.deep.members([blockchainOffer,microserviceOffer]);
+            expect(result).to.be.empty;
+        }
+
+        await trainingOfferCtrl.createTrainingOffer(blockchainOffer);
+        result = await trainingOfferCtrl.searchTrainingOffersByDomainAndLevel(Domain.SoftwareDevelopment, TrainingOfferLevel.Intermediate);
+        if(Array.isArray(result)){
+            expect(result.map(model => {return new TrainingOffer(model)})).to.have.same.deep.members([blockchainOffer]);
+        }
+
+        result = await trainingOfferCtrl.searchTrainingOffersByDomainAndLevel(Domain.SoftwareDevelopment, TrainingOfferLevel.Advanced);
+        if(Array.isArray(result)){
+            expect(result).to.be.empty;
+        }
+        await trainingOfferCtrl.createTrainingOffer(hyperledger);
+        result = await trainingOfferCtrl.searchTrainingOffersByDomainAndLevel(Domain.SoftwareDevelopment, TrainingOfferLevel.Intermediate);
+        if(Array.isArray(result)){
+            expect(result.map(model => {return new TrainingOffer(model)})).to.have.same.deep.members([blockchainOffer, hyperledger]);
+        }
+
+        result = await trainingOfferCtrl.searchTrainingOffersByDomainAndLevel(Domain.SoftwareDevelopment, TrainingOfferLevel.Advanced);
+        if(Array.isArray(result)){
+            expect(result).to.be.empty;
+        }
+        await trainingOfferCtrl.createTrainingOffer(microserviceOffer);
+        result = await trainingOfferCtrl.searchTrainingOffersByDomainAndLevel(Domain.SoftwareDevelopment, TrainingOfferLevel.Advanced);
+        if(Array.isArray(result)){
+            expect(result.map(model => {return new TrainingOffer(model)})).to.have.same.deep.members([microserviceOffer]);
+        }
+
+        result = await trainingOfferCtrl.searchTrainingOffersByDomainAndLevel(Domain.General, TrainingOfferLevel.Advanced);
+        if(Array.isArray(result)){
+            expect(result).to.be.empty;
+        }
+        await trainingOfferCtrl.createTrainingOffer(englishOffer);
+        result = await trainingOfferCtrl.searchTrainingOffersByDomainAndLevel(Domain.General, TrainingOfferLevel.Intermediate);
+        if(Array.isArray(result)){
+            expect(result.map(model => {return new TrainingOffer(model)})).to.have.same.deep.members([englishOffer]);
         }
 
     });
