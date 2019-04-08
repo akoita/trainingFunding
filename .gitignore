@@ -188,5 +188,4 @@ hs_err_pid*
 
 # Log files (if you are creating logs in debug mode, uncomment this)
 # *.logs
-/dist/
-/packages/**/dist/
+dist
