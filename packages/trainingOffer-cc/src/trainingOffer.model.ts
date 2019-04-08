@@ -22,17 +22,19 @@ export class TrainingOffer extends AbstractTrainingAsset<TrainingOffer> {
 
     @Required()
     @Validate(yup.string())
-    public level: TrainingOfferLevel
+    public level: TrainingOfferLevel;
 
 
-    public static build(valueObject: {id: string, created: number, modified: number, status: TrainingAppLifecycleStatus,
-     title: string, description: string, domain: Domain, level: TrainingOfferLevel}): TrainingOffer {
+    public static build(valueObject: {
+        id: string, created: number, modified: number, status: TrainingAppLifecycleStatus,
+        title: string, description: string, domain: Domain, level: TrainingOfferLevel
+    }): TrainingOffer {
         let model = new TrainingOffer();
         model.id = valueObject.id;
         model.created = valueObject.created;
         model.modified = valueObject.modified;
         model.status = valueObject.status;
-        model.title=valueObject.title;
+        model.title = valueObject.title;
         model.description = valueObject.description;
         model.domain = valueObject.domain;
         model.level = valueObject.level;
@@ -45,8 +47,8 @@ export class TrainingOffer extends AbstractTrainingAsset<TrainingOffer> {
 
 
 export enum TrainingOfferLevel {
-    Intermediate="Intermediate",
-    Advanced="Advanced"
+    Intermediate = "Intermediate",
+    Advanced = "Advanced"
 }
 
 export enum Domain {

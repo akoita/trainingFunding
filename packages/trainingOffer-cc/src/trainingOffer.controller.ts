@@ -36,8 +36,7 @@ export class TrainingOfferController extends ConvectorController<ChaincodeTx> {
 
   @Invokable()
   public async listTrainingOffers(): Promise<TrainingOffer[]> {
-    const trainingOffers = await TrainingOffer.getAll();
-    return trainingOffers;
+    return TrainingOffer.getAll();
   }
 
   @Invokable()

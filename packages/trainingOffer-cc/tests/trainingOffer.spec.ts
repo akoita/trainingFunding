@@ -8,7 +8,7 @@ import {MockControllerAdapter} from '@worldsibu/convector-adapter-mock';
 import {ClientFactory, ConvectorControllerClient} from '@worldsibu/convector-core';
 
 import {Domain, TrainingOffer, TrainingOfferController, TrainingOfferLevel} from '../src';
-import {TrainingAppLifecycleStatus} from "common-cc";
+import {TrainingAppLifecycleStatus} from 'common-cc';
 
 describe('TrainingOffer', () => {
     chai.use(chaiAsPromised);
@@ -18,7 +18,6 @@ describe('TrainingOffer', () => {
     let trainingOffer1: TrainingOffer;
     let trainingOffer2: TrainingOffer;
     let trainingOffer3: TrainingOffer;
-    let trainingOffer4: TrainingOffer;
 
     beforeEach(async () => {
         // Mocks the blockchain execution environment
@@ -43,6 +42,26 @@ describe('TrainingOffer', () => {
             domain: Domain.SoftwareDevelopment,
             level: TrainingOfferLevel.Intermediate
         });
+        trainingOffer2 = TrainingOffer.build({
+            id: uuid(),
+            created: Date.now(),
+            modified: Date.now(),
+            status: TrainingAppLifecycleStatus.Open,
+            title: "Microservice architecture",
+            description: "Learn what is the microservice architecture, and how to build it",
+            domain: Domain.SoftwareDevelopment,
+            level: TrainingOfferLevel.Advanced
+        });
+        trainingOffer3 = TrainingOffer.build({
+            id: uuid(),
+            created: Date.now(),
+            modified: Date.now(),
+            status: TrainingAppLifecycleStatus.Open,
+            title: "Learning English",
+            description: "Basic level in english vocabulary and grammar",
+            domain: Domain.General,
+            level: TrainingOfferLevel.Intermediate
+        });
     });
 
 
@@ -57,7 +76,7 @@ describe('TrainingOffer', () => {
     });
 
 
-    it("should close the training offer", async()=>{
+    it("should close the training offer", async () => {
         await trainingOfferCtrl.createTrainingOffer(trainingOffer1);
 
         await trainingOfferCtrl.closeTrainingOffer(trainingOffer1.id);
@@ -69,5 +88,28 @@ describe('TrainingOffer', () => {
 
         await expect(trainingOfferCtrl.closeTrainingOffer("noExistingID").catch(ex => ex.responses[0].error.message))
             .to.be.eventually.equal("no existing training offer found with the id: noExistingID");
+    });
+
+
+    it("should return all training offers", async () => {
+        await expect(trainingOfferCtrl.listTrainingOffers()).to.be.empty;
+
+        await trainingOfferCtrl.createTrainingOffer(trainingOffer1);
+        const allData = await trainingOfferCtrl.listTrainingOffers().then(models => models.map(model => {
+            return new TrainingOffer(model)
+        }));
+        expect(allData).to.have.same.deep.members([trainingOffer1]);
+
+        await trainingOfferCtrl.createTrainingOffer(trainingOffer2);
+        const allData2 = await trainingOfferCtrl.listTrainingOffers().then(models => models.map(model => {
+            return new TrainingOffer(model)
+        }));
+        expect(allData2).to.have.same.deep.members([trainingOffer1, trainingOffer2]);
+
+        await trainingOfferCtrl.createTrainingOffer(trainingOffer3);
+        const allData3 = await trainingOfferCtrl.listTrainingOffers().then(models => models.map(model => {
+            return new TrainingOffer(model)
+        }));
+        expect(allData3).to.have.same.deep.members([trainingOffer1, trainingOffer2, trainingOffer3]);
     });
 });
