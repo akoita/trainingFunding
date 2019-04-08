@@ -173,4 +173,29 @@ describe('Candidate', () => {
 
     });
 
+
+    it('should disable the candidate', async () =>{
+
+        const aboubakar = new Candidate();
+        aboubakar.id = uuid();
+        aboubakar.created = Date.now();
+        aboubakar.modified = Date.now();
+        aboubakar.firstName = 'Aboubakar';
+        aboubakar.lastName = 'Koïta';
+        aboubakar.status = TrainingAppLifecycleStatus.Open;
+
+        await  candidateCtrl.createCandidate(aboubakar);
+
+        await candidateCtrl.disableCandidate(aboubakar.id);
+        let one = await Candidate.getOne(aboubakar.id);
+        await expect(one.status).to.be.eql(TrainingAppLifecycleStatus.Closed);
+
+        await expect(candidateCtrl.disableCandidate(aboubakar.id).catch(ex => ex.responses[0].error.message))
+    .to.be.eventually.equal('Candidate is already disabled');
+
+        await expect(candidateCtrl.disableCandidate("noExistingID").catch(ex => ex.responses[0].error.message))
+    .to.be.eventually.equal('no existing candidate found with the id: noExistingID');
+
+    });
+
 });
