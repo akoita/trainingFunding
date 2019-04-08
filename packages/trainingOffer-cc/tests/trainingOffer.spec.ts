@@ -168,4 +168,37 @@ describe('TrainingOffer', () => {
             })).to.have.same.deep.members([englishOffer]);
         }
     });
+
+
+    it("should search the training offers by domain", async () =>{
+        let result = await trainingOfferCtrl.searchTrainingOffersByDomain(Domain.General);
+        if(Array.isArray(result)){
+            expect(result.map(model => { return model})).to.be.empty;
+        }
+
+        await trainingOfferCtrl.createTrainingOffer(englishOffer);
+        result = await trainingOfferCtrl.searchTrainingOffersByDomain(Domain.General);
+        if(Array.isArray(result)){
+            expect(result.map(model => {return new TrainingOffer(model)})).to.have.same.deep.members([englishOffer]);
+        }
+
+        result = await trainingOfferCtrl.searchTrainingOffersByDomain(Domain.SoftwareDevelopment);
+        if(Array.isArray(result)){
+            expect(result.map(model => { return new TrainingOffer(model)})).to.be.empty;
+        }
+
+        await trainingOfferCtrl.createTrainingOffer(microserviceOffer);
+        result = await trainingOfferCtrl.searchTrainingOffersByDomain(Domain.SoftwareDevelopment);
+        if(Array.isArray(result)){
+            expect(result.map(model => { return new TrainingOffer(model)})).to.have.same.deep.members([microserviceOffer]);
+        }
+
+        await trainingOfferCtrl.createTrainingOffer(blockchainOffer);
+        result = await trainingOfferCtrl.searchTrainingOffersByDomain(Domain.SoftwareDevelopment);
+        if(Array.isArray(result)){
+            expect(result.map(model => { return new TrainingOffer(model)})).to.have.same.deep.members([blockchainOffer,microserviceOffer]);
+        }
+
+    });
+
 });

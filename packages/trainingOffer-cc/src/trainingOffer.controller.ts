@@ -52,9 +52,14 @@ export class TrainingOfferController extends ConvectorController<ChaincodeTx> {
     }
 
     @Invokable()
-    public async searchTrainingOffersByDomain(@Param(Domain) domain: Domain): Promise<TrainingOffer[] | TrainingOffer> {
+    public async searchTrainingOffersByDomain(@Param(yup.string()) domain: Domain): Promise<TrainingOffer[] | TrainingOffer> {
         const queryObject = {
-            "selector": {"domain": domain.toString()},
+            "selector": {
+                $and: [
+                    {"type": TrainingOffer.staticType},
+                    {"domain": {$regex: ".*?"+domain.toString()+".*"}}
+                ]
+            },
             "sort": [{"title": "asc"}]
         };
         const trainingOffers = await TrainingOffer.query(TrainingOffer, JSON.stringify(queryObject));
