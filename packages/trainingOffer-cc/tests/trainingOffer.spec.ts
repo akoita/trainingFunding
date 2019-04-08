@@ -15,9 +15,10 @@ describe('TrainingOffer', () => {
     let adapter: MockControllerAdapter;
     let trainingOfferCtrl: ConvectorControllerClient<TrainingOfferController>;
 
-    let trainingOffer1: TrainingOffer;
-    let trainingOffer2: TrainingOffer;
-    let trainingOffer3: TrainingOffer;
+    let blockchainOffer: TrainingOffer;
+    let hyperledger: TrainingOffer;
+    let microserviceOffer: TrainingOffer;
+    let englishOffer: TrainingOffer;
 
     beforeEach(async () => {
         // Mocks the blockchain execution environment
@@ -32,7 +33,7 @@ describe('TrainingOffer', () => {
             }
         ]);
 
-        trainingOffer1 = TrainingOffer.build({
+        blockchainOffer = TrainingOffer.build({
             id: uuid(),
             created: Date.now(),
             modified: Date.now(),
@@ -42,17 +43,27 @@ describe('TrainingOffer', () => {
             domain: Domain.SoftwareDevelopment,
             level: TrainingOfferLevel.Intermediate
         });
-        trainingOffer2 = TrainingOffer.build({
+        hyperledger = TrainingOffer.build({
             id: uuid(),
             created: Date.now(),
             modified: Date.now(),
             status: TrainingAppLifecycleStatus.Open,
-            title: "Microservice architecture",
+            title: "Hyperledger Fabric blockchain",
+            description: "Mastering Hyperledger Fabric blockchain",
+            domain: Domain.SoftwareDevelopment,
+            level: TrainingOfferLevel.Intermediate
+        });
+        microserviceOffer = TrainingOffer.build({
+            id: uuid(),
+            created: Date.now(),
+            modified: Date.now(),
+            status: TrainingAppLifecycleStatus.Open,
+            title: "Build Microservice architecture",
             description: "Learn what is the microservice architecture, and how to build it",
             domain: Domain.SoftwareDevelopment,
             level: TrainingOfferLevel.Advanced
         });
-        trainingOffer3 = TrainingOffer.build({
+        englishOffer = TrainingOffer.build({
             id: uuid(),
             created: Date.now(),
             modified: Date.now(),
@@ -66,24 +77,24 @@ describe('TrainingOffer', () => {
 
 
     it('should create a Training Offer', async () => {
-        await trainingOfferCtrl.createTrainingOffer(trainingOffer1);
-        const justSavedModel = await TrainingOffer.getOne(trainingOffer1.id);
-        expect(justSavedModel).to.be.deep.eq(trainingOffer1);
+        await trainingOfferCtrl.createTrainingOffer(blockchainOffer);
+        const justSavedModel = await TrainingOffer.getOne(blockchainOffer.id);
+        expect(justSavedModel).to.be.deep.eq(blockchainOffer);
 
-        trainingOffer1.status = TrainingAppLifecycleStatus.Closed;
-        await expect(trainingOfferCtrl.createTrainingOffer(trainingOffer1).catch(ex => ex.responses[0].error.message))
+        blockchainOffer.status = TrainingAppLifecycleStatus.Closed;
+        await expect(trainingOfferCtrl.createTrainingOffer(blockchainOffer).catch(ex => ex.responses[0].error.message))
             .to.be.eventually.equal("new Training offer status can\'t be closed");
     });
 
 
     it("should close the training offer", async () => {
-        await trainingOfferCtrl.createTrainingOffer(trainingOffer1);
+        await trainingOfferCtrl.createTrainingOffer(blockchainOffer);
 
-        await trainingOfferCtrl.closeTrainingOffer(trainingOffer1.id);
-        const saved = await TrainingOffer.getOne(trainingOffer1.id);
+        await trainingOfferCtrl.closeTrainingOffer(blockchainOffer.id);
+        const saved = await TrainingOffer.getOne(blockchainOffer.id);
         expect(saved.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
-        await expect(trainingOfferCtrl.closeTrainingOffer(trainingOffer1.id).catch(ex => ex.responses[0].error.message))
+        await expect(trainingOfferCtrl.closeTrainingOffer(blockchainOffer.id).catch(ex => ex.responses[0].error.message))
             .to.be.eventually.equal("training offer's status is already closed");
 
         await expect(trainingOfferCtrl.closeTrainingOffer("noExistingID").catch(ex => ex.responses[0].error.message))
@@ -94,22 +105,67 @@ describe('TrainingOffer', () => {
     it("should return all training offers", async () => {
         await expect(trainingOfferCtrl.listTrainingOffers()).to.be.empty;
 
-        await trainingOfferCtrl.createTrainingOffer(trainingOffer1);
+        await trainingOfferCtrl.createTrainingOffer(blockchainOffer);
         const allData = await trainingOfferCtrl.listTrainingOffers().then(models => models.map(model => {
             return new TrainingOffer(model)
         }));
-        expect(allData).to.have.same.deep.members([trainingOffer1]);
+        expect(allData).to.have.same.deep.members([blockchainOffer]);
 
-        await trainingOfferCtrl.createTrainingOffer(trainingOffer2);
+        await trainingOfferCtrl.createTrainingOffer(microserviceOffer);
         const allData2 = await trainingOfferCtrl.listTrainingOffers().then(models => models.map(model => {
             return new TrainingOffer(model)
         }));
-        expect(allData2).to.have.same.deep.members([trainingOffer1, trainingOffer2]);
+        expect(allData2).to.have.same.deep.members([blockchainOffer, microserviceOffer]);
 
-        await trainingOfferCtrl.createTrainingOffer(trainingOffer3);
+        await trainingOfferCtrl.createTrainingOffer(englishOffer);
         const allData3 = await trainingOfferCtrl.listTrainingOffers().then(models => models.map(model => {
             return new TrainingOffer(model)
         }));
-        expect(allData3).to.have.same.deep.members([trainingOffer1, trainingOffer2, trainingOffer3]);
+        expect(allData3).to.have.same.deep.members([blockchainOffer, microserviceOffer, englishOffer]);
+    });
+
+
+    it("should search the training offers by title or description", async () => {
+        let result = await trainingOfferCtrl.searchTrainingOffersByTitleAndDescription("blockchain");
+        if (Array.isArray(result)) {
+            expect(result).to.be.empty;
+        }
+
+        await trainingOfferCtrl.createTrainingOffer(blockchainOffer);
+        result = await trainingOfferCtrl.searchTrainingOffersByTitleAndDescription("blockchain");
+        if (Array.isArray(result)) {
+            expect(result.map(model => {
+                return new TrainingOffer(model)
+            })).to.have.same.deep.members([blockchainOffer]);
+        }
+
+        await trainingOfferCtrl.createTrainingOffer(hyperledger);
+        result = await trainingOfferCtrl.searchTrainingOffersByTitleAndDescription("blockchain");
+        if (Array.isArray(result)) {
+            expect(result.map(model => {
+                return new TrainingOffer(model)
+            })).to.have.same.deep.members([blockchainOffer, hyperledger]);
+        }
+
+        await trainingOfferCtrl.createTrainingOffer(microserviceOffer);
+        result = await trainingOfferCtrl.searchTrainingOffersByTitleAndDescription("Microservice");
+        if (Array.isArray(result)) {
+            expect(result.map(model => {
+                return new TrainingOffer(model)
+            })).to.have.same.deep.members([microserviceOffer]);
+        }
+
+        result = await trainingOfferCtrl.searchTrainingOffersByTitleAndDescription("General");
+        if (Array.isArray(result)) {
+            expect(result).to.be.empty;
+        }
+
+        await trainingOfferCtrl.createTrainingOffer(englishOffer);
+        result = await trainingOfferCtrl.searchTrainingOffersByTitleAndDescription("english");
+        if (Array.isArray(result)) {
+            expect(result.map(model => {
+                return new TrainingOffer(model)
+            })).to.have.same.deep.members([englishOffer]);
+        }
     });
 });
