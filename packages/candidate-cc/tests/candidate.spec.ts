@@ -161,10 +161,16 @@ describe('Candidate', () => {
         if(Array.isArray(candidates2)){
             expect(candidates2.map(c => new Candidate(c))).to.have.same.deep.members([aboubakar]);
         }else{
-            throw new Error('no candidate matching name "Koïta"');
+            throw new Error('no candidate matching name "Abouba"');
+        }
+
+        const candidates3 = await candidateCtrl.searchCandidate("noExistingUser");
+        if(Array.isArray(candidates3)){
+            expect(candidates3.map(c => new Candidate(c))).to.be.empty;
+        }else{
+            throw new Error('expecting empty array');
         }
 
     });
-
 
 });
