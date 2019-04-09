@@ -52,7 +52,7 @@ export class TrainingOfferController extends ConvectorController<ChaincodeTx> {
     }
 
     @Invokable()
-    public async searchTrainingOffersByDomain(@Param(yup.string()) domain: Domain): Promise<TrainingOffer[] | TrainingOffer> {
+    public async searchTrainingOffersByDomain(@Param(yup.string().oneOf(Object.keys(Domain).map(k => Domain[k]))) domain: Domain): Promise<TrainingOffer[] | TrainingOffer> {
         const queryObject = {
             "selector": {
                 $and: [
@@ -67,7 +67,7 @@ export class TrainingOfferController extends ConvectorController<ChaincodeTx> {
     }
 
     @Invokable()
-    public async searchTrainingOffersByDomainAndLevel(@Param(yup.string()) domain: Domain, @Param(yup.string()) level: TrainingOfferLevel): Promise<TrainingOffer[] | TrainingOffer> {
+    public async searchTrainingOffersByDomainAndLevel(@Param(yup.string().oneOf(Object.keys(Domain).map(k => Domain[k]))) domain: Domain, @Param(yup.string().oneOf(Object.keys(TrainingOfferLevel).map(k => TrainingOfferLevel[k]))) level: TrainingOfferLevel): Promise<TrainingOffer[] | TrainingOffer> {
         const queryObject = {
             "selector": {
                 $and: [{"type": TrainingOffer.staticType},

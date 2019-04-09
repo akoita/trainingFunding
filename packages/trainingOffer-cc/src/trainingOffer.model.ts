@@ -2,6 +2,18 @@ import * as yup from 'yup';
 import {ReadOnly, Required, Validate} from '@worldsibu/convector-core-model';
 import {AbstractTrainingAsset, TrainingAppLifecycleStatus} from 'common-cc';
 
+
+export enum TrainingOfferLevel {
+    Intermediate = "Intermediate",
+    Advanced = "Advanced"
+}
+
+export enum Domain {
+    SoftwareDevelopment = "SoftwareDevelopment",
+    ProjectManagement = "ProjectManagement",
+    General = "General"
+}
+
 export class TrainingOffer extends AbstractTrainingAsset<TrainingOffer> {
     @ReadOnly()
     @Required()
@@ -17,11 +29,11 @@ export class TrainingOffer extends AbstractTrainingAsset<TrainingOffer> {
     public description: string;
 
     @Required()
-    @Validate(yup.string())
+    @Validate(yup.string().oneOf(Object.keys(Domain).map(k => Domain[k])))
     public domain: Domain;
 
     @Required()
-    @Validate(yup.string())
+    @Validate(yup.string().oneOf(Object.keys(TrainingOfferLevel).map(k => TrainingOfferLevel[k])))
     public level: TrainingOfferLevel;
 
 
@@ -45,14 +57,3 @@ export class TrainingOffer extends AbstractTrainingAsset<TrainingOffer> {
 
 }
 
-
-export enum TrainingOfferLevel {
-    Intermediate = "Intermediate",
-    Advanced = "Advanced"
-}
-
-export enum Domain {
-    SoftwareDevelopment = "SoftwareDevelopment",
-    ProjectManagement = "ProjectManagement",
-    General = "General"
-}
