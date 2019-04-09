@@ -1,11 +1,11 @@
 import * as yup from 'yup';
-import {Required, Validate} from '@worldsibu/convector-core-model';
+import {ReadOnly, Required, Validate} from '@worldsibu/convector-core-model';
 
-import {AbstractTrainingAsset} from 'common-cc';
+import {AbstractTrainingAsset, TrainingAppLifecycleStatus} from 'common-cc';
 
 
 export class Candidate extends AbstractTrainingAsset<Candidate> {
-    // @ReadOnly()
+    @ReadOnly()
     @Required()
     readonly type = 'io.worldsibu.candidate';
 
@@ -17,10 +17,18 @@ export class Candidate extends AbstractTrainingAsset<Candidate> {
     @Validate(yup.string())
     lastName: string;
 
-    //
-    // constructor(object: {id: string, created: number, modified: number, status: TrainingAppLifecycleStatus, firstName: string, lastName: string}){
-    //   super({id: object.id, created: object.created, modified: object.modified, status: object.status});
-    //   this.firstName = object.firstName;
-    //   this.lastName = object.lastName;
-    // }
+
+    public static build(value: {
+        id: string, created: number, modified: number, status: TrainingAppLifecycleStatus,
+        firstName: string, lastName: string
+    }): Candidate {
+        let candidate = new Candidate();
+        candidate.id = value.id;
+        candidate.created = value.created;
+        candidate.modified = value.modified;
+        candidate.status = value.status;
+        candidate.firstName = value.firstName;
+        candidate.lastName = value.lastName;
+        return candidate;
+    }
 }
