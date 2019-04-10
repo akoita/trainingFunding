@@ -8,6 +8,7 @@ export enum TrainingAppLifecycleStatus {
 }
 
 export abstract class AbstractTrainingAsset<T extends AbstractTrainingAsset<any>> extends ConvectorModel<T> {
+    @ReadOnly()
     @Required()
     @Validate(yup.string())
     public id: string;
