@@ -17,7 +17,6 @@ export class Candidate extends AbstractTrainingAsset<Candidate> {
     @Validate(yup.string())
     lastName: string;
 
-
     public static build(value: {
         id: string, created: number, modified: number, status: TrainingAppLifecycleStatus,
         firstName: string, lastName: string
@@ -30,5 +29,15 @@ export class Candidate extends AbstractTrainingAsset<Candidate> {
         candidate.firstName = value.firstName;
         candidate.lastName = value.lastName;
         return candidate;
+    }
+
+    /**
+     * Check the state of a new Candidate and throws an exception if the state is not valid
+     * @param newCandidate
+     */
+    public static checkNewCandidateState(newCandidate: Candidate) {
+        if (newCandidate.status !== TrainingAppLifecycleStatus.Open) {
+            throw new Error('new candidate must be in open status');
+        }
     }
 }

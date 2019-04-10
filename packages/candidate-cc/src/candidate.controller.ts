@@ -10,9 +10,7 @@ export class CandidateController extends ConvectorController<ChaincodeTx> {
     @Invokable()
     public async createCandidate(@Param(Candidate) candidate: Candidate) {
         debugger;
-        if (candidate.status !== TrainingAppLifecycleStatus.Open) {
-            throw new Error('new candidate must be in open status');
-        }
+        Candidate.checkNewCandidateState(candidate);
         await candidate.save();
     }
 

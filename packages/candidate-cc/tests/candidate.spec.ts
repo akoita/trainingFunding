@@ -66,14 +66,14 @@ describe('Candidate', () => {
     });
 
 
-    it('should create a default model', async () => {
+    it('should createTraining a default model', async () => {
         await candidateCtrl.createCandidate(abou);
         const justSavedModel = await Candidate.getOne(abou.id);
         expect(justSavedModel).to.be.deep.equal(abou);
 
     });
 
-    it('should fail to create a candidate with closed status', async () => {
+    it('should fail to createTraining a candidate with closed status', async () => {
         abou.status = TrainingAppLifecycleStatus.Closed;
 
         await expect(candidateCtrl.createCandidate(abou).catch(ex => ex.responses[0].error.message))
@@ -105,7 +105,6 @@ describe('Candidate', () => {
         soumaya.status = TrainingAppLifecycleStatus.Open;
 
         const dede = new Candidate();
-        2;
         dede.id = uuid();
         dede.created = Date.now();
         dede.modified = Date.now();
