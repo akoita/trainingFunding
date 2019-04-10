@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import {ReadOnly, Required, Validate} from '@worldsibu/convector-core-model';
+import {FlatConvectorModel, ReadOnly, Required, Validate} from '@worldsibu/convector-core-model';
 import {AbstractTrainingAsset, TrainingAppLifecycleStatus} from 'common-cc';
 
 
@@ -36,11 +36,11 @@ export class TrainingOffer extends AbstractTrainingAsset<TrainingOffer> {
     @Validate(yup.string().oneOf(Object.keys(TrainingOfferLevel).map(k => TrainingOfferLevel[k])))
     public level: TrainingOfferLevel;
 
-
     public static build(valueObject: {
         id: string, created: number, modified: number, status: TrainingAppLifecycleStatus,
         title: string, description: string, domain: Domain, level: TrainingOfferLevel
     }): TrainingOffer {
+
         let model = new TrainingOffer();
         model.id = valueObject.id;
         model.created = valueObject.created;
@@ -54,6 +54,16 @@ export class TrainingOffer extends AbstractTrainingAsset<TrainingOffer> {
         return model;
     }
 
+
+    /**
+     * Check the state of new training offer and throw an exception if the state is not valid
+     * @param trainingOffer a new training offer
+     */
+    public static checkNewTrainingOfferState(trainingOffer: TrainingOffer) {
+        if (trainingOffer.status === TrainingAppLifecycleStatus.Closed) {
+            throw new Error("new Training offer status can't be closed");
+        }
+    }
 
 }
 

@@ -10,9 +10,7 @@ export class TrainingOfferController extends ConvectorController<ChaincodeTx> {
 
     @Invokable()
     public async createTrainingOffer(@Param(TrainingOffer)    trainingOffer: TrainingOffer) {
-        if (trainingOffer.status === TrainingAppLifecycleStatus.Closed) {
-            throw new Error("new Training offer status can't be closed");
-        }
+        TrainingOffer.checkNewTrainingOfferState(trainingOffer);
         await trainingOffer.save();
     }
 
