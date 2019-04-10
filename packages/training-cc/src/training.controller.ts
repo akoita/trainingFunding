@@ -10,8 +10,10 @@ import {Training, TrainingProcessStatus} from './training.model';
 
 @Controller('training')
 export class TrainingController extends ConvectorController<ChaincodeTx> {
+
   @Invokable()
-  public async create(@Param(Training)    training: Training) {
+  public async createTraining(@Param(Training)    training: Training) {
+    Training.checkNewTrainingState(training);
     await training.save();
   }
 

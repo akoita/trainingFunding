@@ -41,6 +41,20 @@ describe('Training', () => {
     let englishOffer: TrainingOffer;
 
 
+    function convertFromBlocchainFormat(from: Training): Training {
+        let to = Training.build({
+            id: from.id,
+            created: from.created,
+            modified: from.modified,
+            status: from.status,
+            trainingOffer: new TrainingOffer(from.trainingOffer),
+            trainingProcessStatus: from.trainingProcessStatus,
+            candidate: new Candidate(from.candidate)
+        });
+        return to;
+    }
+
+
     beforeEach(async () => {
         // Mocks the blockchain execution environment
         adapter = new MockControllerAdapter();
@@ -53,6 +67,14 @@ describe('Training', () => {
                 name: join(__dirname, '..')
             }
         ]);
+
+
+        function convertFromBlocchainFormat(from: Training): Training {
+            const to = new Training(from);
+            to.candidate = new Candidate(to.candidate);
+            to.trainingOffer = new TrainingOffer(to.trainingOffer);
+            return to;
+        }
 
 
         abou = Candidate.build({
@@ -73,6 +95,7 @@ describe('Training', () => {
             status: TrainingAppLifecycleStatus.Open
 
         });
+
         itachi = Candidate.build({
             id: uuid(),
             created: Date.now(),
@@ -138,7 +161,7 @@ describe('Training', () => {
             trainingProcessStatus: TrainingProcessStatus.NotSubmitted,
             candidate: abou
         });
-        abouHyperledgerTraining =  Training.build({
+        abouHyperledgerTraining = Training.build({
             id: uuid(),
             created: Date.now(),
             modified: Date.now(),
@@ -147,7 +170,7 @@ describe('Training', () => {
             trainingProcessStatus: TrainingProcessStatus.NotSubmitted,
             candidate: abou
         });
-        abouMicroserviceTraining =  Training.build({
+        abouMicroserviceTraining = Training.build({
             id: uuid(),
             created: Date.now(),
             modified: Date.now(),
@@ -166,7 +189,7 @@ describe('Training', () => {
             candidate: abou
         });
 
-        itachiBlockchainTraining =  Training.build({
+        itachiBlockchainTraining = Training.build({
             id: uuid(),
             created: Date.now(),
             modified: Date.now(),
@@ -185,7 +208,7 @@ describe('Training', () => {
             trainingProcessStatus: TrainingProcessStatus.NotSubmitted,
             candidate: itachi
         });
-        itachiEngkishTraining  = Training.build({
+        itachiEngkishTraining = Training.build({
             id: uuid(),
             created: Date.now(),
             modified: Date.now(),
@@ -204,7 +227,7 @@ describe('Training', () => {
             trainingProcessStatus: TrainingProcessStatus.NotSubmitted,
             candidate: julie
         });
-        julieMicroserviceTraining= Training.build({
+        julieMicroserviceTraining = Training.build({
             id: uuid(),
             created: Date.now(),
             modified: Date.now(),
@@ -213,7 +236,7 @@ describe('Training', () => {
             trainingProcessStatus: TrainingProcessStatus.NotSubmitted,
             candidate: julie
         });
-        julieEngkishTraining= Training.build({
+        julieEngkishTraining = Training.build({
             id: uuid(),
             created: Date.now(),
             modified: Date.now(),
@@ -226,18 +249,30 @@ describe('Training', () => {
 
     });
 
-    it('should create a default model', async () => {
-        const modelSample = new Training({
-            id: uuid(),
-            name: 'Test',
-            created: Date.now(),
-            modified: Date.now()
-        });
+    it('should create a Training', async () => {
+        await trainingCtrl.createTraining(abouBlockchainTraining);
+        const justSavedModel = await Training.getOne(abouBlockchainTraining.id);
+        expect(convertFromBlocchainFormat(justSavedModel)).to.be.deep.eq(abouBlockchainTraining);
 
-        await trainingCtrl.create(modelSample);
+        abouBlockchainTraining.status = TrainingAppLifecycleStatus.Closed;
+        await expect(trainingCtrl.createTraining(abouBlockchainTraining).catch(ex => ex.responses[0].error.message))
+            .to.be.eventually.equal("new Training status can\'t be closed");
 
-        const justSavedModel = await adapter.getById<Training>(modelSample.id);
+        abouBlockchainTraining.status = TrainingAppLifecycleStatus.Open;
+        abouBlockchainTraining.trainingProcessStatus = TrainingProcessStatus.Funded;
+        await expect(trainingCtrl.createTraining(abouBlockchainTraining).catch(ex => ex.responses[0].error.message))
+            .to.be.eventually.equal(`new Training process status must be "${TrainingProcessStatus.NotSubmitted}"`);
 
-        expect(justSavedModel.id).to.exist;
+        abouBlockchainTraining.trainingProcessStatus = TrainingProcessStatus.NotSubmitted;
+        abouBlockchainTraining.candidate.status = TrainingAppLifecycleStatus.Closed;
+        await expect(trainingCtrl.createTraining(abouBlockchainTraining).catch(ex => ex.responses[0].error.message))
+            .to.be.eventually.equal(`new candidate must be in open status`);
+
+        abouBlockchainTraining.candidate.status = TrainingAppLifecycleStatus.Open;
+        abouBlockchainTraining.trainingOffer.status = TrainingAppLifecycleStatus.Closed;
+        await expect(trainingCtrl.createTraining(abouBlockchainTraining).catch(ex => ex.responses[0].error.message))
+            .to.be.eventually.equal(`new Training offer status can't be closed`);
+
     });
+
 });
