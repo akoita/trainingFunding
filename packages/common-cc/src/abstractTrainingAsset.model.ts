@@ -26,6 +26,11 @@ export abstract class AbstractTrainingAsset<T extends AbstractTrainingAsset<any>
     @Required()
     @Validate(yup.string().oneOf(Object.keys(TrainingAppLifecycleStatus).map(k => TrainingAppLifecycleStatus[k])))
     public status: TrainingAppLifecycleStatus;
+
+    public isClosed(): boolean {
+        return this.status === TrainingAppLifecycleStatus.Closed;
+    }
+
     //
     // // @Required()
     // // @Validate(AbstractTrainingParticipant)
