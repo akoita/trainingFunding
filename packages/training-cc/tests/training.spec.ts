@@ -387,10 +387,29 @@ describe('Training', () => {
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
         await candidateCtrl.disableCandidate(abou.id);
+        const closedCandidate = await Candidate.getOne(abou.id);
+        expect(closedCandidate.id).to.be.equal(abou.id);
+        expect(closedCandidate.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
         await expect(trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).catch(
             ex => ex.responses[0].error.message)).to.be.eventually.equal(
             `can't submit the training application because it it linked to a closed candidate: "${abouBlockchainTraining.candidateId}"`);
+    });
+
+    it('should throw an exception when trying to submit the application to a training linked to a closed training offer', async () => {
+        await candidateCtrl.createCandidate(abou);
+        await trainingOfferCtrl.createTrainingOffer(blockchainOffer);
+
+        await trainingCtrl.createTraining(abouBlockchainTraining);
+
+        await trainingOfferCtrl.closeTrainingOffer(blockchainOffer.id);
+        const trainingOfferClosed = await TrainingOffer.getOne(blockchainOffer.id);
+        expect(trainingOfferClosed.id).to.be.equal(blockchainOffer.id);
+        expect(trainingOfferClosed.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
+
+        await expect(trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).catch(
+            ex => ex.responses[0].error.message)).to.be.eventually.equal(
+            `can't submit the training application because it it linked to a closed training offer: "${abouBlockchainTraining.trainingOfferId}"`);
     });
 
 });

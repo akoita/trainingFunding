@@ -30,7 +30,8 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
             await self.checkThatTrainingProcessIsInStatus(existing, TrainingProcessStatus.NotSubmitted);
             await self.checkThatCandidateIsValid(existing.candidateId,
                 `can't submit the training application because it it linked to a closed candidate: "${existing.candidateId}"`);
-            await self.checkThatTrainingOfferIsValid(existing.trainingOfferId);
+            await self.checkThatTrainingOfferIsValid(existing.trainingOfferId,
+                `can\'t submit the training application because it it linked to a closed training offer: "${existing.trainingOfferId}"`);
             return existing;
         }
         const training = await preconditions(this);
@@ -175,10 +176,10 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
         }
     }
 
-    private async checkThatTrainingOfferIsValid(trainingOfferId: string) {
+    private async checkThatTrainingOfferIsValid(trainingOfferId: string, errorMessage: string) {
         const trainingOffer = await TrainingOffer.getOne(trainingOfferId);
         if (trainingOffer.status === TrainingAppLifecycleStatus.Closed) {
-            throw new Error('training offer must not be closed');
+            throw new Error(errorMessage);
         }
     }
 
