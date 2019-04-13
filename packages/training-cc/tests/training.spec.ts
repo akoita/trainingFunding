@@ -337,8 +337,47 @@ describe('Training', () => {
             `a new training can't linked to a closed training offer - closed training offer id: "${abouBlockchainTraining.trainingOfferId}"`);
     });
 
+    //================================== Close training===================================================//
+    it('should close an existing training', async () => {
+        await candidateCtrl.createCandidate(abou);
+        await trainingOfferCtrl.createTrainingOffer(blockchainOffer);
 
-    //================================== Submit trainig application ===================================================//
+        await trainingCtrl.createTraining(abouBlockchainTraining);
+
+        const justSavedModel = await Training.getOne(abouBlockchainTraining.id);
+        expect(justSavedModel).to.be.deep.eq(abouBlockchainTraining);
+        expect(justSavedModel.status).to.be.equal(TrainingAppLifecycleStatus.Open);
+
+        const closed = await trainingCtrl.closeTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        expect(closed.id).to.be.equal(abouBlockchainTraining.id);
+        expect(closed.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
+
+    });
+
+    it('should throw an exception when trying to close a non existing training', async () => {
+        await expect(trainingCtrl.closeTraining(abouBlockchainTraining.id).catch(ex => ex.responses[0].error.message)).to.be.eventually.equal(`cannot close a non existing training with the id: "${abouBlockchainTraining.id}"`);
+    });
+
+    it('should thow an exception when trying to close an already closed training', async () => {
+        await candidateCtrl.createCandidate(abou);
+        await trainingOfferCtrl.createTrainingOffer(blockchainOffer);
+
+        await trainingCtrl.createTraining(abouBlockchainTraining);
+
+        const justSavedModel = await Training.getOne(abouBlockchainTraining.id);
+        expect(justSavedModel).to.be.deep.eq(abouBlockchainTraining);
+        expect(justSavedModel.status).to.be.equal(TrainingAppLifecycleStatus.Open);
+
+        const closed = await trainingCtrl.closeTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        expect(closed.id).to.be.equal(abouBlockchainTraining.id);
+        expect(closed.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
+
+        await expect(trainingCtrl.closeTraining(abouBlockchainTraining.id).catch(ex => ex.responses[0].error.message)).to.be.eventually.equal(`cannot close an already closed training with the id: "${abouBlockchainTraining.id}"`);
+
+    });
+
+
+    //================================== Submit training application ===================================================//
 
     it('should submit the training application', async () => {
         await candidateCtrl.createCandidate(abou);
@@ -1043,6 +1082,77 @@ describe('Training', () => {
             ex => ex.responses[0].error.message)).to.be.eventually.equal(
             'cannot fail the training with the id: "' + abouBlockchainTraining.id + '" because it ' +
             'is linked to a closed training offer with the id: "' + abouBlockchainTraining.trainingOfferId + '"');
+    });
+
+    it('should return the trainings linked to the candidates ids provided', async () => {
+        const abouTrainings0 = await trainingCtrl.getTrainingsByCandidatesIds([abou.id]);
+        expect(abouTrainings0).to.be.empty;
+
+        await candidateCtrl.createCandidate(abou);
+        await trainingOfferCtrl.createTrainingOffer(blockchainOffer);
+        await trainingCtrl.createTraining(abouBlockchainTraining);
+        const abouTrainings1 = await trainingCtrl.getTrainingsByCandidatesIds([abou.id]).then(result =>
+            result.map(training => new Training(training)));
+        expect(abouTrainings1).to.have.same.deep.members([abouBlockchainTraining]);
+
+        await trainingOfferCtrl.createTrainingOffer(hyperledger);
+        await trainingCtrl.createTraining(abouHyperledgerTraining);
+        const abouTrainings2 = await trainingCtrl.getTrainingsByCandidatesIds([abou.id]).then(result =>
+            result.map(training => new Training(training)));
+        expect(abouTrainings2).to.have.same.deep.members([abouBlockchainTraining, abouHyperledgerTraining]);
+
+        await trainingOfferCtrl.createTrainingOffer(microserviceOffer);
+        await trainingCtrl.createTraining(abouMicroserviceTraining);
+        const abouTrainings3 = await trainingCtrl.getTrainingsByCandidatesIds([abou.id]).then(result =>
+            result.map(training => new Training(training)));
+        expect(abouTrainings3).to.have.same.deep.members([abouBlockchainTraining, abouHyperledgerTraining, abouMicroserviceTraining]);
+
+        const julieTrainings0 = await trainingCtrl.getTrainingsByCandidatesIds([julie.id]);
+        expect(julieTrainings0).to.be.empty;
+
+        await candidateCtrl.createCandidate(julie);
+        await trainingCtrl.createTraining(julieBlockchainTraining);
+        const julieTrainings1 = await trainingCtrl.getTrainingsByCandidatesIds([julie.id]).then(result =>
+            result.map(training => new Training(training)));
+        expect(julieTrainings1).to.have.same.deep.members([julieBlockchainTraining]);
+
+        await trainingCtrl.createTraining(julieMicroserviceTraining);
+        const julieTrainings2 = await trainingCtrl.getTrainingsByCandidatesIds([julie.id]).then(result =>
+            result.map(training => new Training(training)));
+        expect(julieTrainings2).to.have.same.deep.members([julieBlockchainTraining, julieMicroserviceTraining]);
+
+        const julieAndAbouTrainings = await trainingCtrl.getTrainingsByCandidatesIds([julie.id, abou.id]).then(result =>
+            result.map(training => new Training(training)));
+        expect(julieAndAbouTrainings).to.have.same.deep.members([julieBlockchainTraining, julieMicroserviceTraining, abouBlockchainTraining,
+            abouHyperledgerTraining, abouMicroserviceTraining]);
+
+    });
+
+    it('should return the trainings in the process status provided', async () => {
+        const trainings0 = await trainingCtrl.getTrainingsByProcessStatus([TrainingProcessStatus.NotSubmitted]);
+        expect(trainings0).to.be.empty;
+
+        await candidateCtrl.createCandidate(abou);
+        await trainingOfferCtrl.createTrainingOffer(blockchainOffer);
+        await trainingCtrl.createTraining(abouBlockchainTraining);
+        await expect(trainingCtrl.getTrainingsByProcessStatus([TrainingProcessStatus.NotSubmitted]).then(result =>
+            result.map(training => new Training(training)))).to.have.eventually.same.deep.members([abouBlockchainTraining]);
+        await expect(trainingCtrl.getTrainingsByProcessStatus([TrainingProcessStatus.Submitted]).then(result =>
+            result.map(training => new Training(training)))).to.be.eventually.empty;
+
+        await trainingOfferCtrl.createTrainingOffer(hyperledger);
+        await trainingCtrl.createTraining(abouHyperledgerTraining);
+        await expect(trainingCtrl.getTrainingsByProcessStatus([TrainingProcessStatus.NotSubmitted]).then(result =>
+            result.map(training => new Training(training)))).to.have.eventually.same.deep.members([abouHyperledgerTraining, abouBlockchainTraining]);
+
+        await trainingCtrl.submitTrainingApplication(abouHyperledgerTraining.id);
+        await expect(trainingCtrl.getTrainingsByProcessStatus([TrainingProcessStatus.NotSubmitted]).then(result =>
+            result.map(training => new Training(training)))).to.have.eventually.same.deep.members([abouBlockchainTraining]);
+        await expect(trainingCtrl.getTrainingsByProcessStatus([TrainingProcessStatus.Submitted]).then(result =>
+            result.map(training => {
+                const converted = new Training(training);
+                return [converted.id, converted.trainingProcessStatus];
+            }))).to.have.eventually.same.deep.members([[abouHyperledgerTraining.id, TrainingProcessStatus.Submitted]]);
     });
 
 });

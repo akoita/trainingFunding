@@ -23,6 +23,22 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
 
 
     @Invokable()
+    public async closeTraining(@Param(yup.string()) trainingId: string): Promise<Training> {
+        async function preconditions(self: TrainingController) {
+            let existing = await self.checkThatTrainingExistWithId(trainingId,
+                `cannot close a non existing training with the id: "${trainingId}"`);
+            self.checkThatTrainingIsNotClosed(existing,
+                `cannot close an already closed training with the id: "${trainingId}"`);
+            existing.status = TrainingAppLifecycleStatus.Closed;
+            return existing;
+        }
+
+        const existing = await preconditions(this);
+        await existing.save();
+        return Training.getOne(trainingId);
+    }
+
+    @Invokable()
     public async submitTrainingApplication(@Param(yup.string()) trainingId: string): Promise<Training> {
         async function preconditions(self: TrainingController): Promise<Training> {
             const existing = await self.checkThatTrainingExistWithId(trainingId, `cannot submit an application for non existing training with the id: "${trainingId}"`);
@@ -179,38 +195,43 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
         return await Training.getOne(trainingId);
     }
 
+
     @Invokable()
-    public async getCandidateTrainings(@Param(String) namePart: string): Promise<Training[] | Training> {
+    public async getTrainingsByCandidatesIds(@Param(yup.array(yup.string())) candidatesIds: string[]): Promise<Training[]> {
         const queryObject = {
             "selector": {
-                "$or": [{"candidate.firstName": namePart.toString()}, {"candidate.lastName": namePart.toString()}]
+                "$and": [{"type": Training.staticType}, {"candidateId": {"$in": candidatesIds}}]
             },
             "sort":
-                [{"trainingOffer.title": "asc"}]
+                [{"id": "asc"}]
         };
-
         const trainings = await Training.query(Training, JSON.stringify(queryObject));
-        return trainings;
+        if (Array.isArray(trainings)) {
+            return trainings;
+        } else {
+            return [trainings];
+        }
     }
 
+
     @Invokable()
-    public async searchTrainingByProcessStatus(@Param(TrainingProcessStatus) trainingProcessStatus: TrainingProcessStatus): Promise<Training[] | Training> {
+    public async getTrainingsByProcessStatus(@Param(yup.array(yup.string().oneOf(Object.keys(TrainingProcessStatus).map(k => TrainingProcessStatus[k]))))
+                                                 trainingProcessStatus: TrainingProcessStatus[]): Promise<Training[]> {
         const queryObject = {
-            "selector": {"trainingProcessStatus": trainingProcessStatus.toString()},
-            "sort": [{"trainingOffer.title": "asc"}]
+            "selector": {
+                "$and": [{"type": Training.staticType}, {"trainingProcessStatus": {"$in": trainingProcessStatus}}]
+            },
+            "sort":
+                [{"id": "asc"}]
         };
         const trainings = await Training.query(Training, JSON.stringify(queryObject));
-        return trainings;
+        if (Array.isArray(trainings)) {
+            return trainings;
+        } else {
+            return [trainings];
+        }
     }
 
-    @Invokable()
-    public async closeTraining(@Param(yup.string()) trainingId: string): Promise<Training> {
-        let existing = await this.checkThatTrainingExistWithId(trainingId);
-        this.checkThatTrainingIsNotClosed(existing);
-        existing.status = TrainingAppLifecycleStatus.Closed;
-        await existing.save();
-        return Training.getOne(trainingId);
-    }
 
     /**
      * Check the state of a new training and trows an execption if the status if not valid
@@ -243,7 +264,6 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
         }
 
     }
-
 
     /**
      * @param trainingID

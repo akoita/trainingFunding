@@ -6,11 +6,11 @@ import {AbstractTrainingAsset, TrainingAppLifecycleStatus} from 'common-cc';
 export enum TrainingProcessStatus {
     NotSubmitted = 'NotSubmitted',
     Submitted = 'Submitted',
+    Accepted = 'Accepted',
     Funded = 'Funded',
     InProgress = 'InProgress',
     Succeeded = 'Succeeded',
-    Failed = 'Failed',
-    Accepted = 'Accepted'
+    Failed = 'Failed'
 }
 
 
