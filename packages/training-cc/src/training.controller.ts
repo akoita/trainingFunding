@@ -49,10 +49,15 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
     @Invokable()
     public async acceptApplication(@Param(yup.string()) trainingId: string): Promise<Training> {
         async function precondition(self: TrainingController): Promise<Training> {
-            const existing = await self.checkThatTrainingExistWithId(trainingId, `cannot accept an application for non existing training with the id: "${trainingId}"`);
+            const existing = await self.checkThatTrainingExistWithId(trainingId,
+                `cannot accept an application for non existing training with the id: "${trainingId}"`);
             await self.checkThatTrainingIsNotClosed(existing,
                 `cannot accept an application for a closed training with the id "${trainingId}"`);
-            await self.checkThatTrainingProcessIsInStatus(existing, TrainingProcessStatus.Submitted);
+            await self.checkThatTrainingProcessIsInStatus(existing, TrainingProcessStatus.Submitted,
+                'cannot start fund training with the id: "' + existing.id +
+                '" because it\'s process is expected to be "' + TrainingProcessStatus.Submitted +
+                '" instead of "' + existing.trainingProcessStatus + '"');
+
             await self.checkThatCandidateIsValid(existing.candidateId,
                 'cannot accept an application for the training with the id: "' + existing.id + '" because it ' +
                 'is linked to a closed candidate with the id: "' + existing.candidateId + '"');
@@ -70,21 +75,56 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
     }
 
     @Invokable()
-    public async fundTraining(@Param(Training) training: Training) {
-        if (training.trainingProcessStatus !== TrainingProcessStatus.Accepted) {
-            throw new Error("training must be in the status Submitted");
+    public async fundTraining(@Param(yup.string())trainingId: string): Promise<Training> {
+        async function precondition(self: TrainingController): Promise<Training> {
+            const existing = await self.checkThatTrainingExistWithId(trainingId,
+                `cannot fund a non existing training with the id: "${trainingId}"`);
+            await self.checkThatTrainingIsNotClosed(existing,
+                `cannot fund a closed training with the id "${trainingId}"`);
+            await self.checkThatTrainingProcessIsInStatus(existing, TrainingProcessStatus.Accepted,
+                'cannot start fund training with the id: "' + existing.id +
+                '" because it\'s process is expected to be "' + TrainingProcessStatus.Accepted +
+                '" instead of "' + existing.trainingProcessStatus + '"');
+            await self.checkThatCandidateIsValid(existing.candidateId,
+                'cannot fund the training with the id: "' + existing.id + '" because it ' +
+                'is linked to a closed candidate with the id: "' + existing.candidateId + '"');
+            await self.checkThatTrainingOfferIsValid(existing.trainingOfferId,
+                'cannot fund the training with the id: "' + existing.id + '" because it ' +
+                'is linked to a closed training offer with the id: "' + existing.trainingOfferId + '"');
+            return existing;
         }
+
+        const training = await precondition(this);
         training.trainingProcessStatus = TrainingProcessStatus.Funded;
         await training.save();
+        return await Training.getOne(trainingId);
     }
 
     @Invokable()
-    public async startTraining(@Param(Training) training: Training) {
-        if (training.trainingProcessStatus !== TrainingProcessStatus.Funded) {
-            throw new Error("training must be in the status Funded");
+    public async startTraining(@Param(yup.string()) trainingId: string): Promise<Training> {
+        async function precondition(self: TrainingController): Promise<Training> {
+            const existing = await self.checkThatTrainingExistWithId(trainingId,
+                `cannot start a non existing training with the id: "${trainingId}"`);
+            await self.checkThatTrainingIsNotClosed(existing,
+                `cannot start a closed training with the id "${trainingId}"`);
+            await self.checkThatTrainingProcessIsInStatus(existing, TrainingProcessStatus.Funded,
+                'cannot start the training with the id: "' + existing.id +
+                '" because it\'s process is expected to be "' + TrainingProcessStatus.Funded + '" instead of "'
+                + existing.trainingProcessStatus + '"');
+
+            await self.checkThatCandidateIsValid(existing.candidateId,
+                'cannot start the training with the id: "' + existing.id + '" because it ' +
+                'is linked to a closed candidate with the id: "' + existing.candidateId + '"');
+            await self.checkThatTrainingOfferIsValid(existing.trainingOfferId,
+                'cannot start the training with the id: "' + existing.id + '" because it ' +
+                'is linked to a closed training offer with the id: "' + existing.trainingOfferId + '"');
+            return existing;
         }
+
+        const training = await precondition(this);
         training.trainingProcessStatus = TrainingProcessStatus.InProgress;
         await training.save();
+        return await Training.getOne(trainingId);
     }
 
     @Invokable()
@@ -212,9 +252,10 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
         }
     }
 
-    private checkThatTrainingProcessIsInStatus(training: Training, expectedStatus: TrainingProcessStatus) {
+    private checkThatTrainingProcessIsInStatus(training: Training, expectedStatus: TrainingProcessStatus,
+                                               errorMessage: string = `training must be in the status "${expectedStatus}"`) {
         if (training.trainingProcessStatus !== expectedStatus) {
-            throw new Error(`training must be in the status "${expectedStatus}"`);
+            throw new Error(errorMessage);
         }
     }
 }
