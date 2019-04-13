@@ -23,30 +23,50 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
 
 
     @Invokable()
-    public async submitTrainingApplication(@Param(yup.string()) trainingId: string) {
-        async function  preconditions(self: any): Promise<Training> {
-            const existing = await self.checkThatTrainingExistWithId(trainingId);
+    public async submitTrainingApplication(@Param(yup.string()) trainingId: string): Promise<Training> {
+        async function preconditions(self: TrainingController): Promise<Training> {
+            const existing = await self.checkThatTrainingExistWithId(trainingId, `cannot submit an application for non existing training with the id: "${trainingId}"`);
             await self.checkThatTrainingIsNotClosed(existing);
             await self.checkThatTrainingProcessIsInStatus(existing, TrainingProcessStatus.NotSubmitted);
             await self.checkThatCandidateIsValid(existing.candidateId,
-                `can't submit the training application because it it linked to a closed candidate: "${existing.candidateId}"`);
+                'cannot submit the an application for the training with id: "' + existing.id + '" because it' +
+                ' is linked to a closed candidate with id: "' + existing.candidateId + '"');
             await self.checkThatTrainingOfferIsValid(existing.trainingOfferId,
-                `can\'t submit the training application because it it linked to a closed training offer: "${existing.trainingOfferId}"`);
+                'cannot submit the an application for the training with id: "' + existing.id + '" because it' +
+                ' is linked to a closed training offer with id: "' + existing.trainingOfferId + '"');
+
             return existing;
         }
+
         const training = await preconditions(this);
         training.trainingProcessStatus = TrainingProcessStatus.Submitted;
         await training.save();
+        return await Training.getOne(trainingId);
+
     }
 
 
     @Invokable()
-    public async acceptApplication(@Param(Training) training: Training) {
-        if (training.trainingProcessStatus !== TrainingProcessStatus.Submitted) {
-            throw new Error("training must be in the status Submitted");
+    public async acceptApplication(@Param(yup.string()) trainingId: string): Promise<Training> {
+        async function precondition(self: TrainingController): Promise<Training> {
+            const existing = await self.checkThatTrainingExistWithId(trainingId, `cannot accept an application for non existing training with the id: "${trainingId}"`);
+            await self.checkThatTrainingIsNotClosed(existing,
+                `cannot accept an application for a closed training with the id "${trainingId}"`);
+            await self.checkThatTrainingProcessIsInStatus(existing, TrainingProcessStatus.Submitted);
+            await self.checkThatCandidateIsValid(existing.candidateId,
+                'cannot accept an application for the training with the id: "' + existing.id + '" because it ' +
+                'is linked to a closed candidate with the id: "' + existing.candidateId + '"');
+            await self.checkThatTrainingOfferIsValid(existing.trainingOfferId,
+                'cannot accept an application for the training with the id: "' + existing.id + '" because it ' +
+                'is linked to a closed training offer with the id: "' + existing.trainingOfferId + '"');
+
+            return existing;
         }
+
+        const training = await precondition(this);
         training.trainingProcessStatus = TrainingProcessStatus.Accepted;
         await training.save();
+        return await Training.getOne(trainingId);
     }
 
     @Invokable()
@@ -110,11 +130,12 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
     }
 
     @Invokable()
-    public async closeTraining(@Param(yup.string()) trainingId: string) {
+    public async closeTraining(@Param(yup.string()) trainingId: string): Promise<Training> {
         let existing = await this.checkThatTrainingExistWithId(trainingId);
         this.checkThatTrainingIsNotClosed(existing);
         existing.status = TrainingAppLifecycleStatus.Closed;
         await existing.save();
+        return Training.getOne(trainingId);
     }
 
     /**
@@ -162,17 +183,18 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
         }
     }
 
-    private async checkThatTrainingExistWithId(trainingId: string): Promise<Training> {
+    private async checkThatTrainingExistWithId(trainingId: string, errorMessage: string = `no existing training found with the id: "${trainingId}"`): Promise<Training> {
         const existing = await Training.getOne(trainingId);
         if (existing && existing.id) {
             return existing;
         }
-        throw new Error(`no existing training found with the id: "${trainingId}"`);
+        throw new Error(errorMessage);
     }
 
-    private checkThatTrainingIsNotClosed(training: Training) {
+    private checkThatTrainingIsNotClosed(training: Training,
+                                         errorMessage: string = `the training with the id "${training.id}" is not expected to be closed`) {
         if (training.isClosed()) {
-            throw new Error(`the training with the id "${training.id}" is not expected to be closed`);
+            throw new Error(errorMessage);
         }
     }
 

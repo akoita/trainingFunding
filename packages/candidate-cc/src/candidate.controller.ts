@@ -37,7 +37,7 @@ export class CandidateController extends ConvectorController<ChaincodeTx> {
     }
 
     @Invokable()
-    public async disableCandidate(@Param(yup.string()) candidateId: string) {
+    public async disableCandidate(@Param(yup.string()) candidateId: string): Promise<Candidate> {
         const candidate = await Candidate.getOne(candidateId);
         if (!candidate || !candidate.id) {
             throw new Error('no existing candidate found with the id: ' + candidateId)
@@ -47,5 +47,6 @@ export class CandidateController extends ConvectorController<ChaincodeTx> {
         }
         candidate.status = TrainingAppLifecycleStatus.Closed;
         await candidate.save();
+        return await Candidate.getOne(candidateId);
     }
 }
