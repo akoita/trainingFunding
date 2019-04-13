@@ -128,21 +128,55 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
     }
 
     @Invokable()
-    public async certifyCandidate(@Param(Training) training: Training) {
-        if (training.trainingProcessStatus !== TrainingProcessStatus.InProgress) {
-            throw new Error("training must be in the status InProgress");
+    public async certifyTraining(@Param(yup.string()) trainingId: string): Promise<Training> {
+        async function precondition(self: TrainingController): Promise<Training> {
+            const existing = await self.checkThatTrainingExistWithId(trainingId,
+                `cannot certify a non existing training with the id: "${trainingId}"`);
+            await self.checkThatTrainingIsNotClosed(existing,
+                `cannot certify a closed training with the id "${trainingId}"`);
+            await self.checkThatTrainingProcessIsInStatus(existing, TrainingProcessStatus.InProgress,
+                'cannot certify the training with the id: "' + existing.id +
+                '" because it\'s process is expected to be "' + TrainingProcessStatus.InProgress + '" instead of "'
+                + existing.trainingProcessStatus + '"');
+            await self.checkThatCandidateIsValid(existing.candidateId,
+                'cannot certify the training with the id: "' + existing.id + '" because it ' +
+                'is linked to a closed candidate with the id: "' + existing.candidateId + '"');
+            await self.checkThatTrainingOfferIsValid(existing.trainingOfferId,
+                'cannot certify the training with the id: "' + existing.id + '" because it ' +
+                'is linked to a closed training offer with the id: "' + existing.trainingOfferId + '"');
+            return existing;
         }
+
+        const training = await precondition(this);
         training.trainingProcessStatus = TrainingProcessStatus.Succeeded;
         await training.save();
+        return await Training.getOne(trainingId);
     }
 
     @Invokable()
-    public async failCandidate(@Param(Training) training: Training) {
-        if (training.trainingProcessStatus !== TrainingProcessStatus.InProgress) {
-            throw new Error("training must be in the status InProgress");
+    public async failTraining(@Param(yup.string()) trainingId: string): Promise<Training> {
+        async function precondition(self: TrainingController): Promise<Training> {
+            const existing = await self.checkThatTrainingExistWithId(trainingId,
+                `cannot fail a non existing training with the id: "${trainingId}"`);
+            await self.checkThatTrainingIsNotClosed(existing,
+                `cannot fail a closed training with the id "${trainingId}"`);
+            await self.checkThatTrainingProcessIsInStatus(existing, TrainingProcessStatus.InProgress,
+                'cannot fail the training with the id: "' + existing.id +
+                '" because it\'s process is expected to be "' + TrainingProcessStatus.InProgress + '" instead of "'
+                + existing.trainingProcessStatus + '"');
+            await self.checkThatCandidateIsValid(existing.candidateId,
+                'cannot fail the training with the id: "' + existing.id + '" because it ' +
+                'is linked to a closed candidate with the id: "' + existing.candidateId + '"');
+            await self.checkThatTrainingOfferIsValid(existing.trainingOfferId,
+                'cannot fail the training with the id: "' + existing.id + '" because it ' +
+                'is linked to a closed training offer with the id: "' + existing.trainingOfferId + '"');
+            return existing;
         }
+
+        const training = await precondition(this);
         training.trainingProcessStatus = TrainingProcessStatus.Failed;
         await training.save();
+        return await Training.getOne(trainingId);
     }
 
     @Invokable()
