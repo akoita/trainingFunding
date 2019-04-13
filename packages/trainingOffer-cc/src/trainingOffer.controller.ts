@@ -15,7 +15,7 @@ export class TrainingOfferController extends ConvectorController<ChaincodeTx> {
     }
 
     @Invokable()
-    public async closeTrainingOffer(@Param(yup.string()) trainingOfferId: string) {
+    public async closeTrainingOffer(@Param(yup.string()) trainingOfferId: string): Promise<TrainingOffer> {
         const trainingOffer = await TrainingOffer.getOne(trainingOfferId);
         if (!trainingOffer || !trainingOffer.id) {
             throw new Error("no existing training offer found with the id: " + trainingOfferId);
@@ -25,6 +25,7 @@ export class TrainingOfferController extends ConvectorController<ChaincodeTx> {
         }
         trainingOffer.status = TrainingAppLifecycleStatus.Closed;
         await trainingOffer.save();
+        return await TrainingOffer.getOne(trainingOffer.id);
     }
 
     @Invokable()
