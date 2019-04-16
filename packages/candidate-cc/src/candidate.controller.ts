@@ -14,6 +14,16 @@ export class CandidateController extends ConvectorController<ChaincodeTx> {
         await candidate.save();
     }
 
+
+    @Invokable()
+    public async get(@Param(yup.string()) candidateId: string): Promise<Candidate> {
+        const candidate = await Candidate.getOne(candidateId);
+        if(!candidate || !candidate.id){
+            throw new Error(`no candidate found with the id: "${candidateId}"`);
+        }
+        return candidate;
+    }
+
     @Invokable()
     public async listCandidates(): Promise<Candidate[]> {
         debugger;

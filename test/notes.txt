@@ -1,10 +1,10 @@
-export MODEL1='{"type":"io.worldsibu.candidate","id":"9fff2e01-38c2-46f2-a25b-6902d18fde79","firstName":"Aboubakar","lastName":"Koïta","created":1554525542493,"modified":1554525542493,"status":"Open"}'
+export MODEL1='{"type":"io.worldsibu.candidate","id":"1m","firstName":"Aboubakar","lastName":"Koïta","created":1554525542493,"modified":1554525542493,"status":"Open"}'
 
-export MODEL2='{"type":"io.worldsibu.candidate","id":"6e96cefb-4727-46e8-a983-48937a5670df","firstName":"Soumaya","lastName":"Koïta","created":1554525542494,"modified":1554525542494,"status":"Open"}'
+export MODEL2='{"type":"io.worldsibu.candidate","id":"2m","firstName":"Soumaya","lastName":"Koïta","created":1554525542494,"modified":1554525542494,"status":"Open"}'
 
-export MODEL3='{"type":"io.worldsibu.candidate","id":"ba378c9d-d1ec-40f4-93c0-b65d9e2d4113","firstName":"Dede","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
+export MODEL3='{"type":"io.worldsibu.candidate","id":"3m","firstName":"Dede","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
 
-export MODEL4='{"type":"io.worldsibu.candidate","id":"bf196039-55a3-4bb3-8928-f54e1d538eeb","firstName":"Bafanta","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
+export MODEL4='{"type":"io.worldsibu.candidate","id":"4m","firstName":"Bafanta","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
 
 export function createCandidate() {
 hurl invoke candidate candidate_createCandidate "$MODEL1"
@@ -42,9 +42,46 @@ hurl invoke candidate candidate_createCandidate "$MODEL2"
 hurl invoke candidate candidate_createCandidate "$MODEL3"
 hurl invoke candidate candidate_createCandidate "$MODEL4"
 
+hurl invoke candidate candidate_get 1m
+
 hurl invoke candidate candidate_listCandidates
 
 hurl invoke candidate candidate_searchCandidate "Aboubakar"
 
 docker logs peer0.org1.hurley.lab  2>&1 | grep "CouchDB index"
+======================================= OLD Backend ===============================================
+
+npx lerna run compile --scope myapp
+
+npx lerna run dev --scope myapp --stream
+
+npx lerna add candidate-cc --scope myapp
+npx lerna add trainingOffer-cc --scope myapp
+npx lerna add training-cc --scope myapp
+
+npx lerna add @worldsibu/convector-platform-fabric --scope myapp
+
+npx lerna add @worldsibu/convector-storage-couchdb --scope myapp
+
+npx lerna add fabric-client --scope myapp
+
+npx lerna add fabric-ca-client --scope myapp
+
+npx lerna add @types/bytebuffer --scope myapp
+
+============================ Backend =========================================
+https://docs.worldsibu.com/article/95-tutorial-back-end
+mkdir -p packages/server/src
+touch packages/server/src/app.ts
+
+npx lerna add common-cc --scope server
+npx lerna add candidate-cc --scope server
+npx lerna add trainingOffer-cc --scope server
+npx lerna add training-cc --scope server
+
+npx lerna bootstrap
+
+npx lerna run start --scope server --stream
+
+npm run cc:start -- candidate
 
