@@ -48,3 +48,34 @@ hurl invoke candidate candidate_searchCandidate "Aboubakar"
 
 docker logs peer0.org1.hurley.lab  2>&1 | grep "CouchDB index"
 
+
+============================== Backend with loopback ===================================
+npm i -g @loopback/cli
+
+lb4 webapp
+
+npm i @loopback/build
+
+npm install @types/dotenv
+
+
+npx lerna add common-cc --scope webapp
+npx lerna add candidate-cc --scope webapp
+npx lerna add trainingOffer-cc --scope webapp
+npx lerna add training-cc --scope webapp
+
+npx lerna add @worldsibu/convector-platform-fabric --scope webapp
+
+npx lerna add @worldsibu/convector-storage-couchdb --scope webapp
+
+npx lerna add dotenv --scope webapp
+
+
+npx lerna bootstrap
+
+npx lerna run start --scope webapp --stream
+
+npx lerna run build --scope webapp
+
+
+lb4 controller
