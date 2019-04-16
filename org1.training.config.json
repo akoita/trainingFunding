@@ -12,6 +12,16 @@
       "name": "training-cc",
       "version": "file:./packages/training-cc",
       "controller": "TrainingController"
+    },
+    {
+      "name": "common-cc",
+      "version": "file:./packages/common-cc",
+      "controller": "CommonController"
+    },
+    {
+      "name": "trainingOffer-cc",
+      "version": "file:./packages/trainingOffer-cc",
+      "controller": "TrainingOfferController"
     }
   ],
   "policy": {
