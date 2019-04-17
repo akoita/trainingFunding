@@ -194,3 +194,5 @@ packages/**/dist
 packages/**/dist/**
 chaincode-*
 /packages/trainingOffer-cc/package-lock.json
+*.d.ts
+*.js.map
