@@ -65,9 +65,8 @@ npx lerna add trainingOffer-cc --scope webapp
 npx lerna add training-cc --scope webapp
 
 npx lerna add @worldsibu/convector-platform-fabric --scope webapp
-
 npx lerna add @worldsibu/convector-storage-couchdb --scope webapp
-
+npx lerna add node-couchdb --scope webapp
 npx lerna add dotenv --scope webapp
 
 
@@ -79,3 +78,17 @@ npx lerna run build --scope webapp
 
 
 lb4 controller
+
+npm install pm2 -g
+
+pm2 completion install
+
+pm2 init
+
+npm install pm2 --save
+
+pm2 restart all
+
+pm2 stop  all
+
+pm2 logs
