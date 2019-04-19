@@ -7,6 +7,7 @@ import {TrainingAppLifecycleStatus} from 'common-cc';
 
 @Controller('candidate')
 export class CandidateController extends ConvectorController<ChaincodeTx> {
+
     @Invokable()
     public async createCandidate(@Param(Candidate) candidate: Candidate) {
         debugger;
@@ -14,8 +15,9 @@ export class CandidateController extends ConvectorController<ChaincodeTx> {
         await candidate.save();
     }
 
+
     @Invokable()
-    public async get(@Param(yup.string()) candidateId: string): Promise<Candidate> {
+    public async getCandidateById(@Param(yup.string())candidateId: string): Promise<Candidate> {
         const candidate = await Candidate.getOne(candidateId);
         if (!candidate || !candidate.id) {
             throw new Error(`no candidate found with the id: "${candidateId}"`);
@@ -31,7 +33,9 @@ export class CandidateController extends ConvectorController<ChaincodeTx> {
     }
 
     @Invokable()
-    public async searchCandidate(@Param(yup.string()) namePart: string): Promise<Candidate[]> {
+    public async searchCandidate(@Param(yup.string())namePart: string
+    ):
+        Promise<Candidate[]> {
         debugger;
         const queryObject = {
             "selector": {
@@ -45,13 +49,13 @@ export class CandidateController extends ConvectorController<ChaincodeTx> {
         const candidates = await Candidate.query(Candidate, JSON.stringify(queryObject));
         if (Array.isArray(candidates)) {
             return candidates;
-        }else {
+        } else {
             return [candidates];
         }
     }
 
     @Invokable()
-    public async disableCandidate(@Param(yup.string()) candidateId: string): Promise<Candidate> {
+    public async disableCandidate(@Param(yup.string()) candidateId: string) {
         const candidate = await Candidate.getOne(candidateId);
         if (!candidate || !candidate.id) {
             throw new Error('no existing candidate found with the id: ' + candidateId)
@@ -61,6 +65,5 @@ export class CandidateController extends ConvectorController<ChaincodeTx> {
         }
         candidate.status = TrainingAppLifecycleStatus.Closed;
         await candidate.save();
-        return await Candidate.getOne(candidateId);
     }
 }

@@ -21,9 +21,18 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
         await training.save();
     }
 
+    @Invokable()
+    public async getTrainingById(@Param(yup.string()) trainingId: string): Promise<Training> {
+        const training = await Training.getOne(trainingId);
+        if (!training || !training.id) {
+            throw new Error(`no training found with the id: "${trainingId}"`);
+        }
+        return training;
+    }
+
 
     @Invokable()
-    public async closeTraining(@Param(yup.string()) trainingId: string): Promise<Training> {
+    public async closeTraining(@Param(yup.string()) trainingId: string) {
         async function preconditions(self: TrainingController) {
             let existing = await self.checkThatTrainingExistWithId(trainingId,
                 `cannot close a non existing training with the id: "${trainingId}"`);
@@ -35,11 +44,10 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
 
         const existing = await preconditions(this);
         await existing.save();
-        return Training.getOne(trainingId);
     }
 
     @Invokable()
-    public async submitTrainingApplication(@Param(yup.string()) trainingId: string): Promise<Training> {
+    public async submitTrainingApplication(@Param(yup.string()) trainingId: string) {
         async function preconditions(self: TrainingController): Promise<Training> {
             const existing = await self.checkThatTrainingExistWithId(trainingId, `cannot submit an application for non existing training with the id: "${trainingId}"`);
             await self.checkThatTrainingIsNotClosed(existing);
@@ -57,13 +65,11 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
         const training = await preconditions(this);
         training.trainingProcessStatus = TrainingProcessStatus.Submitted;
         await training.save();
-        return await Training.getOne(trainingId);
-
     }
 
 
     @Invokable()
-    public async acceptApplication(@Param(yup.string()) trainingId: string): Promise<Training> {
+    public async acceptApplication(@Param(yup.string()) trainingId: string) {
         async function precondition(self: TrainingController): Promise<Training> {
             const existing = await self.checkThatTrainingExistWithId(trainingId,
                 `cannot accept an application for non existing training with the id: "${trainingId}"`);
@@ -87,11 +93,10 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
         const training = await precondition(this);
         training.trainingProcessStatus = TrainingProcessStatus.Accepted;
         await training.save();
-        return await Training.getOne(trainingId);
     }
 
     @Invokable()
-    public async fundTraining(@Param(yup.string())trainingId: string): Promise<Training> {
+    public async fundTraining(@Param(yup.string())trainingId: string) {
         async function precondition(self: TrainingController): Promise<Training> {
             const existing = await self.checkThatTrainingExistWithId(trainingId,
                 `cannot fund a non existing training with the id: "${trainingId}"`);
@@ -113,11 +118,10 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
         const training = await precondition(this);
         training.trainingProcessStatus = TrainingProcessStatus.Funded;
         await training.save();
-        return await Training.getOne(trainingId);
     }
 
     @Invokable()
-    public async startTraining(@Param(yup.string()) trainingId: string): Promise<Training> {
+    public async startTraining(@Param(yup.string()) trainingId: string) {
         async function precondition(self: TrainingController): Promise<Training> {
             const existing = await self.checkThatTrainingExistWithId(trainingId,
                 `cannot start a non existing training with the id: "${trainingId}"`);
@@ -140,11 +144,10 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
         const training = await precondition(this);
         training.trainingProcessStatus = TrainingProcessStatus.InProgress;
         await training.save();
-        return await Training.getOne(trainingId);
     }
 
     @Invokable()
-    public async certifyTraining(@Param(yup.string()) trainingId: string): Promise<Training> {
+    public async certifyTraining(@Param(yup.string()) trainingId: string) {
         async function precondition(self: TrainingController): Promise<Training> {
             const existing = await self.checkThatTrainingExistWithId(trainingId,
                 `cannot certify a non existing training with the id: "${trainingId}"`);
@@ -166,11 +169,10 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
         const training = await precondition(this);
         training.trainingProcessStatus = TrainingProcessStatus.Succeeded;
         await training.save();
-        return await Training.getOne(trainingId);
     }
 
     @Invokable()
-    public async failTraining(@Param(yup.string()) trainingId: string): Promise<Training> {
+    public async failTraining(@Param(yup.string()) trainingId: string) {
         async function precondition(self: TrainingController): Promise<Training> {
             const existing = await self.checkThatTrainingExistWithId(trainingId,
                 `cannot fail a non existing training with the id: "${trainingId}"`);
@@ -192,7 +194,6 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
         const training = await precondition(this);
         training.trainingProcessStatus = TrainingProcessStatus.Failed;
         await training.save();
-        return await Training.getOne(trainingId);
     }
 
 

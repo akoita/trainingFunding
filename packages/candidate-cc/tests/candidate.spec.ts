@@ -42,7 +42,7 @@ describe('Candidate', () => {
             lastName: 'Koïta',
             status: TrainingAppLifecycleStatus.Open
 
-        })
+        });
         juli = Candidate.build({
             id: uuid(),
             created: Date.now(),
@@ -51,7 +51,7 @@ describe('Candidate', () => {
             lastName: 'Koïta',
             status: TrainingAppLifecycleStatus.Open
 
-        })
+        });
         itachi = Candidate.build({
             id: uuid(),
             created: Date.now(),

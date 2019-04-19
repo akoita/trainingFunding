@@ -348,7 +348,8 @@ describe('Training', () => {
         expect(justSavedModel).to.be.deep.eq(abouBlockchainTraining);
         expect(justSavedModel.status).to.be.equal(TrainingAppLifecycleStatus.Open);
 
-        const closed = await trainingCtrl.closeTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.closeTraining(abouBlockchainTraining.id);
+        const closed = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(closed.id).to.be.equal(abouBlockchainTraining.id);
         expect(closed.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
@@ -368,7 +369,8 @@ describe('Training', () => {
         expect(justSavedModel).to.be.deep.eq(abouBlockchainTraining);
         expect(justSavedModel.status).to.be.equal(TrainingAppLifecycleStatus.Open);
 
-        const closed = await trainingCtrl.closeTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.closeTraining(abouBlockchainTraining.id);
+        const closed = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(closed.id).to.be.equal(abouBlockchainTraining.id);
         expect(closed.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
@@ -385,7 +387,9 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
 
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
@@ -397,8 +401,9 @@ describe('Training', () => {
         await trainingOfferCtrl.createTrainingOffer(blockchainOffer);
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const closed = await trainingCtrl.closeTraining(abouBlockchainTraining.id).then(result => new Training(result));
-        ;
+        await trainingCtrl.closeTraining(abouBlockchainTraining.id);
+
+        const closed = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
 
         expect(closed.id).to.be.equal(abouBlockchainTraining.id);
         expect(closed.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
@@ -421,8 +426,8 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const closedCandidate = await candidateCtrl.disableCandidate(abou.id).then(result => new Candidate(result));
-        ;
+        await candidateCtrl.disableCandidate(abou.id);
+        const closedCandidate = await candidateCtrl.getCandidateById(abou.id).then(result => new Candidate(result));
         expect(closedCandidate.id).to.be.equal(abou.id);
         expect(closedCandidate.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
@@ -438,8 +443,8 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const trainingOfferClosed = await trainingOfferCtrl.closeTrainingOffer(blockchainOffer.id).then(result => new TrainingOffer(result));
-        ;
+        await trainingOfferCtrl.closeTrainingOffer(blockchainOffer.id);
+        const trainingOfferClosed = await trainingOfferCtrl.getTrainingOfferById(blockchainOffer.id).then(result => new TrainingOffer(result));
         expect(trainingOfferClosed.id).to.be.equal(blockchainOffer.id);
         expect(trainingOfferClosed.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
@@ -459,11 +464,13 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const accepted = await trainingCtrl.acceptApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
 
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
@@ -491,7 +498,8 @@ describe('Training', () => {
         await trainingOfferCtrl.createTrainingOffer(blockchainOffer);
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const closed = await trainingCtrl.closeTraining(abouBlockchainTraining.id).then(result => new Training((result)));
+        await trainingCtrl.closeTraining(abouBlockchainTraining.id);
+        const closed = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training((result)));
 
         expect(closed.id).to.be.equal(abouBlockchainTraining.id);
         expect(closed.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
@@ -514,11 +522,13 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const closedCandidate = await candidateCtrl.disableCandidate(abou.id).then(result => new Candidate(result));
+        await candidateCtrl.disableCandidate(abou.id);
+        const closedCandidate = await candidateCtrl.getCandidateById(abou.id).then(result => new Candidate(result));
         expect(closedCandidate.id).to.be.equal(abou.id);
         expect(closedCandidate.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
@@ -534,11 +544,13 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const closedTrainingOffer = await trainingOfferCtrl.closeTrainingOffer(blockchainOffer.id).then(result => new TrainingOffer(result));
+        await trainingOfferCtrl.closeTrainingOffer(blockchainOffer.id);
+        const closedTrainingOffer = await trainingOfferCtrl.getTrainingOfferById(blockchainOffer.id).then(result => new TrainingOffer(result));
         expect(closedTrainingOffer.id).to.be.equal(blockchainOffer.id);
         expect(closedTrainingOffer.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
@@ -557,15 +569,18 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const accepted = await trainingCtrl.acceptApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        const funded = await trainingCtrl.fundTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
 
@@ -592,7 +607,8 @@ describe('Training', () => {
         await trainingOfferCtrl.createTrainingOffer(blockchainOffer);
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const closed = await trainingCtrl.closeTraining(abouBlockchainTraining.id).then(result => new Training((result)));
+        await trainingCtrl.closeTraining(abouBlockchainTraining.id);
+        const closed = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training((result)));
 
         expect(closed.id).to.be.equal(abouBlockchainTraining.id);
         expect(closed.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
@@ -615,15 +631,18 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const accepted = await trainingCtrl.acceptApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        const closedCandidate = await candidateCtrl.disableCandidate(abou.id).then(result => new Candidate(result));
+        await candidateCtrl.disableCandidate(abou.id);
+        const closedCandidate = await candidateCtrl.getCandidateById(abou.id).then(result => new Candidate(result));
         expect(closedCandidate.id).to.be.equal(abou.id);
         expect(closedCandidate.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
@@ -639,15 +658,18 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const accepted = await trainingCtrl.acceptApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        const closedTrainingOffer = await trainingOfferCtrl.closeTrainingOffer(blockchainOffer.id).then(result => new TrainingOffer(result));
+        await trainingOfferCtrl.closeTrainingOffer(blockchainOffer.id);
+        const closedTrainingOffer = await trainingOfferCtrl.getTrainingOfferById(blockchainOffer.id).then(result => new TrainingOffer(result));
         expect(closedTrainingOffer.id).to.be.equal(blockchainOffer.id);
         expect(closedTrainingOffer.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
@@ -666,19 +688,23 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const accepted = await trainingCtrl.acceptApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        const funded = await trainingCtrl.fundTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
 
-        const started = await trainingCtrl.startTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.startTraining(abouBlockchainTraining.id);
+        const started = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(started.id).to.equal(abouBlockchainTraining.id);
         expect(started.trainingProcessStatus).to.equal(TrainingProcessStatus.InProgress);
 
@@ -691,19 +717,23 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const accepted = await trainingCtrl.acceptApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        const funded = await trainingCtrl.fundTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
 
-        const closed = await trainingCtrl.closeTraining(abouBlockchainTraining.id).then(result => new Training((result)));
+        await trainingCtrl.closeTraining(abouBlockchainTraining.id);
+        const closed = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training((result)));
         expect(closed.id).to.be.equal(abouBlockchainTraining.id);
         expect(closed.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
@@ -738,19 +768,23 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const accepted = await trainingCtrl.acceptApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        const funded = await trainingCtrl.fundTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
 
-        const closedCandidate = await candidateCtrl.disableCandidate(abou.id).then(result => new Candidate(result));
+        await candidateCtrl.disableCandidate(abou.id);
+        const closedCandidate = await candidateCtrl.getCandidateById(abou.id).then(result => new Candidate(result));
         expect(closedCandidate.id).to.be.equal(abou.id);
         expect(closedCandidate.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
@@ -766,19 +800,23 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const accepted = await trainingCtrl.acceptApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        const funded = await trainingCtrl.fundTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
 
-        const closedTrainingOffer = await trainingOfferCtrl.closeTrainingOffer(blockchainOffer.id).then(result => new TrainingOffer(result));
+        await trainingOfferCtrl.closeTrainingOffer(blockchainOffer.id);
+        const closedTrainingOffer = await trainingOfferCtrl.getTrainingOfferById(blockchainOffer.id).then(result => new TrainingOffer(result));
         expect(closedTrainingOffer.id).to.be.equal(blockchainOffer.id);
         expect(closedTrainingOffer.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
@@ -797,23 +835,29 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
+
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const accepted = await trainingCtrl.acceptApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        const funded = await trainingCtrl.fundTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
 
-        const started = await trainingCtrl.startTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.startTraining(abouBlockchainTraining.id);
+        const started = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(started.id).to.equal(abouBlockchainTraining.id);
         expect(started.trainingProcessStatus).to.equal(TrainingProcessStatus.InProgress);
 
-        const certified = await trainingCtrl.certifyTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.certifyTraining(abouBlockchainTraining.id);
+        const certified = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(certified.id).to.equal(abouBlockchainTraining.id);
         expect(certified.trainingProcessStatus).to.equal(TrainingProcessStatus.Succeeded);
 
@@ -826,23 +870,28 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const accepted = await trainingCtrl.acceptApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        const funded = await trainingCtrl.fundTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
 
-        const started = await trainingCtrl.startTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.startTraining(abouBlockchainTraining.id);
+        const started = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(started.id).to.equal(abouBlockchainTraining.id);
         expect(started.trainingProcessStatus).to.equal(TrainingProcessStatus.InProgress);
 
-        const closed = await trainingCtrl.closeTraining(abouBlockchainTraining.id).then(result => new Training((result)));
+        await trainingCtrl.closeTraining(abouBlockchainTraining.id);
+        const closed = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training((result)));
         expect(closed.id).to.be.equal(abouBlockchainTraining.id);
         expect(closed.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
@@ -878,23 +927,28 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const accepted = await trainingCtrl.acceptApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        const funded = await trainingCtrl.fundTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
 
-        const started = await trainingCtrl.startTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.startTraining(abouBlockchainTraining.id);
+        const started = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(started.id).to.equal(abouBlockchainTraining.id);
         expect(started.trainingProcessStatus).to.equal(TrainingProcessStatus.InProgress);
 
-        const closedCandidate = await candidateCtrl.disableCandidate(abou.id).then(result => new Candidate(result));
+        await candidateCtrl.disableCandidate(abou.id);
+        const closedCandidate = await candidateCtrl.getCandidateById(abou.id).then(result => new Candidate(result));
         expect(closedCandidate.id).to.be.equal(abou.id);
         expect(closedCandidate.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
@@ -910,23 +964,28 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const accepted = await trainingCtrl.acceptApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        const funded = await trainingCtrl.fundTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
 
-        const started = await trainingCtrl.startTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.startTraining(abouBlockchainTraining.id);
+        const started = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(started.id).to.equal(abouBlockchainTraining.id);
         expect(started.trainingProcessStatus).to.equal(TrainingProcessStatus.InProgress);
 
-        const closedTrainingOffer = await trainingOfferCtrl.closeTrainingOffer(blockchainOffer.id).then(result => new TrainingOffer(result));
+        await trainingOfferCtrl.closeTrainingOffer(blockchainOffer.id);
+        const closedTrainingOffer = await trainingOfferCtrl.getTrainingOfferById(blockchainOffer.id).then(result => new TrainingOffer(result));
         expect(closedTrainingOffer.id).to.be.equal(blockchainOffer.id);
         expect(closedTrainingOffer.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
@@ -945,23 +1004,28 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const accepted = await trainingCtrl.acceptApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        const funded = await trainingCtrl.fundTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
 
-        const started = await trainingCtrl.startTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.startTraining(abouBlockchainTraining.id);
+        const started = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(started.id).to.equal(abouBlockchainTraining.id);
         expect(started.trainingProcessStatus).to.equal(TrainingProcessStatus.InProgress);
 
-        const certified = await trainingCtrl.failTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.failTraining(abouBlockchainTraining.id);
+        const certified = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(certified.id).to.equal(abouBlockchainTraining.id);
         expect(certified.trainingProcessStatus).to.equal(TrainingProcessStatus.Failed);
 
@@ -974,23 +1038,28 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const accepted = await trainingCtrl.acceptApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        const funded = await trainingCtrl.fundTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
 
-        const started = await trainingCtrl.startTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.startTraining(abouBlockchainTraining.id);
+        const started = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(started.id).to.equal(abouBlockchainTraining.id);
         expect(started.trainingProcessStatus).to.equal(TrainingProcessStatus.InProgress);
 
-        const closed = await trainingCtrl.closeTraining(abouBlockchainTraining.id).then(result => new Training((result)));
+        await trainingCtrl.closeTraining(abouBlockchainTraining.id);
+        const closed = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training((result)));
         expect(closed.id).to.be.equal(abouBlockchainTraining.id);
         expect(closed.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
@@ -1026,23 +1095,28 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const accepted = await trainingCtrl.acceptApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        const funded = await trainingCtrl.fundTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
 
-        const started = await trainingCtrl.startTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.startTraining(abouBlockchainTraining.id);
+        const started = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(started.id).to.equal(abouBlockchainTraining.id);
         expect(started.trainingProcessStatus).to.equal(TrainingProcessStatus.InProgress);
 
-        const closedCandidate = await candidateCtrl.disableCandidate(abou.id).then(result => new Candidate(result));
+        await candidateCtrl.disableCandidate(abou.id);
+        const closedCandidate = await candidateCtrl.getCandidateById(abou.id).then(result => new Candidate(result));
         expect(closedCandidate.id).to.be.equal(abou.id);
         expect(closedCandidate.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
@@ -1058,23 +1132,28 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        const submitted = await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id);
+        const submitted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        const accepted = await trainingCtrl.acceptApplication(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        const funded = await trainingCtrl.fundTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
 
-        const started = await trainingCtrl.startTraining(abouBlockchainTraining.id).then(result => new Training(result));
+        await trainingCtrl.startTraining(abouBlockchainTraining.id);
+        const started = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(started.id).to.equal(abouBlockchainTraining.id);
         expect(started.trainingProcessStatus).to.equal(TrainingProcessStatus.InProgress);
 
-        const closedTrainingOffer = await trainingOfferCtrl.closeTrainingOffer(blockchainOffer.id).then(result => new TrainingOffer(result));
+        await trainingOfferCtrl.closeTrainingOffer(blockchainOffer.id);
+        const closedTrainingOffer = await trainingOfferCtrl.getTrainingOfferById(blockchainOffer.id).then(result => new TrainingOffer(result));
         expect(closedTrainingOffer.id).to.be.equal(blockchainOffer.id);
         expect(closedTrainingOffer.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
