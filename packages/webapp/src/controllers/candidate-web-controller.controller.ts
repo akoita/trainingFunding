@@ -4,7 +4,7 @@
 
 import {CandidateControllerBackEnd, InitServerIdentity} from '../convector';
 
-import {get, param,} from '@loopback/rest';
+import {get, param, post, requestBody} from '@loopback/rest';
 import {Candidate} from "candidate-cc";
 
 
@@ -12,6 +12,20 @@ InitServerIdentity();
 
 export class CandidateWebControllerController {
     constructor() {
+    }
+
+
+    @post('/candidate', {
+        responses: {
+            '200': {
+                description: 'Create a new Candidate',
+                content: {'application/json': {schema: {'x-ts-type': Candidate}}},
+            },
+        },
+    })
+    async createCandidate(@requestBody() candidate: Candidate): Promise<Candidate> {
+        return await CandidateControllerBackEnd.createCandidate(candidate);
+
     }
 
     @get('/candidate/{id}', {
@@ -23,7 +37,7 @@ export class CandidateWebControllerController {
         },
     })
     async getCandidate(@param.path.string('id') candidateId: string): Promise<Candidate> {
-        return await CandidateControllerBackEnd.get(candidateId);
+        return await CandidateControllerBackEnd.getCandidateById(candidateId);
     }
 
 
@@ -63,6 +77,18 @@ export class CandidateWebControllerController {
     })
     async searchCandidates(@param.path.string('search_term') searchTerm: string): Promise<Candidate[]> {
         return await CandidateControllerBackEnd.searchCandidate(searchTerm);
+    }
+
+    @post('/candidate/disable/{id}', {
+        responses: {
+            '200': {
+                description: 'disable the candidate',
+                content: {'application/json': {'x-ts-type': Candidate}},
+            },
+        },
+    })
+    async disableCandidate(@param.path.string('id') candidateId: string): Promise<Candidate> {
+        return await CandidateControllerBackEnd.disableCandidate(candidateId);
     }
 
 
