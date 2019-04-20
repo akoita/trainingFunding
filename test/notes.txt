@@ -3,10 +3,12 @@ export MODEL2='{"type":"io.worldsibu.candidate","id":"c2","firstName":"Soumaya",
 export MODEL3='{"type":"io.worldsibu.candidate","id":"c3","firstName":"Dede","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
 export MODEL4='{"type":"io.worldsibu.candidate","id":"c4","firstName":"Bafanta","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
 
-export TRAINING1='{id: "to1",  created: 1555717056861,  modified: 1555717056861,  status: "Open",  title: "Introduction to blockchain",  description: "An introduction training on blockchain technology",  domain: "SoftwareDevelopment",  level: "Intermediate"}'
-export TRAINING2='{id: "to2",  created: 1555717056865,  modified: 1555717056865,  status: "Open",  title: "Hyperledger Fabric blockchain",  description: "Mastering Hyperledger Fabric blockchain",  domain: "SoftwareDevelopment",  level: "Intermediate"}'
-export TRAINING3='{id: "to3",  created: 1555717056866,  modified: 1555717056866,  status: "Open",  title: "Build Microservice architecture",  description: "Learn what is the microservice architecture, and how to build it",  domain: "SoftwareDevelopment",  level: "Advanced"}'
-export TRAINING4='{id: "to4",  created: 1555717056867,  modified: 1555717056867,  status: "Open",  title: "Learning English",  description: "Basic level in english vocabulary and grammar",  domain: "General",  level: "Intermediate"}'
+export TRAINING1='{"id":"to1","type":"io.worldsibu.trainingOffer","title":"Introduction to blockchain","description":"An introduction training on blockchain technology","domain":"SoftwareDevelopment","level":"Intermediate","created":1555719374171,"modified":1555719374171,"status":"Open"}'
+export TRAINING2='{"id":"to2","type":"io.worldsibu.trainingOffer","title":"Hyperledger Fabric blockchain","description":"Mastering Hyperledger Fabric blockchain","domain":"SoftwareDevelopment","level":"Intermediate","created":1555719374175,"modified":1555719374175,"status":"Open"}'
+export TRAINING3='{"id":"to3","type":"io.worldsibu.trainingOffer","title":"Build Microservice architecture","description":"Learn what is the microservice architecture, and how to build it","domain":"SoftwareDevelopment","level":"Advanced","created":1555719374175,"modified":1555719374175,"status":"Open"}'
+export TRAINING4='{"id":"to4","type":"io.worldsibu.trainingOffer","title":"Learning English","description":"Basic level in english vocabulary and grammar","domain":"General","level":"Intermediate","created":1555719374176,"modified":1555719374176,"status":"Open"}'
+
+
 
 
 export function createCandidate() {
@@ -51,6 +53,27 @@ hurl invoke candidate candidate_searchCandidate "Aboubakar"
 
 docker logs peer0.org1.hurley.lab  2>&1 | grep "CouchDB index"
 
+
+
+================================================
+
+npm run cc:start -- trainingOffer
+
+hurl invoke trainingOffer trainingOffer_createTrainingOffer $TRAINING1"
+
+hurl invoke trainingOffer trainingOffer_createTrainingOffer
+
+hurl invoke trainingOffer trainingOffer_listTrainingOffers
+
+hurl invoke trainingOffer trainingOffer_searchTrainingOffersByTitleAndDescription block
+
+hurl invoke trainingOffer trainingOffer_searchTrainingOffersByDomain SoftwareDevelopment
+²
+hurl invoke trainingOffer trainingOffer_searchTrainingOffersByDomain General
+
+hurl invoke trainingOffer trainingOffer_searchTrainingOffersByDomainAndLevel SoftwareDevelopment Intermediate
+
+hurl invoke trainingOffer trainingOffer_searchTrainingOffersByDomainAndLevel SoftwareDevelopment Advanced
 
 ============================== Backend with loopback ===================================
 npm i -g @loopback/cli
@@ -98,3 +121,5 @@ pm2 restart all
 pm2 stop  all
 
 pm2 logs
+
+================================================
