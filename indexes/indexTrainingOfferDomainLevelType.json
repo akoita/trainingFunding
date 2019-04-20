@@ -1,0 +1,12 @@
+{
+  "index": {
+    "fields": [
+      "domain",
+      "level",
+      "type"
+    ]
+  },
+  "ddoc": "indexTrainingOfferDomainLevelpeDoc",
+  "name": "indexTrainingOfferDomainLevelType",
+  "type": "json"
+}

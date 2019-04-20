@@ -1,0 +1,11 @@
+{
+  "index": {
+    "fields": [
+      "title",
+      "type"
+    ]
+  },
+  "ddoc": "indexTrainingOfferTitleTypeDoc",
+  "name": "indexTrainingOfferTitleTypeType",
+  "type": "json"
+}
