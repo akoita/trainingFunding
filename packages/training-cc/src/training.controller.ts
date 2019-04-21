@@ -14,7 +14,7 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
     @Invokable()
     public async createTraining(@Param(Training)    training: Training) {
         async function preconditions(self: any) {
-            await self.checkNewTrainingState((training))
+            await self.checkNewTrainingState(training);
         }
 
         await preconditions(this);
