@@ -1,7 +1,7 @@
-export MODEL1='{"type":"io.worldsibu.candidate","id":"c1","firstName":"Aboubakar","lastName":"Koïta","created":1554525542493,"modified":1554525542493,"status":"Open"}'
-export MODEL2='{"type":"io.worldsibu.candidate","id":"c2","firstName":"Soumaya","lastName":"Koïta","created":1554525542494,"modified":1554525542494,"status":"Open"}'
-export MODEL3='{"type":"io.worldsibu.candidate","id":"c3","firstName":"Dede","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
-export MODEL4='{"type":"io.worldsibu.candidate","id":"c4","firstName":"Bafanta","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
+export CANDIDATE1='{"type":"io.worldsibu.candidate","id":"c1","firstName":"Aboubakar","lastName":"Koïta","created":1554525542493,"modified":1554525542493,"status":"Open"}'
+export CANDIDATE2='{"type":"io.worldsibu.candidate","id":"c2","firstName":"Soumaya","lastName":"Koïta","created":1554525542494,"modified":1554525542494,"status":"Open"}'
+export CANDIDATE3='{"type":"io.worldsibu.candidate","id":"c3","firstName":"Dede","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
+export CANDIDATE4='{"type":"io.worldsibu.candidate","id":"c4","firstName":"Bafanta","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
 
 
 export OTRAINING1='{"id":"to1","type":"io.worldsibu.trainingOffer","title":"Introduction to blockchain","description":"An introduction training on blockchain technology","domain":"SoftwareDevelopment","level":"Intermediate","created":1555719374171,"modified":1555719374171,"status":"Open"}'
@@ -9,11 +9,11 @@ export OTRAINING2='{"id":"to2","type":"io.worldsibu.trainingOffer","title":"Hype
 export OTRAINING3='{"id":"to3","type":"io.worldsibu.trainingOffer","title":"Build Microservice architecture","description":"Learn what is the microservice architecture, and how to build it","domain":"SoftwareDevelopment","level":"Advanced","created":1555719374175,"modified":1555719374175,"status":"Open"}'
 export OTRAINING4='{"id":"to4","type":"io.worldsibu.trainingOffer","title":"Learning English","description":"Basic level in english vocabulary and grammar","domain":"General","level":"Intermediate","created":1555719374176,"modified":1555719374176,"status":"Open"}'
 
-export TRAINING1='{"id":"t1","type":"io.worldsibu.training","trainingOfferId":"t01","candidateId":"c1","trainingProcessStatus":"NotSubmitted","created":1555771546985,"modified":1555771546985,"status":"Open"}'
-export TRAINING2='{"id":"t2","type":"io.worldsibu.training","trainingOfferId":"t03","candidateId":"c1","trainingProcessStatus":"NotSubmitted","created":1555771546985,"modified":1555771546985,"status":"Open"}'
-export TRAINING3='{"id":"t3","type":"io.worldsibu.training","trainingOfferId":"t01","candidateId":"c2","trainingProcessStatus":"NotSubmitted","created":1555771546982,"modified":1555771546982,"status":"Open"}'
-export TRAINING4='{"id":"t4","type":"io.worldsibu.training","trainingOfferId":"t02","candidateId":"c2","trainingProcessStatus":"NotSubmitted","created":1555771546983,"modified":1555771546983,"status":"Open"}'
-export TRAINING4='{"id":"t5","type":"io.worldsibu.training","trainingOfferId":"t03","candidateId":"c3","trainingProcessStatus":"NotSubmitted","created":1555771546983,"modified":1555771546983,"status":"Open"}'
+export TRAINING1='{"id":"t1","type":"io.worldsibu.training","trainingOfferId":"to1","candidateId":"c1","trainingProcessStatus":"NotSubmitted","created":1555771546985,"modified":1555771546985,"status":"Open"}'
+export TRAINING2='{"id":"t2","type":"io.worldsibu.training","trainingOfferId":"to3","candidateId":"c1","trainingProcessStatus":"NotSubmitted","created":1555771546985,"modified":1555771546985,"status":"Open"}'
+export TRAINING3='{"id":"t3","type":"io.worldsibu.training","trainingOfferId":"to1","candidateId":"c2","trainingProcessStatus":"NotSubmitted","created":1555771546982,"modified":1555771546982,"status":"Open"}'
+export TRAINING4='{"id":"t4","type":"io.worldsibu.training","trainingOfferId":"to2","candidateId":"c2","trainingProcessStatus":"NotSubmitted","created":1555771546983,"modified":1555771546983,"status":"Open"}'
+export TRAINING5='{"id":"t5","type":"io.worldsibu.training","trainingOfferId":"to3","candidateId":"c3","trainingProcessStatus":"NotSubmitted","created":1555771546983,"modified":1555771546983,"status":"Open"}'
 ==================================================================================
 
 npm run cc:start -- candidate
@@ -23,14 +23,17 @@ npm run cc:start -- trainingOffer
 npm run cc:start -- training
 
 ==============================================================
-hurl invoke candidate candidate_createCandidate "$MODEL1"
-hurl invoke candidate candidate_createCandidate "$MODEL2"
-hurl invoke candidate candidate_createCandidate "$MODEL3"
-hurl invoke candidate candidate_createCandidate "$MODEL4"
 
-hurl invoke candidate candidate_listCandidates
+hurl invoke training candidate_createCandidate "$CANDIDATE1"
+hurl invoke training candidate_createCandidate "$CANDIDATE2"
+hurl invoke training candidate_createCandidate "$CANDIDATE3"
+hurl invoke training candidate_createCandidate "$CANDIDATE4"
 
-hurl invoke candidate candidate_searchCandidate "Aboubakar"
+hurl invoke training candidate_listCandidates
+
+hurl invoke training candidate_getCandidateById c1
+
+hurl invoke training candidate_searchCandidate "Aboubakar"
 
 docker logs peer0.org1.hurley.lab  2>&1 | grep "CouchDB index"
 
@@ -38,32 +41,75 @@ docker logs peer0.org1.hurley.lab  2>&1 | grep "CouchDB index"
 
 npm run cc:start -- trainingOffer
 
-hurl invoke trainingOffer trainingOffer_createTrainingOffer "$TRAINING1"
+hurl invoke training trainingOffer_createTrainingOffer "$OTRAINING1"
+hurl invoke training trainingOffer_createTrainingOffer "$OTRAINING2"
+hurl invoke training trainingOffer_createTrainingOffer "$OTRAINING3"
+hurl invoke training trainingOffer_createTrainingOffer "$OTRAINING4"
 
 
-hurl invoke trainingOffer trainingOffer_createTrainingOffer
-
-hurl invoke trainingOffer trainingOffer_listTrainingOffers
-
-hurl invoke trainingOffer trainingOffer_searchTrainingOffersByTitleAndDescription block
-
-hurl invoke trainingOffer trainingOffer_searchTrainingOffersByDomain SoftwareDevelopment
-²
-hurl invoke trainingOffer trainingOffer_searchTrainingOffersByDomain General
-
-hurl invoke trainingOffer trainingOffer_searchTrainingOffersByDomainAndLevel SoftwareDevelopment Intermediate
-
-hurl invoke trainingOffer trainingOffer_searchTrainingOffersByDomainAndLevel SoftwareDevelopment Advanced
+hurl invoke training trainingOffer_listTrainingOffers
+            training
+hurl invoke training trainingOffer_searchTrainingOffersByTitleAndDescription block
+            training
+hurl invoke training trainingOffer_searchTrainingOffersByDomain SoftwareDevelopment
+²           training
+hurl invoke training trainingOffer_searchTrainingOffersByDomain General
+            training
+hurl invoke training trainingOffer_searchTrainingOffersByDomainAndLevel SoftwareDevelopment Intermediate
+            training
+hurl invoke training trainingOffer_searchTrainingOffersByDomainAndLevel SoftwareDevelopment Advanced
 
 ================================================================================================================
 
 hurl invoke training training_createTraining "$TRAINING1"
+hurl invoke training training_createTraining "$TRAINING2"
+hurl invoke training training_createTraining "$TRAINING3"
+hurl invoke training training_createTraining "$TRAINING4"
+hurl invoke training training_createTraining "$TRAINING5"
 
 hurl invoke training training_getTrainingById t1
 
-hurl invoke training training_getTrainingsByCandidatesIds "[c1, c2, c3]"
+hurl invoke training training_getTrainingsByCandidatesIds '["c1","c2","c3"]'
 
-hurl invoke training training_getTrainingsByProcessStatus "[NotSubmitted, Submitted]"
+hurl invoke training training_getTrainingsByProcessStatus '["NotSubmitted"]'
+
+hurl invoke training training_submitTrainingApplication t1
+
+hurl invoke training training_submitTrainingApplication t2
+
+hurl invoke training training_submitTrainingApplication t3
+
+hurl invoke training training_submitTrainingApplication t4
+
+hurl invoke training training_getTrainingsByProcessStatus '["Submitted"]'
+
+hurl invoke training training_getTrainingsByProcessStatus '["Accepted"]'
+hurl invoke training training_acceptApplication t4
+hurl invoke training training_acceptApplication t3
+hurl invoke training training_acceptApplication t2
+hurl invoke training training_getTrainingsByProcessStatus '["Accepted"]'
+
+hurl invoke training training_getTrainingsByProcessStatus '["Funded"]'
+hurl invoke training training_fundTraining t4
+hurl invoke training training_fundTraining t3
+hurl invoke training training_getTrainingsByProcessStatus '["Funded"]'
+
+hurl invoke training training_getTrainingsByProcessStatus '["InProgress"]'
+hurl invoke training training_startTraining t4
+hurl invoke training training_startTraining t3
+hurl invoke training training_getTrainingsByProcessStatus '["InProgress"]'
+
+hurl invoke training training_getTrainingsByProcessStatus '["Succeeded","Failed"]'
+hurl invoke training training_failTraining t4
+hurl invoke training training_certifyTraining t3
+hurl invoke training training_getTrainingsByProcessStatus '["Succeeded","Failed"]'
+
+hurl invoke training training_getTrainingById t1
+hurl invoke training training_closeTraining t1
+hurl invoke training training_getTrainingById t1
+
+
+===============================================================================================================
 
 
 =================================================================================================================================
