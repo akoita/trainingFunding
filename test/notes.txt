@@ -3,45 +3,26 @@ export MODEL2='{"type":"io.worldsibu.candidate","id":"c2","firstName":"Soumaya",
 export MODEL3='{"type":"io.worldsibu.candidate","id":"c3","firstName":"Dede","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
 export MODEL4='{"type":"io.worldsibu.candidate","id":"c4","firstName":"Bafanta","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
 
-export TRAINING1='{"id":"to1","type":"io.worldsibu.trainingOffer","title":"Introduction to blockchain","description":"An introduction training on blockchain technology","domain":"SoftwareDevelopment","level":"Intermediate","created":1555719374171,"modified":1555719374171,"status":"Open"}'
-export TRAINING2='{"id":"to2","type":"io.worldsibu.trainingOffer","title":"Hyperledger Fabric blockchain","description":"Mastering Hyperledger Fabric blockchain","domain":"SoftwareDevelopment","level":"Intermediate","created":1555719374175,"modified":1555719374175,"status":"Open"}'
-export TRAINING3='{"id":"to3","type":"io.worldsibu.trainingOffer","title":"Build Microservice architecture","description":"Learn what is the microservice architecture, and how to build it","domain":"SoftwareDevelopment","level":"Advanced","created":1555719374175,"modified":1555719374175,"status":"Open"}'
-export TRAINING4='{"id":"to4","type":"io.worldsibu.trainingOffer","title":"Learning English","description":"Basic level in english vocabulary and grammar","domain":"General","level":"Intermediate","created":1555719374176,"modified":1555719374176,"status":"Open"}'
 
+export OTRAINING1='{"id":"to1","type":"io.worldsibu.trainingOffer","title":"Introduction to blockchain","description":"An introduction training on blockchain technology","domain":"SoftwareDevelopment","level":"Intermediate","created":1555719374171,"modified":1555719374171,"status":"Open"}'
+export OTRAINING2='{"id":"to2","type":"io.worldsibu.trainingOffer","title":"Hyperledger Fabric blockchain","description":"Mastering Hyperledger Fabric blockchain","domain":"SoftwareDevelopment","level":"Intermediate","created":1555719374175,"modified":1555719374175,"status":"Open"}'
+export OTRAINING3='{"id":"to3","type":"io.worldsibu.trainingOffer","title":"Build Microservice architecture","description":"Learn what is the microservice architecture, and how to build it","domain":"SoftwareDevelopment","level":"Advanced","created":1555719374175,"modified":1555719374175,"status":"Open"}'
+export OTRAINING4='{"id":"to4","type":"io.worldsibu.trainingOffer","title":"Learning English","description":"Basic level in english vocabulary and grammar","domain":"General","level":"Intermediate","created":1555719374176,"modified":1555719374176,"status":"Open"}'
 
-
-
-export function createCandidate() {
-hurl invoke candidate candidate_createCandidate "$MODEL1"
-hurl invoke candidate candidate_createCandidate "$MODEL2"
-hurl invoke candidate candidate_createCandidate "$MODEL3"
-hurl invoke candidate candidate_createCandidate "$MODEL4"
-}
-
-
-hurl new
-
-npm run cc:package -- common org1
-
-npm run cc:start -- common org1
-
-npm run cc:package -- candidate org1
-
-npm run cc:install -- common
-
-npm run cc:install -- candidate
-
-npm run cc:install:debug -- candidate
+export TRAINING1='{"id":"t1","type":"io.worldsibu.training","trainingOfferId":"t01","candidateId":"c1","trainingProcessStatus":"NotSubmitted","created":1555771546985,"modified":1555771546985,"status":"Open"}'
+export TRAINING2='{"id":"t2","type":"io.worldsibu.training","trainingOfferId":"t03","candidateId":"c1","trainingProcessStatus":"NotSubmitted","created":1555771546985,"modified":1555771546985,"status":"Open"}'
+export TRAINING3='{"id":"t3","type":"io.worldsibu.training","trainingOfferId":"t01","candidateId":"c2","trainingProcessStatus":"NotSubmitted","created":1555771546982,"modified":1555771546982,"status":"Open"}'
+export TRAINING4='{"id":"t4","type":"io.worldsibu.training","trainingOfferId":"t02","candidateId":"c2","trainingProcessStatus":"NotSubmitted","created":1555771546983,"modified":1555771546983,"status":"Open"}'
+export TRAINING4='{"id":"t5","type":"io.worldsibu.training","trainingOfferId":"t03","candidateId":"c3","trainingProcessStatus":"NotSubmitted","created":1555771546983,"modified":1555771546983,"status":"Open"}'
+==================================================================================
 
 npm run cc:start -- candidate
 
-npm run cc:start:debug -- candidate org1
+npm run cc:start -- trainingOffer
 
-npm run cc:upgrade -- candidate 3
+npm run cc:start -- training
 
-
-chrome://inspect
-
+==============================================================
 hurl invoke candidate candidate_createCandidate "$MODEL1"
 hurl invoke candidate candidate_createCandidate "$MODEL2"
 hurl invoke candidate candidate_createCandidate "$MODEL3"
@@ -53,13 +34,12 @@ hurl invoke candidate candidate_searchCandidate "Aboubakar"
 
 docker logs peer0.org1.hurley.lab  2>&1 | grep "CouchDB index"
 
-
-
-================================================
+===========================================================
 
 npm run cc:start -- trainingOffer
 
-hurl invoke trainingOffer trainingOffer_createTrainingOffer $TRAINING1"
+hurl invoke trainingOffer trainingOffer_createTrainingOffer "$TRAINING1"
+
 
 hurl invoke trainingOffer trainingOffer_createTrainingOffer
 
@@ -75,7 +55,21 @@ hurl invoke trainingOffer trainingOffer_searchTrainingOffersByDomainAndLevel Sof
 
 hurl invoke trainingOffer trainingOffer_searchTrainingOffersByDomainAndLevel SoftwareDevelopment Advanced
 
+================================================================================================================
+
+hurl invoke training training_createTraining "$TRAINING1"
+
+hurl invoke training training_getTrainingById t1
+
+hurl invoke training training_getTrainingsByCandidatesIds "[c1, c2, c3]"
+
+hurl invoke training training_getTrainingsByProcessStatus "[NotSubmitted, Submitted]"
+
+
+=================================================================================================================================
 ============================== Backend with loopback ===================================
+===========================================================================================================================
+
 npm i -g @loopback/cli
 
 lb4 webapp
