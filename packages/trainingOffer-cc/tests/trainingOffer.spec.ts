@@ -126,13 +126,13 @@ describe('TrainingOffer', () => {
 
 
     it("should search the training offers by title or description", async () => {
-        let result = await trainingOfferCtrl.searchTrainingOffersByTitleAndDescription("blockchain");
+        let result = await trainingOfferCtrl.searchTrainingOffersByTitleOrDescription("blockchain");
         if (Array.isArray(result)) {
             expect(result).to.be.empty;
         }
 
         await trainingOfferCtrl.createTrainingOffer(blockchainOffer);
-        result = await trainingOfferCtrl.searchTrainingOffersByTitleAndDescription("blockchain");
+        result = await trainingOfferCtrl.searchTrainingOffersByTitleOrDescription("blockchain");
         if (Array.isArray(result)) {
             expect(result.map(model => {
                 return new TrainingOffer(model)
@@ -140,7 +140,7 @@ describe('TrainingOffer', () => {
         }
 
         await trainingOfferCtrl.createTrainingOffer(hyperledger);
-        result = await trainingOfferCtrl.searchTrainingOffersByTitleAndDescription("blockchain");
+        result = await trainingOfferCtrl.searchTrainingOffersByTitleOrDescription("blockchain");
         if (Array.isArray(result)) {
             expect(result.map(model => {
                 return new TrainingOffer(model)
@@ -148,20 +148,20 @@ describe('TrainingOffer', () => {
         }
 
         await trainingOfferCtrl.createTrainingOffer(microserviceOffer);
-        result = await trainingOfferCtrl.searchTrainingOffersByTitleAndDescription("Microservice");
+        result = await trainingOfferCtrl.searchTrainingOffersByTitleOrDescription("Microservice");
         if (Array.isArray(result)) {
             expect(result.map(model => {
                 return new TrainingOffer(model)
             })).to.have.same.deep.members([microserviceOffer]);
         }
 
-        result = await trainingOfferCtrl.searchTrainingOffersByTitleAndDescription("General");
+        result = await trainingOfferCtrl.searchTrainingOffersByTitleOrDescription("General");
         if (Array.isArray(result)) {
             expect(result).to.be.empty;
         }
 
         await trainingOfferCtrl.createTrainingOffer(englishOffer);
-        result = await trainingOfferCtrl.searchTrainingOffersByTitleAndDescription("english");
+        result = await trainingOfferCtrl.searchTrainingOffersByTitleOrDescription("english");
         if (Array.isArray(result)) {
             expect(result.map(model => {
                 return new TrainingOffer(model)

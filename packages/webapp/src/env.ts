@@ -3,7 +3,7 @@ dotenv.config();
 
 const homedir = require('os').homedir();
 
-export const chaincode = process.env.CHAINCODE || 'candidate';
+export const chaincode = process.env.CHAINCODE || 'training';
 export const channel = process.env.CHANNEL || 'ch1';
 
 // Automatically extract credentials by the user id
@@ -18,7 +18,7 @@ export const networkProfile = process.env.NETWORKPROFILE || `/${homedir}/hyperle
 export const port = process.env.PORT || 8000;
 
 // Default to common values
-export const couchDBView = process.env.COUCHDBVIEW || 'ch1_candidate';
+export const couchDBView = process.env.COUCHDBVIEW || 'ch1_training';
 export const couchDBProtocol = process.env.COUCHDB_PROTOCOL || 'http';
 export const couchDBHost = process.env.COUCHDB_HOST || 'localhost';
 export const couchDBPort = process.env.COUCHDB_PORT || 5084;

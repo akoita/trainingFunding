@@ -6,6 +6,7 @@ import {ClientFactory} from '@worldsibu/convector-core';
 
 import {Candidate, CandidateController} from 'candidate-cc';
 import {TrainingOfferController} from 'trainingOffer-cc';
+import {TrainingController} from "training-cc";
 
 const adapter = new FabricControllerAdapter({
     txTimeout: 300000,
@@ -20,6 +21,7 @@ const adapter = new FabricControllerAdapter({
 export const initAdapter = adapter.init();
 export const CandidateControllerBackEnd = ClientFactory(CandidateController, adapter);
 export const TrainingOfferControllerBackEnd = ClientFactory(TrainingOfferController, adapter);
+export const TrainingControllerBackEnd = ClientFactory(TrainingController, adapter);
 
 //#region Optional
 
@@ -38,7 +40,6 @@ export async function InitServerIdentity() {
         }
     } catch (ex) {
         console.log(JSON.stringify(ex));
-        throw new Error('no candidate found');
     }
 }
 

@@ -42,7 +42,7 @@ export class TrainingOfferController extends ConvectorController<ChaincodeTx> {
     }
 
     @Invokable()
-    public async searchTrainingOffersByTitleAndDescription(@Param(yup.string()) keyword: string): Promise<TrainingOffer[] | TrainingOffer> {
+    public async searchTrainingOffersByTitleOrDescription(@Param(yup.string()) keyword: string): Promise<TrainingOffer[]> {
         const queryObject = {
             "selector": {
                 $and: [
@@ -54,12 +54,15 @@ export class TrainingOfferController extends ConvectorController<ChaincodeTx> {
                 [{"title": "asc"}]
         };
         const trainingOffers = await TrainingOffer.query(TrainingOffer, JSON.stringify(queryObject));
-        return trainingOffers;
-
+        if (Array.isArray(trainingOffers)) {
+            return trainingOffers;
+        } else {
+            return [trainingOffers];
+        }
     }
 
     @Invokable()
-    public async searchTrainingOffersByDomain(@Param(yup.string().oneOf(Object.keys(Domain).map(k => Domain[k]))) domain: Domain): Promise<TrainingOffer[] | TrainingOffer> {
+    public async searchTrainingOffersByDomain(@Param(yup.string().oneOf(Object.keys(Domain).map(k => Domain[k]))) domain: Domain): Promise<TrainingOffer[]> {
         const queryObject = {
             "selector": {
                 $and: [
@@ -70,11 +73,15 @@ export class TrainingOfferController extends ConvectorController<ChaincodeTx> {
             "sort": [{"title": "asc"}]
         };
         const trainingOffers = await TrainingOffer.query(TrainingOffer, JSON.stringify(queryObject));
-        return trainingOffers;
+        if (Array.isArray(trainingOffers)) {
+            return trainingOffers;
+        } else {
+            return [trainingOffers];
+        }
     }
 
     @Invokable()
-    public async searchTrainingOffersByDomainAndLevel(@Param(yup.string().oneOf(Object.keys(Domain).map(k => Domain[k]))) domain: Domain, @Param(yup.string().oneOf(Object.keys(TrainingOfferLevel).map(k => TrainingOfferLevel[k]))) level: TrainingOfferLevel): Promise<TrainingOffer[] | TrainingOffer> {
+    public async searchTrainingOffersByDomainAndLevel(@Param(yup.string().oneOf(Object.keys(Domain).map(k => Domain[k]))) domain: Domain, @Param(yup.string().oneOf(Object.keys(TrainingOfferLevel).map(k => TrainingOfferLevel[k]))) level: TrainingOfferLevel): Promise<TrainingOffer[]> {
         const queryObject = {
             "selector": {
                 $and: [{"type": TrainingOffer.staticType},
@@ -85,7 +92,11 @@ export class TrainingOfferController extends ConvectorController<ChaincodeTx> {
                 [{"title": "asc"}]
         };
         const trainingOffers = await TrainingOffer.query(TrainingOffer, JSON.stringify(queryObject));
-        return trainingOffers;
+        if (Array.isArray(trainingOffers)) {
+            return trainingOffers;
+        } else {
+            return [trainingOffers];
+        }
     }
 
 }

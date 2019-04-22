@@ -15,55 +15,54 @@ export class CandidateWebControllerController {
     }
 
 
-    @post('/candidate', {
-        responses: {
-            '200': {
-                description: 'Create a new Candidate',
-                content: {'application/json': {schema: {'x-ts-type': Candidate}}},
-            },
-        },
+    @post('/candidate/create', {
+        description: 'Creates a new candidate',
+        responses: {}
     })
-    async createCandidate(@requestBody() candidate: Candidate): Promise<Candidate> {
-        return await CandidateControllerBackEnd.createCandidate(candidate);
+    async createCandidate(@requestBody() candidate: Candidate) {
+        await CandidateControllerBackEnd.createCandidate(candidate);
 
     }
 
-    @get('/candidate/{id}', {
+    @get('/candidate', {
+        description: 'Returns a Candidate by id',
         responses: {
             '200': {
-                description: 'Get a Candidate by id',
+                description: 'a Candidate',
                 content: {'application/json': {'x-ts-type': Candidate}},
             },
         },
     })
-    async getCandidate(@param.path.string('id') candidateId: string): Promise<Candidate> {
+    async getCandidate(@param.query.string('id') candidateId: string): Promise<Candidate> {
         return await CandidateControllerBackEnd.getCandidateById(candidateId);
     }
 
 
     @get('/candidates', {
+        description: 'Returns the list of all the Candidates',
         responses: {
             '200': {
-                description: 'Returns the list of all the Candidates',
+                description: 'list of all Candidates',
                 content: {
                     'application/json': {
                         schema: {
                             type: 'array',
                             items: {'x-ts-type': Candidate}
-                        },
-                    },
-                },
-            },
-        },
+                        }
+                    }
+                }
+            }
+        }
     })
     async allCandidates(): Promise<Candidate[]> {
         return await CandidateControllerBackEnd.listCandidates();
     }
 
-    @get('/candidates/{search_term}', {
+    @get('/candidates/search', {
+        description: 'Returns the list of the candidates whose names match the search term',
         responses: {
             '200': {
-                description: 'Returns the list of the candidates whose names match the search term',
+                description: 'list of Candidate',
                 content: {
                     'application/json': {
                         schema: {
@@ -75,20 +74,16 @@ export class CandidateWebControllerController {
             },
         },
     })
-    async searchCandidates(@param.path.string('search_term') searchTerm: string): Promise<Candidate[]> {
+    async searchCandidates(@param.query.string('search') searchTerm: string): Promise<Candidate[]> {
         return await CandidateControllerBackEnd.searchCandidate(searchTerm);
     }
 
-    @post('/candidate/disable/{id}', {
-        responses: {
-            '200': {
-                description: 'disable the candidate',
-                content: {'application/json': {'x-ts-type': Candidate}},
-            },
-        },
+    @post('/candidate/disable', {
+        description: 'Disable the candidate corresponding to the id',
+        responses: {}
     })
-    async disableCandidate(@param.path.string('id') candidateId: string): Promise<Candidate> {
-        return await CandidateControllerBackEnd.disableCandidate(candidateId);
+    async disableCandidate(@param.query.string('id') candidateId: string) {
+        await CandidateControllerBackEnd.disableCandidate(candidateId);
     }
 
 
