@@ -12,8 +12,12 @@ export const identityId = process.env.IDENTITYID || 'gov';
 export const identityName = process.env.IDENTITY || 'admin';
 export const identityOrg = process.env.ORG || 'org1';
 
-export const keyStore = process.env.KEYSTORE || `/${homedir}/hyperledger-fabric-network/.hfc-${identityOrg}`;
-export const networkProfile = process.env.NETWORKPROFILE || `/${homedir}/hyperledger-fabric-network/network-profiles/${identityOrg}.network-profile.yaml`;
+export const keyStore =
+  process.env.KEYSTORE ||
+  `/${homedir}/hyperledger-fabric-network/.hfc-${identityOrg}`;
+export const networkProfile =
+  process.env.NETWORKPROFILE ||
+  `/${homedir}/hyperledger-fabric-network/network-profiles/${identityOrg}.network-profile.yaml`;
 
 export const port = process.env.PORT || 8000;
 

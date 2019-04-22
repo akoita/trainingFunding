@@ -146,6 +146,8 @@ npx lerna run clean --scope webapp --stream; npx lerna run start --scope webapp 
 npx lerna run build --scope webapp
 
 
+npm run prettier:check -- --write
+
 lb4 controller
 
 npm install pm2 -g
