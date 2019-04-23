@@ -2,20 +2,20 @@
 
 // import {inject} from '@loopback/context';
 
-import {TrainingControllerBackEnd} from '../convector';
 import {get, param, post, requestBody} from '@loopback/rest';
-
-import {Training, TrainingProcessStatus} from 'training-cc';
+import {ConvectorControllerClient} from '@worldsibu/convector-core';
+import {Training, TrainingController, TrainingProcessStatus} from 'training-cc';
+import {inject} from '@loopback/context';
 
 export class TrainingWebControllerController {
-  constructor() {}
+  constructor(@inject('TrainingControllerBackEnd') private trainingFabricController: ConvectorControllerClient<TrainingController>) {}
 
   @post('/training/create', {
     description: 'Create a new training',
     responses: {},
   })
   public async createTraining(@requestBody() training: Training) {
-    await TrainingControllerBackEnd.createTraining(training);
+    await this.trainingFabricController.createTraining(training);
   }
 
   @get('/training', {
@@ -30,7 +30,7 @@ export class TrainingWebControllerController {
   public async getTrainingById(
     @param.query.string('id') trainingId: string,
   ): Promise<Training> {
-    return await TrainingControllerBackEnd.getTrainingById(trainingId);
+    return await this.trainingFabricController.getTrainingById(trainingId);
   }
 
   @post('training/close', {
@@ -38,7 +38,7 @@ export class TrainingWebControllerController {
     responses: {},
   })
   public async closeTraining(@param.query.string('id') trainingId: string) {
-    await TrainingControllerBackEnd.closeTraining(trainingId);
+    await this.trainingFabricController.closeTraining(trainingId);
   }
 
   @post('training/submitApplication', {
@@ -48,7 +48,7 @@ export class TrainingWebControllerController {
   public async submitTrainingApplication(
     @param.query.string('id') trainingId: string,
   ) {
-    await TrainingControllerBackEnd.submitTrainingApplication(trainingId);
+    await this.trainingFabricController.submitTrainingApplication(trainingId);
   }
 
   @post('training/acceptApplication', {
@@ -56,7 +56,7 @@ export class TrainingWebControllerController {
     responses: {},
   })
   public async acceptApplication(@param.query.string('id') trainingId: string) {
-    await TrainingControllerBackEnd.acceptApplication(trainingId);
+    await this.trainingFabricController.acceptApplication(trainingId);
   }
 
   @post('training/fund', {
@@ -64,7 +64,7 @@ export class TrainingWebControllerController {
     responses: {},
   })
   public async fundTraining(@param.query.string('id') trainingId: string) {
-    await TrainingControllerBackEnd.fundTraining(trainingId);
+    await this.trainingFabricController.fundTraining(trainingId);
   }
 
   @post('training/start', {
@@ -72,7 +72,7 @@ export class TrainingWebControllerController {
     responses: {},
   })
   public async startTraining(@param.query.string('id') trainingId: string) {
-    await TrainingControllerBackEnd.startTraining(trainingId);
+    await this.trainingFabricController.startTraining(trainingId);
   }
 
   @post('training/certifyTraining', {
@@ -80,7 +80,7 @@ export class TrainingWebControllerController {
     responses: {},
   })
   public async certifyTraining(@param.query.string('id') trainingId: string) {
-    await TrainingControllerBackEnd.certifyTraining(trainingId);
+    await this.trainingFabricController.certifyTraining(trainingId);
   }
 
   @post('training/failTraining', {
@@ -88,7 +88,7 @@ export class TrainingWebControllerController {
     responses: {},
   })
   public async failTraining(@param.query.string('id') trainingId: string) {
-    await TrainingControllerBackEnd.failTraining(trainingId);
+    await this.trainingFabricController.failTraining(trainingId);
   }
 
   @get('trainings/byCandidates', {
@@ -110,7 +110,7 @@ export class TrainingWebControllerController {
   public async getTrainingsByCandidatesIds(
     @param.array('ids', 'query', {type: 'string'}) candidatesIds: string[],
   ): Promise<Training[]> {
-    return await TrainingControllerBackEnd.getTrainingsByCandidatesIds(
+    return await this.trainingFabricController.getTrainingsByCandidatesIds(
       candidatesIds,
     );
   }
@@ -137,7 +137,7 @@ export class TrainingWebControllerController {
     @param.array('status', 'query', {type: 'string'})
     trainingProcessStatus: TrainingProcessStatus[],
   ): Promise<Training[]> {
-    return await TrainingControllerBackEnd.getTrainingsByProcessStatus(
+    return await this.trainingFabricController.getTrainingsByProcessStatus(
       trainingProcessStatus,
     );
   }
