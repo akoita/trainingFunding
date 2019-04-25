@@ -7,8 +7,13 @@ import {ConvectorControllerClient} from '@worldsibu/convector-core';
 import {Training, TrainingController, TrainingProcessStatus} from 'training-cc';
 import {inject} from '@loopback/context';
 
-export class TrainingWebControllerController {
-  constructor(@inject('TrainingControllerBackEnd') private trainingFabricController: ConvectorControllerClient<TrainingController>) {}
+export class TrainingWebController {
+  constructor(
+    @inject('TrainingControllerBackEnd')
+    private trainingFabricController: ConvectorControllerClient<
+      TrainingController
+    >,
+  ) {}
 
   @post('/training/create', {
     description: 'Create a new training',

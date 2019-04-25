@@ -6,7 +6,7 @@ describe('PingController', () => {
   let app: WebappApplication;
   let client: Client;
 
-  before('setupApplication', async () => {
+  beforeEach('setupApplication', async () => {
     ({app, client} = await setupApplication());
   });
 
