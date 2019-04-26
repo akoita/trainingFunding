@@ -11,10 +11,6 @@ import {join} from 'path';
 import {ClientFactory} from '@worldsibu/convector-core';
 import {TrainingController} from 'training-cc';
 import {TrainingOfferController} from 'trainingOffer-cc';
-import {
-  TrainingControllerBackEnd,
-  TrainingOfferControllerBackEnd,
-} from '../../convector';
 
 export async function setupApplication(): Promise<AppWithClient> {
   const fabrickMockAdapter = new MockControllerAdapter();

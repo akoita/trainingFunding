@@ -11,12 +11,12 @@ export class CandidateDataSet {
     status: TrainingAppLifecycleStatus.Open,
   });
 
-  public static juli = Candidate.build({
+  public static julie = Candidate.build({
     id: 'c2',
     created: Date.now(),
     modified: Date.now(),
-    firstName: 'Aboubakar',
-    lastName: 'Koïta',
+    firstName: 'Julie',
+    lastName: 'Gayet',
     status: TrainingAppLifecycleStatus.Open,
   });
 
@@ -24,8 +24,8 @@ export class CandidateDataSet {
     id: 'c3',
     created: Date.now(),
     modified: Date.now(),
-    firstName: 'Aboubakar',
-    lastName: 'Koïta',
+    firstName: 'Itachi',
+    lastName: 'Uchiha',
     status: TrainingAppLifecycleStatus.Open,
   });
 }

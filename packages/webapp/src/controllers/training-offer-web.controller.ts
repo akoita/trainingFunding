@@ -2,7 +2,6 @@
 
 // import {inject} from '@loopback/context';
 
-import {TrainingOfferControllerBackEnd} from '../convector';
 import {ConvectorControllerClient} from '@worldsibu/convector-core';
 import {get, param, post, requestBody} from '@loopback/rest';
 import {
