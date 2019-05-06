@@ -60,16 +60,25 @@ export class TrainingWebController {
     description: 'Accept an application to a training',
     responses: {},
   })
-  public async acceptApplication(@param.query.string('id') trainingId: string) {
-    await this.trainingFabricController.acceptApplication(trainingId);
+  public async acceptApplication(
+    @param.query.string('id') trainingId: string,
+    @param.query.string('companyId') companyId: string,
+  ) {
+    await this.trainingFabricController.acceptApplication(
+      trainingId,
+      companyId,
+    );
   }
 
   @post('training/fund', {
     description: 'Fund a training accepted',
     responses: {},
   })
-  public async fundTraining(@param.query.string('id') trainingId: string) {
-    await this.trainingFabricController.fundTraining(trainingId);
+  public async fundTraining(
+    @param.query.string('id') trainingId: string,
+    @param.query.string('investorId') investorId: string,
+  ) {
+    await this.trainingFabricController.fundTraining(trainingId, investorId);
   }
 
   @post('training/start', {

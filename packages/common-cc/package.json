@@ -10,8 +10,7 @@
   "scripts": {
     "clean": "rimraf dist client",
     "build": "npm run clean && tsc",
-    "prepare": "npm run build",
-    "test": "npm run build && mocha -r ts-node/register tests/*.spec.ts --reporter spec"
+    "prepare": "npm run build"
   },
   "dependencies": {
     "@types/chai-as-promised": "^7.1.0",

@@ -20,6 +20,7 @@
     "candidate-cc": "^0.1.0",
     "chai-as-promised": "^7.1.1",
     "common-cc": "^0.1.0",
+    "participant-cc": "^0.1.0",
     "reflect-metadata": "^0.1.12",
     "trainingOffer-cc": "^0.1.0",
     "yup": "^0.26.6"

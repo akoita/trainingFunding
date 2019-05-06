@@ -4,6 +4,7 @@ import {TrainingAppLifecycleStatus} from 'common-cc';
 export class CandidateDataSet {
   public static abou = Candidate.build({
     id: 'c1',
+    ownerId: 'CareerAdvisor1',
     created: Date.now(),
     modified: Date.now(),
     firstName: 'Aboubakar',
@@ -13,6 +14,7 @@ export class CandidateDataSet {
 
   public static julie = Candidate.build({
     id: 'c2',
+    ownerId: 'CareerAdvisor1',
     created: Date.now(),
     modified: Date.now(),
     firstName: 'Julie',
@@ -22,6 +24,7 @@ export class CandidateDataSet {
 
   public static itachi = Candidate.build({
     id: 'c3',
+    ownerId: 'CareerAdvisor1',
     created: Date.now(),
     modified: Date.now(),
     firstName: 'Itachi',

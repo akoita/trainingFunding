@@ -18,11 +18,12 @@ export class Candidate extends AbstractTrainingAsset<Candidate> {
     lastName: string;
 
     public static build(value: {
-        id: string, created: number, modified: number, status: TrainingAppLifecycleStatus,
+        id: string, ownerId: string, created: number, modified: number, status: TrainingAppLifecycleStatus,
         firstName: string, lastName: string
     }): Candidate {
         let candidate = new Candidate();
         candidate.id = value.id;
+        candidate.ownerId = value.ownerId;
         candidate.created = value.created;
         candidate.modified = value.modified;
         candidate.status = value.status;

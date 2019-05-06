@@ -36,20 +36,21 @@ export class TrainingOffer extends AbstractTrainingAsset<TrainingOffer> {
     @Validate(yup.string().oneOf(Object.keys(TrainingOfferLevel).map(k => TrainingOfferLevel[k])))
     public level: TrainingOfferLevel;
 
-    public static build(valueObject: {
-        id: string, created: number, modified: number, status: TrainingAppLifecycleStatus,
+    public static build(params: {
+        id: string, ownerId: string, created: number, modified: number, status: TrainingAppLifecycleStatus,
         title: string, description: string, domain: Domain, level: TrainingOfferLevel
     }): TrainingOffer {
 
         let model = new TrainingOffer();
-        model.id = valueObject.id;
-        model.created = valueObject.created;
-        model.modified = valueObject.modified;
-        model.status = valueObject.status;
-        model.title = valueObject.title;
-        model.description = valueObject.description;
-        model.domain = valueObject.domain;
-        model.level = valueObject.level;
+        model.id = params.id;
+        model.ownerId = params.ownerId;
+        model.created = params.created;
+        model.modified = params.modified;
+        model.status = params.status;
+        model.title = params.title;
+        model.description = params.description;
+        model.domain = params.domain;
+        model.level = params.level;
 
         return model;
     }

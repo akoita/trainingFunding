@@ -12,15 +12,24 @@ import {Training, TrainingController, TrainingProcessStatus} from '../src';
 import {Candidate, CandidateController} from "candidate-cc";
 import {TrainingAppLifecycleStatus} from "common-cc";
 import {Domain, TrainingOffer, TrainingOfferController, TrainingOfferLevel} from "trainingOffer-cc";
+import {
+    CareerAdvisorParticipantController,
+    InvestorParticipantController,
+    TrainingCompanyParticipantController
+} from "participant-cc";
 
 describe('Training', () => {
     chai.use(chaiAsPromised);
-    let trainingCtrlAdapter: MockControllerAdapter;
-    let candidateCtrlAdapter: MockControllerAdapter;
-    let trainingOfferCtrlAdapter: MockControllerAdapter;
+    // mock adapter
+    let mockAdapter: MockControllerAdapter;
+    // assets controllers
     let trainingCtrl: ConvectorControllerClient<TrainingController>;
     let candidateCtrl: ConvectorControllerClient<CandidateController>;
     let trainingOfferCtrl: ConvectorControllerClient<TrainingOfferController>;
+    // participants controllers
+    let careerAdvisorParticipantCtrl: ConvectorControllerClient<CareerAdvisorParticipantController>;
+    let trainingCompanyParticipantCtrl: ConvectorControllerClient<TrainingCompanyParticipantController>;
+    let investorParticipantCtrl: ConvectorControllerClient<InvestorParticipantController>;
 
     let abouBlockchainTraining: Training;
     let abouHyperledgerTraining: Training;
@@ -45,33 +54,48 @@ describe('Training', () => {
     let englishOffer: TrainingOffer;
 
 
+    const fakeParticipantCert = '-----BEGIN CERTIFICATE-----\n' +
+        'MIICKDCCAc6gAwIBAgIRAKpIbs0yLYy65JIrr9irtugwCgYIKoZIzj0EAwIwcTEL\n' +
+        'MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\n' +
+        'cmFuY2lzY28xGDAWBgNVBAoTD29yZzEuaHVybGV5LmxhYjEbMBkGA1UEAxMSY2Eu\n' +
+        'b3JnMS5odXJsZXkubGFiMB4XDTE5MDUwMzEzMjQwMFoXDTI5MDQzMDEzMjQwMFow\n' +
+        'azELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNh\n' +
+        'biBGcmFuY2lzY28xDzANBgNVBAsTBmNsaWVudDEeMBwGA1UEAwwVVXNlcjFAb3Jn\n' +
+        'MS5odXJsZXkubGFiMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE5QS5zZd5kIlr\n' +
+        'lCceMAShpkryJr3LKlev/fblhc76C6x6jfbWsYx4eilqDKGmGtoP/DL/ubiHtWxW\n' +
+        'ncRs5tuu7KNNMEswDgYDVR0PAQH/BAQDAgeAMAwGA1UdEwEB/wQCMAAwKwYDVR0j\n' +
+        'BCQwIoAgOrfdQBvYqeJMP2kSeYMs454SgMM0UMxVMX3smJhq1T0wCgYIKoZIzj0E\n' +
+        'AwIDSAAwRQIhAKuLQTEpu7OUJVepcKR8/4agjQzP5m5dbyOhZUPi7HKzAiBromIn\n' +
+        'dH9+KtMkM6VNbtSP54kS5idQg+1lXSal76P98A==\n' +
+        '-----END CERTIFICATE-----\n';
+    const fakeSecondParticipantCert = '-----BEGIN CERTIFICATE-----\n' +
+        'MIICJzCCAc6gAwIBAgIRAM5RbRyFH9XUyE1qUrsxeSQwCgYIKoZIzj0EAwIwcTEL\n' +
+        'MAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNhbiBG\n' +
+        'cmFuY2lzY28xGDAWBgNVBAoTD29yZzEuaHVybGV5LmxhYjEbMBkGA1UEAxMSY2Eu\n' +
+        'b3JnMS5odXJsZXkubGFiMB4XDTE5MDUwMzEzMjQwMFoXDTI5MDQzMDEzMjQwMFow\n' +
+        'azELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDVNh\n' +
+        'biBGcmFuY2lzY28xDzANBgNVBAsTBmNsaWVudDEeMBwGA1UEAwwVQWRtaW5Ab3Jn\n' +
+        'MS5odXJsZXkubGFiMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE1xvsU/lkL31c\n' +
+        'SFdvvi88NXA4jM0XHL6MkCoZ+1xQMughVf7chMN4EjCk4r6+avRnGs8TBVvkFXwM\n' +
+        'DX5TTHMoJ6NNMEswDgYDVR0PAQH/BAQDAgeAMAwGA1UdEwEB/wQCMAAwKwYDVR0j\n' +
+        'BCQwIoAgOrfdQBvYqeJMP2kSeYMs454SgMM0UMxVMX3smJhq1T0wCgYIKoZIzj0E\n' +
+        'AwIDRwAwRAIgH+RAPxmcMPxkmolhW8tuHbc61/QuIA35j0Mzxp2K0JgCIEXkwYk6\n' +
+        'K/6c2BcFc7xD3fFhwCw7Oh/Epkp/WNYnNZoW\n' +
+        '-----END CERTIFICATE-----\n';
+
+
     beforeEach(async () => {
         // Mocks the blockchain execution environment
-        // trainingCtrlAdapter = new MockControllerAdapter();
-        // trainingCtrl = ClientFactory(TrainingController, trainingCtrlAdapter);
-        //
-        // candidateCtrlAdapter = new MockControllerAdapter();
-        // candidateCtrl = ClientFactory(CandidateController, candidateCtrlAdapter);
-        //
-        // trainingOfferCtrlAdapter = new MockControllerAdapter();
-        // trainingOfferCtrl = ClientFactory(TrainingOfferController, trainingOfferCtrlAdapter);
-
-        trainingCtrlAdapter = new MockControllerAdapter();
-        trainingCtrl = ClientFactory(TrainingController, trainingCtrlAdapter);
-        candidateCtrl = ClientFactory(CandidateController, trainingCtrlAdapter);
-        trainingOfferCtrl = ClientFactory(TrainingOfferController, trainingCtrlAdapter);
+        mockAdapter = new MockControllerAdapter();
+        trainingCtrl = ClientFactory(TrainingController, mockAdapter);
+        candidateCtrl = ClientFactory(CandidateController, mockAdapter);
+        trainingOfferCtrl = ClientFactory(TrainingOfferController, mockAdapter);
+        careerAdvisorParticipantCtrl = ClientFactory(CareerAdvisorParticipantController, mockAdapter);
+        trainingCompanyParticipantCtrl = ClientFactory(TrainingCompanyParticipantController, mockAdapter);
+        investorParticipantCtrl = ClientFactory(InvestorParticipantController, mockAdapter);
 
 
-        // [
-        //     {adapter: trainingCtrlAdapter, name: 'TrainingController', dir: 'training-cc'},
-        //     {adapter: candidateCtrlAdapter, name: 'CandidateController', dir: 'candidate-cc'},
-        //     {adapter: trainingOfferCtrlAdapter, name: 'TrainingOfferController', dir: 'trainingOffer-cc'}
-        // ].forEach(async (adapterAndName) => {
-        //
-        // });
-
-
-        await trainingCtrlAdapter.init([
+        await mockAdapter.init([
             {
                 version: '*',
                 controller: TrainingController.name,
@@ -86,27 +110,32 @@ describe('Training', () => {
                 version: '*',
                 controller: TrainingOfferController.name,
                 name: join(__dirname, '..', '..', 'trainingOffer-cc')
+            },
+            {
+                version: '*',
+                controller: 'CareerAdvisorParticipantController',
+                name: join(__dirname, '..', '..', 'participant-cc')
+            },
+            {
+                version: '*',
+                controller: 'TrainingCompanyParticipantController',
+                name: join(__dirname, '..', '..', 'participant-cc')
+            },
+            {
+                version: '*',
+                controller: 'InvestorParticipantController',
+                name: join(__dirname, '..', '..', 'participant-cc')
             }
-        ]);
 
-        //
-        // [
-        //     {adapter: trainingCtrlAdapter, name: 'TrainingController', dir: 'training-cc'},
-        //     {adapter: candidateCtrlAdapter, name: 'CandidateController', dir: 'candidate-cc'},
-        //     {adapter: trainingOfferCtrlAdapter, name: 'TrainingOfferController', dir: 'trainingOffer-cc'}
-        // ].forEach(async (adapterAndName) => {
-        //     await adapterAndName.adapter.init([
-        //         {
-        //             version: '*',
-        //             controller: adapterAndName.name,
-        //             name: join(__dirname, '..', '..', adapterAndName.dir)
-        //         }
-        //     ]);
-        //
-        // });
+        ]);
+        (mockAdapter.stub as any).usercert = fakeParticipantCert;
+        await careerAdvisorParticipantCtrl.register('CareerAdvisor1', 'CareerAdvisor1Name');
+        await trainingCompanyParticipantCtrl.register('TrainingCompany1', 'TrainingCompany1Name');
+        await investorParticipantCtrl.register('Investor1', 'Investor1Name');
 
         abou = Candidate.build({
             id: uuid(),
+            ownerId: 'CareerAdvisor1',
             created: Date.now(),
             modified: Date.now(),
             firstName: 'Aboubakar',
@@ -117,6 +146,7 @@ describe('Training', () => {
 
         julie = Candidate.build({
             id: uuid(),
+            ownerId: 'CareerAdvisor1',
             created: Date.now(),
             modified: Date.now(),
             firstName: 'Julie',
@@ -127,6 +157,7 @@ describe('Training', () => {
 
         itachi = Candidate.build({
             id: uuid(),
+            ownerId: 'CareerAdvisor1',
             created: Date.now(),
             modified: Date.now(),
             firstName: 'Itachi',
@@ -137,6 +168,7 @@ describe('Training', () => {
 
         blockchainOffer = TrainingOffer.build({
             id: uuid(),
+            ownerId: 'TrainingCompany1',
             created: Date.now(),
             modified: Date.now(),
             status: TrainingAppLifecycleStatus.Open,
@@ -147,6 +179,7 @@ describe('Training', () => {
         });
         hyperledger = TrainingOffer.build({
             id: uuid(),
+            ownerId: 'TrainingCompany1',
             created: Date.now(),
             modified: Date.now(),
             status: TrainingAppLifecycleStatus.Open,
@@ -157,6 +190,7 @@ describe('Training', () => {
         });
         microserviceOffer = TrainingOffer.build({
             id: uuid(),
+            ownerId: 'TrainingCompany1',
             created: Date.now(),
             modified: Date.now(),
             status: TrainingAppLifecycleStatus.Open,
@@ -167,6 +201,7 @@ describe('Training', () => {
         });
         englishOffer = TrainingOffer.build({
             id: uuid(),
+            ownerId: 'TrainingCompany1',
             created: Date.now(),
             modified: Date.now(),
             status: TrainingAppLifecycleStatus.Open,
@@ -183,6 +218,7 @@ describe('Training', () => {
 
         abouBlockchainTraining = Training.build({
             id: uuid(),
+            ownerId: 'CareerAdvisor1',
             created: Date.now(),
             modified: Date.now(),
             status: TrainingAppLifecycleStatus.Open,
@@ -192,6 +228,7 @@ describe('Training', () => {
         });
         abouHyperledgerTraining = Training.build({
             id: uuid(),
+            ownerId: 'CareerAdvisor1',
             created: Date.now(),
             modified: Date.now(),
             status: TrainingAppLifecycleStatus.Open,
@@ -201,6 +238,7 @@ describe('Training', () => {
         });
         abouMicroserviceTraining = Training.build({
             id: uuid(),
+            ownerId: 'CareerAdvisor1',
             created: Date.now(),
             modified: Date.now(),
             status: TrainingAppLifecycleStatus.Open,
@@ -210,6 +248,7 @@ describe('Training', () => {
         });
         abouEngkishTraining = Training.build({
             id: uuid(),
+            ownerId: 'CareerAdvisor1',
             created: Date.now(),
             modified: Date.now(),
             status: TrainingAppLifecycleStatus.Open,
@@ -220,6 +259,7 @@ describe('Training', () => {
 
         itachiBlockchainTraining = Training.build({
             id: uuid(),
+            ownerId: 'CareerAdvisor1',
             created: Date.now(),
             modified: Date.now(),
             status: TrainingAppLifecycleStatus.Open,
@@ -230,6 +270,7 @@ describe('Training', () => {
 
         itachiHyperledgerTraining = Training.build({
             id: uuid(),
+            ownerId: 'CareerAdvisor1',
             created: Date.now(),
             modified: Date.now(),
             status: TrainingAppLifecycleStatus.Open,
@@ -239,6 +280,7 @@ describe('Training', () => {
         });
         itachiEngkishTraining = Training.build({
             id: uuid(),
+            ownerId: 'CareerAdvisor1',
             created: Date.now(),
             modified: Date.now(),
             status: TrainingAppLifecycleStatus.Open,
@@ -249,6 +291,7 @@ describe('Training', () => {
 
         julieBlockchainTraining = Training.build({
             id: uuid(),
+            ownerId: 'CareerAdvisor1',
             created: Date.now(),
             modified: Date.now(),
             status: TrainingAppLifecycleStatus.Open,
@@ -258,6 +301,7 @@ describe('Training', () => {
         });
         julieMicroserviceTraining = Training.build({
             id: uuid(),
+            ownerId: 'CareerAdvisor1',
             created: Date.now(),
             modified: Date.now(),
             status: TrainingAppLifecycleStatus.Open,
@@ -267,6 +311,7 @@ describe('Training', () => {
         });
         julieEngkishTraining = Training.build({
             id: uuid(),
+            ownerId: 'CareerAdvisor1',
             created: Date.now(),
             modified: Date.now(),
             status: TrainingAppLifecycleStatus.Open,
@@ -433,7 +478,7 @@ describe('Training', () => {
 
         await expect(trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).catch(
             ex => ex.responses[0].error.message)).to.be.eventually.equal(
-            'cannot submit the an application for the training with id: "' + abouBlockchainTraining.id + '" because it' +
+            'cannot submit an application for the training with id: "' + abouBlockchainTraining.id + '" because it' +
             ' is linked to a closed candidate with id: "' + abouBlockchainTraining.candidateId + '"');
     });
 
@@ -450,7 +495,7 @@ describe('Training', () => {
 
         await expect(trainingCtrl.submitTrainingApplication(abouBlockchainTraining.id).catch(
             ex => ex.responses[0].error.message)).to.be.eventually.equal(
-            'cannot submit the an application for the training with id: "' + abouBlockchainTraining.id + '" because it' +
+            'cannot submit an application for the training with id: "' + abouBlockchainTraining.id + '" because it' +
             ' is linked to a closed training offer with id: "' + abouBlockchainTraining.trainingOfferId + '"');
 
     });
@@ -469,7 +514,7 @@ describe('Training', () => {
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id, 'TrainingCompany1');
         const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
 
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
@@ -484,7 +529,7 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        await expect(trainingCtrl.acceptApplication(abouBlockchainTraining.id).catch(
+        await expect(trainingCtrl.acceptApplication(abouBlockchainTraining.id, 'TrainingCompany1').catch(
             ex => ex.responses[0].error.message)).to.be.eventually.equal(
             'cannot start fund training with the id: "' + abouBlockchainTraining.id +
             '" because it\'s process is expected to be "' + TrainingProcessStatus.Submitted +
@@ -504,13 +549,13 @@ describe('Training', () => {
         expect(closed.id).to.be.equal(abouBlockchainTraining.id);
         expect(closed.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
-        await expect(trainingCtrl.acceptApplication(abouBlockchainTraining.id).catch(
+        await expect(trainingCtrl.acceptApplication(abouBlockchainTraining.id, 'TrainingCompany1').catch(
             ex => ex.responses[0].error.message)).to.be.eventually.equal(
             `cannot accept an application for a closed training with the id "${abouBlockchainTraining.id}"`);
     });
 
     it('should throw an exception when trying to accept an application for an non existing training', async () => {
-        await expect(trainingCtrl.acceptApplication(abouBlockchainTraining.id).catch(
+        await expect(trainingCtrl.acceptApplication(abouBlockchainTraining.id, 'TrainingCompany1').catch(
             ex => ex.responses[0].error.message)).to.be.eventually.equal(
             `cannot accept an application for non existing training with the id: "${abouBlockchainTraining.id}"`);
     });
@@ -532,7 +577,7 @@ describe('Training', () => {
         expect(closedCandidate.id).to.be.equal(abou.id);
         expect(closedCandidate.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
-        await expect(trainingCtrl.acceptApplication(abouBlockchainTraining.id).catch(
+        await expect(trainingCtrl.acceptApplication(abouBlockchainTraining.id, 'TrainingCompany1').catch(
             ex => ex.responses[0].error.message)).to.be.eventually.equal(
             'cannot accept an application for the training with the id: "' + abouBlockchainTraining.id + '" because it ' +
             'is linked to a closed candidate with the id: "' + abouBlockchainTraining.candidateId + '"');
@@ -554,7 +599,7 @@ describe('Training', () => {
         expect(closedTrainingOffer.id).to.be.equal(blockchainOffer.id);
         expect(closedTrainingOffer.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
-        await expect(trainingCtrl.acceptApplication(abouBlockchainTraining.id).catch(
+        await expect(trainingCtrl.acceptApplication(abouBlockchainTraining.id, 'TrainingCompany1').catch(
             ex => ex.responses[0].error.message)).to.be.eventually.equal(
             'cannot accept an application for the training with the id: "' + abouBlockchainTraining.id + '" because it ' +
             'is linked to a closed training offer with the id: "' + abouBlockchainTraining.trainingOfferId + '"');
@@ -574,12 +619,12 @@ describe('Training', () => {
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id, 'TrainingCompany1');
         const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id, 'TrainingCompany1');
         const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
@@ -593,7 +638,7 @@ describe('Training', () => {
 
         await trainingCtrl.createTraining(abouBlockchainTraining);
 
-        await expect(trainingCtrl.fundTraining(abouBlockchainTraining.id).catch(
+        await expect(trainingCtrl.fundTraining(abouBlockchainTraining.id, 'TrainingCompany1').catch(
             ex => ex.responses[0].error.message)).to.be.eventually.equal(
             'cannot start fund training with the id: "' + abouBlockchainTraining.id +
             '" because it\'s process is expected to be "' + TrainingProcessStatus.Accepted +
@@ -613,13 +658,13 @@ describe('Training', () => {
         expect(closed.id).to.be.equal(abouBlockchainTraining.id);
         expect(closed.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
-        await expect(trainingCtrl.fundTraining(abouBlockchainTraining.id).catch(
+        await expect(trainingCtrl.fundTraining(abouBlockchainTraining.id, 'TrainingCompany1').catch(
             ex => ex.responses[0].error.message)).to.be.eventually.equal(
             `cannot fund a closed training with the id "${abouBlockchainTraining.id}"`);
     });
 
     it('should throw an exception when trying to fund a non existing training', async () => {
-        await expect(trainingCtrl.fundTraining(abouBlockchainTraining.id).catch(
+        await expect(trainingCtrl.fundTraining(abouBlockchainTraining.id, 'TrainingCompany1').catch(
             ex => ex.responses[0].error.message)).to.be.eventually.equal(
             `cannot fund a non existing training with the id: "${abouBlockchainTraining.id}"`);
     });
@@ -636,7 +681,7 @@ describe('Training', () => {
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id, 'TrainingCompany1');
         const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
@@ -646,7 +691,7 @@ describe('Training', () => {
         expect(closedCandidate.id).to.be.equal(abou.id);
         expect(closedCandidate.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
-        await expect(trainingCtrl.fundTraining(abouBlockchainTraining.id).catch(
+        await expect(trainingCtrl.fundTraining(abouBlockchainTraining.id, 'TrainingCompany1').catch(
             ex => ex.responses[0].error.message)).to.be.eventually.equal(
             'cannot fund the training with the id: "' + abouBlockchainTraining.id + '" because it ' +
             'is linked to a closed candidate with the id: "' + abouBlockchainTraining.candidateId + '"');
@@ -663,7 +708,7 @@ describe('Training', () => {
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id, 'TrainingCompany1');
         const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
@@ -673,7 +718,7 @@ describe('Training', () => {
         expect(closedTrainingOffer.id).to.be.equal(blockchainOffer.id);
         expect(closedTrainingOffer.status).to.be.equal(TrainingAppLifecycleStatus.Closed);
 
-        await expect(trainingCtrl.fundTraining(abouBlockchainTraining.id).catch(
+        await expect(trainingCtrl.fundTraining(abouBlockchainTraining.id, 'TrainingCompany1').catch(
             ex => ex.responses[0].error.message)).to.be.eventually.equal(
             'cannot fund the training with the id: "' + abouBlockchainTraining.id + '" because it ' +
             'is linked to a closed training offer with the id: "' + abouBlockchainTraining.trainingOfferId + '"');
@@ -693,12 +738,12 @@ describe('Training', () => {
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id, 'TrainingCompany1');
         const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id, 'Investor1');
         const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
@@ -722,12 +767,12 @@ describe('Training', () => {
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id, 'TrainingCompany1');
         const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id, 'Investor1');
         const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
@@ -773,12 +818,12 @@ describe('Training', () => {
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id, 'TrainingCompany1');
         const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id, 'Investor1');
         const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
@@ -805,12 +850,12 @@ describe('Training', () => {
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id,'TrainingCompany1');
         const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id, 'Investor1');
         const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
@@ -841,12 +886,12 @@ describe('Training', () => {
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id,'TrainingCompany1');
         const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id, 'Investor1');
         const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
@@ -875,12 +920,12 @@ describe('Training', () => {
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id, 'TrainingCompany1');
         const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id, 'Investor1');
         const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
@@ -932,12 +977,12 @@ describe('Training', () => {
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id,'TrainingCompany1');
         const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id, 'Investor1');
         const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
@@ -969,12 +1014,12 @@ describe('Training', () => {
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id,'TrainingCompany1');
         const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id, 'Investor1');
         const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
@@ -1009,12 +1054,12 @@ describe('Training', () => {
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id,'TrainingCompany1');
         const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id,'Investor1');
         const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
@@ -1043,12 +1088,12 @@ describe('Training', () => {
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id,'TrainingCompany1');
         const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id, 'Investor1');
         const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
@@ -1100,12 +1145,12 @@ describe('Training', () => {
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id,'TrainingCompany1');
         const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id, 'Investor1');
         const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);
@@ -1137,12 +1182,12 @@ describe('Training', () => {
         expect(submitted.id).to.be.equal(abouBlockchainTraining.id);
         expect(submitted.trainingProcessStatus).to.be.equal(TrainingProcessStatus.Submitted);
 
-        await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
+        await trainingCtrl.acceptApplication(abouBlockchainTraining.id,'TrainingCompany1');
         const accepted = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(accepted.id).to.equal(abouBlockchainTraining.id);
         expect(accepted.trainingProcessStatus).to.equal(TrainingProcessStatus.Accepted);
 
-        await trainingCtrl.fundTraining(abouBlockchainTraining.id);
+        await trainingCtrl.fundTraining(abouBlockchainTraining.id, 'Investor1');
         const funded = await trainingCtrl.getTrainingById(abouBlockchainTraining.id).then(result => new Training(result));
         expect(funded.id).to.equal(abouBlockchainTraining.id);
         expect(funded.trainingProcessStatus).to.equal(TrainingProcessStatus.Funded);

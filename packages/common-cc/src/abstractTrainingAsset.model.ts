@@ -1,5 +1,7 @@
 import * as yup from 'yup';
-import {ConvectorModel, ReadOnly, Required, Validate} from '@worldsibu/convector-core-model';
+import {Required, Validate} from '@worldsibu/convector-core-model';
+import {Param} from '@worldsibu/convector-core';
+import {AbstractTrainingConceptModel} from "./abstractTrainingConcept.model";
 
 
 export enum TrainingAppLifecycleStatus {
@@ -7,40 +9,17 @@ export enum TrainingAppLifecycleStatus {
     Closed = "Closed"
 }
 
-export abstract class AbstractTrainingAsset<T extends AbstractTrainingAsset<any>> extends ConvectorModel<T> {
-    @ReadOnly()
+const trainingAppLifecycleStatusSchema = () => yup.string().oneOf(Object.keys(TrainingAppLifecycleStatus).map(k => TrainingAppLifecycleStatus[k]));
+
+export abstract class AbstractTrainingAsset<T extends AbstractTrainingConceptModel<any>> extends AbstractTrainingConceptModel<T> {
+
     @Required()
     @Validate(yup.string())
-    public id: string;
+    public ownerId: string;
 
-    @ReadOnly()
-    @Required()
-    @Validate(yup.number())
-    public created: number;
-
-    @Required()
-    @Validate(yup.number())
-    public modified: number;
-
-
-    @Required()
-    @Validate(yup.string().oneOf(Object.keys(TrainingAppLifecycleStatus).map(k => TrainingAppLifecycleStatus[k])))
-    public status: TrainingAppLifecycleStatus;
-
-    public isClosed(): boolean {
-        return this.status === TrainingAppLifecycleStatus.Closed;
+    public withOwnerId(@Param(yup.string()) ownerId: string): this {
+        this.ownerId = ownerId;
+        return this;
     }
 
-    //
-    // // @Required()
-    // // @Validate(AbstractTrainingParticipant)
-    // // public owner: AbstractTrainingParticipant<any>;
-    //
-    // constructor(object: {id: string, created: number, modified: number, status: TrainingAppLifecycleStatus}) {
-    //   super(object.id);
-    //   this.id= object.id;
-    //   this.created =object.created;
-    //   this.modified = object.modified;
-    //   this.status = object.status;
-    // }
 }

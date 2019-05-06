@@ -35,18 +35,27 @@ export class Training extends AbstractTrainingAsset<Training> {
     @Validate(yup.string().oneOf(Object.keys(TrainingProcessStatus).map(k => TrainingProcessStatus[k])))
     public trainingProcessStatus: TrainingProcessStatus;
 
-    public static build(value: {
-        id: string, created: number, modified: number, status: TrainingAppLifecycleStatus, trainingOfferId: string,
+    @ReadOnly()
+    @Validate(yup.string())
+    trainingCompanyId: string;
+
+    @ReadOnly()
+    @Validate(yup.string())
+    investorId: string;
+
+    public static build(params: {
+        id: string, ownerId: string, created: number, modified: number, status: TrainingAppLifecycleStatus, trainingOfferId: string,
         trainingProcessStatus: TrainingProcessStatus, candidateId: string
     }): Training {
         const model = new Training();
-        model.id = value.id;
-        model.created = value.created;
-        model.modified = value.modified;
-        model.status = value.status;
-        model.trainingOfferId = value.trainingOfferId;
-        model.trainingProcessStatus = value.trainingProcessStatus;
-        model.candidateId = value.candidateId;
+        model.id = params.id;
+        model.ownerId = params.ownerId;
+        model.created = params.created;
+        model.modified = params.modified;
+        model.status = params.status;
+        model.trainingOfferId = params.trainingOfferId;
+        model.trainingProcessStatus = params.trainingProcessStatus;
+        model.candidateId = params.candidateId;
         return model;
     }
 
