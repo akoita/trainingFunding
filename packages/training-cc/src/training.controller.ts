@@ -46,8 +46,6 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
             .withOwnerId(params.ownerId)
             .withTrainingProcessStatus(TrainingProcessStatus.NotSubmitted)
             .withStatus(TrainingAppLifecycleStatus.Open)
-            .withModified(currentTimestamp)
-            .withCreated(currentTimestamp)
             .save();
     }
 

@@ -37,23 +37,4 @@ export class Candidate extends AbstractTrainingAsset<Candidate> {
     }
   }
 
-  public static build(value: {
-    id: string;
-    ownerId: string;
-    created: number;
-    modified: number;
-    status: TrainingAppLifecycleStatus;
-    firstName: string;
-    lastName: string;
-  }): Candidate {
-    let candidate = new Candidate();
-    candidate.id = value.id;
-    candidate.ownerId = value.ownerId;
-    candidate.created = value.created;
-    candidate.modified = value.modified;
-    candidate.status = value.status;
-    candidate.firstName = value.firstName;
-    candidate.lastName = value.lastName;
-    return candidate;
-  }
 }

@@ -41,14 +41,11 @@ export class CandidateController extends ConvectorController<ChaincodeTx> {
     }
 
     await preconditions(this);
-    const currentTimestamp = Date.now();
     await new Candidate(params.id)
       .withOwnerId(params.ownerId)
       .withFirstName(params.firstName)
       .withLastName(params.lastName)
       .withStatus(TrainingAppLifecycleStatus.Open)
-      .withModified(currentTimestamp)
-      .withCreated(currentTimestamp)
       .save();
   }
 

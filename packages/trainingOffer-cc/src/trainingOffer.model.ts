@@ -61,26 +61,7 @@ export class TrainingOffer extends AbstractTrainingAsset<TrainingOffer> {
         return this;
     }
 
-
-    public static build(params: {
-        id: string, ownerId: string, created: number, modified: number, status: TrainingAppLifecycleStatus,
-        title: string, description: string, domain: TrainingDomain, level: TrainingOfferLevel
-    }): TrainingOffer {
-
-        let model = new TrainingOffer();
-        model.id = params.id;
-        model.ownerId = params.ownerId;
-        model.created = params.created;
-        model.modified = params.modified;
-        model.status = params.status;
-        model.title = params.title;
-        model.description = params.description;
-        model.domain = params.domain;
-        model.level = params.level;
-
-        return model;
-    }
-
+    
     /**
      * Check the state of new training offer and throw an exception if the state is not valid
      * @param trainingOffer a new training offer

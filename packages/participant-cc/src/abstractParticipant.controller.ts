@@ -20,7 +20,7 @@ export abstract class AbstractParticipantController<T extends AbstractTrainingPa
                                                id: participantId,
                                                name: participantName,
                                                msp: this.fullIdentity.getMSPID(),
-                                           }).withCreated(Date.now()).withModified(Date.now()).withStatus(
+                                           }).withStatus(
                 TrainingAppLifecycleStatus.Open);
             // Create a new identity
             participant.identities = [x509Identities.build({

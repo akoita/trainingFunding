@@ -47,15 +47,12 @@ export class TrainingOfferController extends ConvectorController<ChaincodeTx> {
     }
 
     await precondition(this);
-    const currentTimestamp = Date.now();
     await new TrainingOffer(params.id)
       .withDescription(params.description)
       .withDomain(params.domain)
       .withLevel(params.level)
       .withTitle(params.title)
       .withOwnerId(params.ownerId)
-      .withCreated(currentTimestamp)
-      .withModified(currentTimestamp)
       .withStatus(TrainingAppLifecycleStatus.Open)
       .save();
   }
