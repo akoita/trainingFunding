@@ -5,7 +5,7 @@
 import {ConvectorControllerClient} from '@worldsibu/convector-core';
 import {get, param, post, requestBody} from '@loopback/rest';
 import {
-  Domain,
+  TrainingDomain,
   TrainingOffer,
   TrainingOfferController,
   TrainingOfferLevel,
@@ -119,7 +119,7 @@ export class TrainingOfferWebController {
     },
   })
   public async searchTrainingOffersByDomain(
-    @param.path.string('domain') domain: Domain,
+    @param.path.string('domain') domain: TrainingDomain,
   ): Promise<TrainingOffer[]> {
     return await this.trainingOfferFabricController.searchTrainingOffersByDomain(
       domain,
@@ -145,7 +145,7 @@ export class TrainingOfferWebController {
     },
   })
   public async searchTrainingOffersByDomainAndLevel(
-    @param.query.string('domain') domain: Domain,
+    @param.query.string('domain') domain: TrainingDomain,
     @param.query.string('level') level: TrainingOfferLevel,
   ): Promise<TrainingOffer[]> {
     return await this.trainingOfferFabricController.searchTrainingOffersByDomainAndLevel(

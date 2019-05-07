@@ -1,34 +1,22 @@
-import {Candidate} from 'candidate-cc';
-import {TrainingAppLifecycleStatus} from 'common-cc';
-
 export class CandidateDataSet {
-  public static abou = Candidate.build({
+  public static abou = {
     id: 'c1',
     ownerId: 'CareerAdvisor1',
-    created: Date.now(),
-    modified: Date.now(),
     firstName: 'Aboubakar',
     lastName: 'Koïta',
-    status: TrainingAppLifecycleStatus.Open,
-  });
+  };
 
-  public static julie = Candidate.build({
+  public static julie = {
     id: 'c2',
     ownerId: 'CareerAdvisor1',
-    created: Date.now(),
-    modified: Date.now(),
-    firstName: 'Julie',
-    lastName: 'Gayet',
-    status: TrainingAppLifecycleStatus.Open,
-  });
+    firstName: 'Aboubakar',
+    lastName: 'Koïta',
+  };
 
-  public static itachi = Candidate.build({
+  public static itachi = {
     id: 'c3',
     ownerId: 'CareerAdvisor1',
-    created: Date.now(),
-    modified: Date.now(),
-    firstName: 'Itachi',
-    lastName: 'Uchiha',
-    status: TrainingAppLifecycleStatus.Open,
-  });
+    firstName: 'Aboubakar',
+    lastName: 'Koïta',
+  };
 }

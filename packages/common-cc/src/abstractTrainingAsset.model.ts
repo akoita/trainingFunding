@@ -21,5 +21,4 @@ export abstract class AbstractTrainingAsset<T extends AbstractTrainingConceptMod
         this.ownerId = ownerId;
         return this;
     }
-
 }

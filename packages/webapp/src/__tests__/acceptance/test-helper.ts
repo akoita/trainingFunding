@@ -5,7 +5,7 @@ import {
   givenHttpServerConfig,
 } from '@loopback/testlab';
 import {MockControllerAdapter} from '@worldsibu/convector-adapter-mock';
-import {CandidateController} from 'candidate-cc';
+import {Candidate, CandidateController, CandidateParams} from 'candidate-cc';
 import {join} from 'path';
 
 import {ClientFactory} from '@worldsibu/convector-core';
@@ -16,6 +16,15 @@ import {
   InvestorParticipantController,
   TrainingCompanyParticipantController,
 } from 'participant-cc';
+
+export function extractCandidateParams(candidate: Candidate): CandidateParams {
+  return {
+    id: candidate.id,
+    ownerId: candidate.ownerId,
+    firstName: candidate.firstName,
+    lastName: candidate.lastName,
+  };
+}
 
 export async function setupApplication(): Promise<AppWithClient> {
   const fabrickMockAdapter = new MockControllerAdapter();

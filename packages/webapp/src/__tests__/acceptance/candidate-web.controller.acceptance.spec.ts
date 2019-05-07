@@ -1,6 +1,6 @@
 import {WebappApplication} from '../..';
 import {Client} from '@loopback/testlab';
-import {setupApplication} from './test-helper';
+import {extractCandidateParams, setupApplication} from './test-helper';
 import {expect} from 'chai';
 import 'mocha';
 import {CandidateDataSet} from '../fixtures/candidateDataSet';
@@ -25,20 +25,24 @@ describe('CandidateWebController', () => {
 
     await client
       .post('/candidate/create')
-      .send(CandidateDataSet.abou.toJSON())
+      .send(CandidateDataSet.abou)
       .expect(204);
     const res2 = await client.get('/candidates').expect(200);
     expect(
-      (<Candidate[]>res2.body).map(m => new Candidate(m)),
+      (<Candidate[]>res2.body).map(m =>
+        extractCandidateParams(new Candidate(m)),
+      ),
     ).to.have.same.deep.members([CandidateDataSet.abou]);
 
     await client
       .post('/candidate/create')
-      .send(CandidateDataSet.itachi.toJSON())
+      .send(CandidateDataSet.itachi)
       .expect(204);
     const res3 = await client.get('/candidates').expect(200);
     expect(
-      (<Candidate[]>res3.body).map(m => new Candidate(m)),
+      (<Candidate[]>res3.body).map(m =>
+        extractCandidateParams(new Candidate(m)),
+      ),
     ).to.have.same.deep.members([
       CandidateDataSet.abou,
       CandidateDataSet.itachi,
@@ -46,11 +50,13 @@ describe('CandidateWebController', () => {
 
     await client
       .post('/candidate/create')
-      .send(CandidateDataSet.julie.toJSON())
+      .send(CandidateDataSet.julie)
       .expect(204);
     const res4 = await client.get('/candidates').expect(200);
     expect(
-      (<Candidate[]>res4.body).map(m => new Candidate(m)),
+      (<Candidate[]>res4.body).map(m =>
+        extractCandidateParams(new Candidate(m)),
+      ),
     ).to.have.same.deep.members([
       CandidateDataSet.abou,
       CandidateDataSet.itachi,

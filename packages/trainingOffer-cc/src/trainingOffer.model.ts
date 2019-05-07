@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import {FlatConvectorModel, ReadOnly, Required, Validate} from '@worldsibu/convector-core-model';
+import {ReadOnly, Required, Validate} from '@worldsibu/convector-core-model';
 import {AbstractTrainingAsset, TrainingAppLifecycleStatus} from 'common-cc';
 
 
@@ -8,11 +8,16 @@ export enum TrainingOfferLevel {
     Advanced = "Advanced"
 }
 
-export enum Domain {
+export enum TrainingDomain {
     SoftwareDevelopment = "SoftwareDevelopment",
     ProjectManagement = "ProjectManagement",
     General = "General"
 }
+
+export const trainingOfferLevelYupSchema = () => yup.string()
+                                                    .oneOf(Object.keys(TrainingOfferLevel).map(k => TrainingOfferLevel[k]));
+
+export const trainingDomainYupSchema = () => yup.string().oneOf(Object.keys(TrainingDomain).map(k => TrainingDomain[k]));
 
 export class TrainingOffer extends AbstractTrainingAsset<TrainingOffer> {
     @ReadOnly()
@@ -29,16 +34,37 @@ export class TrainingOffer extends AbstractTrainingAsset<TrainingOffer> {
     public description: string;
 
     @Required()
-    @Validate(yup.string().oneOf(Object.keys(Domain).map(k => Domain[k])))
-    public domain: Domain;
+    @Validate(trainingDomainYupSchema())
+    public domain: TrainingDomain;
 
     @Required()
-    @Validate(yup.string().oneOf(Object.keys(TrainingOfferLevel).map(k => TrainingOfferLevel[k])))
+    @Validate(trainingOfferLevelYupSchema())
     public level: TrainingOfferLevel;
+
+    public withTitle(title: string): this {
+        this.title = title;
+        return this;
+    }
+
+    public withDescription(description: string): this {
+        this.description = description;
+        return this;
+    }
+
+    public withDomain(domain: TrainingDomain): this {
+        this.domain = domain;
+        return this;
+    }
+
+    public withLevel(level: TrainingOfferLevel): this {
+        this.level = level;
+        return this;
+    }
+
 
     public static build(params: {
         id: string, ownerId: string, created: number, modified: number, status: TrainingAppLifecycleStatus,
-        title: string, description: string, domain: Domain, level: TrainingOfferLevel
+        title: string, description: string, domain: TrainingDomain, level: TrainingOfferLevel
     }): TrainingOffer {
 
         let model = new TrainingOffer();
@@ -54,7 +80,6 @@ export class TrainingOffer extends AbstractTrainingAsset<TrainingOffer> {
 
         return model;
     }
-
 
     /**
      * Check the state of new training offer and throw an exception if the state is not valid
