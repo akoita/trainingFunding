@@ -27,6 +27,21 @@
       "name": "trainingOffer-cc",
       "version": "file:./packages/trainingOffer-cc",
       "controller": "TrainingOfferController"
+    },
+    {
+      "name": "participant-cc",
+      "version": "file:./packages/participant-cc",
+      "controller": "CareerAdvisorParticipantController"
+    },
+    {
+      "name": "participant-cc",
+      "version": "file:./packages/participant-cc",
+      "controller": "TrainingCompanyParticipantController"
+    },
+    {
+      "name": "participant-cc",
+      "version": "file:./packages/participant-cc",
+      "controller": "InvestorParticipantController"
     }
   ],
   "policy": {
