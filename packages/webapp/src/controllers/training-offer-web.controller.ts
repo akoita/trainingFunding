@@ -9,6 +9,7 @@ import {
   TrainingOffer,
   TrainingOfferController,
   TrainingOfferLevel,
+  TrainingOfferParams,
 } from 'trainingOffer-cc';
 import {inject} from '@loopback/context';
 
@@ -24,7 +25,7 @@ export class TrainingOfferWebController {
     description: 'Create a new training offer',
     responses: {},
   })
-  async createTrainingOffer(@requestBody() trainingOffer: TrainingOffer) {
+  async createTrainingOffer(@requestBody() trainingOffer: TrainingOfferParams) {
     await this.trainingOfferFabricController.createTrainingOffer(trainingOffer);
   }
 

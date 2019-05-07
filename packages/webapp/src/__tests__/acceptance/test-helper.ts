@@ -144,6 +144,13 @@ export async function setupApplication(): Promise<AppWithClient> {
   app.bind('CandidateControllerBackEnd').to(candidateFabricCtrl);
   app.bind('TrainingOfferControllerBackEnd').to(trainingOfferFabricCtrl);
   app.bind('TrainingControllerBackEnd').to(trainingFabricCtrl);
+  app
+    .bind('CareerAdvisorParticipantControllerBackEnd')
+    .to(careerAdvisorParticipantCtrl);
+  app
+    .bind('TrainingCompanyParticipantControllerBackEnd')
+    .to(trainingCompanyParticipantCtrl);
+  app.bind('InvestorParticipantControllerBackEnd').to(investorParticipantCtrl);
 
   await app.boot();
   await app.start();

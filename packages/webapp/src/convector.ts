@@ -13,6 +13,11 @@ import {ClientFactory} from '@worldsibu/convector-core';
 import {Candidate, CandidateController} from 'candidate-cc';
 import {TrainingOfferController} from 'trainingOffer-cc';
 import {TrainingController} from 'training-cc';
+import {
+  CareerAdvisorParticipantController,
+  InvestorParticipantController,
+  TrainingCompanyParticipantController,
+} from 'participant-cc';
 
 const adapter = new FabricControllerAdapter({
   txTimeout: 300000,
@@ -25,16 +30,28 @@ const adapter = new FabricControllerAdapter({
 });
 
 export const initAdapter = adapter.init();
-export const CandidateControllerBackEnd = ClientFactory(
+export const CandidateControllerBackEnd: CandidateController = ClientFactory(
   CandidateController,
   adapter,
 );
-export const TrainingOfferControllerBackEnd = ClientFactory(
+export const TrainingOfferControllerBackEnd: TrainingOfferController = ClientFactory(
   TrainingOfferController,
   adapter,
 );
-export const TrainingControllerBackEnd = ClientFactory(
+export const TrainingControllerBackEnd: TrainingController = ClientFactory(
   TrainingController,
+  adapter,
+);
+export const CareerAdvisorParticipantControllerBackEnd: CareerAdvisorParticipantController = ClientFactory(
+  CareerAdvisorParticipantController,
+  adapter,
+);
+export const TrainingCompanyParticipantControllerBackEnd: TrainingCompanyParticipantController = ClientFactory(
+  TrainingCompanyParticipantController,
+  adapter,
+);
+export const InvestorParticipantControllerBackEnd: InvestorParticipantController = ClientFactory(
+  InvestorParticipantController,
   adapter,
 );
 

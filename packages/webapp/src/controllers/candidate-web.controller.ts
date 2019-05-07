@@ -1,9 +1,7 @@
-// Uncomment these imports to begin using these cool features!
-
 import '../convector';
 import {ConvectorControllerClient} from '@worldsibu/convector-core';
 import {get, param, post, requestBody} from '@loopback/rest';
-import {Candidate, CandidateController} from 'candidate-cc';
+import {Candidate, CandidateController, CandidateParams} from 'candidate-cc';
 import {inject} from '@loopback/context';
 
 export class CandidateWebController {
@@ -18,7 +16,7 @@ export class CandidateWebController {
     description: 'Creates a new candidate',
     responses: {},
   })
-  async createCandidate(@requestBody() candidate: Candidate) {
+  async createCandidate(@requestBody() candidate: CandidateParams) {
     await this.candidateFabricController.createCandidate(candidate);
   }
 

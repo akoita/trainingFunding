@@ -2,8 +2,11 @@ import {WebappApplication} from './application';
 import {ApplicationConfig} from '@loopback/core';
 import {
   CandidateControllerBackEnd,
-  TrainingOfferControllerBackEnd,
+  CareerAdvisorParticipantControllerBackEnd,
+  InvestorParticipantControllerBackEnd,
+  TrainingCompanyParticipantControllerBackEnd,
   TrainingControllerBackEnd,
+  TrainingOfferControllerBackEnd,
 } from './convector';
 
 export {WebappApplication};
@@ -13,6 +16,15 @@ export async function main(options: ApplicationConfig = {}) {
   app.bind('CandidateControllerBackEnd').to(CandidateControllerBackEnd);
   app.bind('TrainingOfferControllerBackEnd').to(TrainingOfferControllerBackEnd);
   app.bind('TrainingControllerBackEnd').to(TrainingControllerBackEnd);
+  app
+    .bind('CareerAdvisorParticipantControllerBackEnd')
+    .to(CareerAdvisorParticipantControllerBackEnd);
+  app
+    .bind('TrainingCompanyParticipantControllerBackEnd')
+    .to(TrainingCompanyParticipantControllerBackEnd);
+  app
+    .bind('InvestorParticipantControllerBackEnd')
+    .to(InvestorParticipantControllerBackEnd);
   await app.boot();
   await app.start();
 

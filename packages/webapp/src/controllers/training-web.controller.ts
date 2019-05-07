@@ -4,7 +4,12 @@
 
 import {get, param, post, requestBody} from '@loopback/rest';
 import {ConvectorControllerClient} from '@worldsibu/convector-core';
-import {Training, TrainingController, TrainingProcessStatus} from 'training-cc';
+import {
+  Training,
+  TrainingController,
+  TrainingParams,
+  TrainingProcessStatus,
+} from 'training-cc';
 import {inject} from '@loopback/context';
 
 export class TrainingWebController {
@@ -19,7 +24,7 @@ export class TrainingWebController {
     description: 'Create a new training',
     responses: {},
   })
-  public async createTraining(@requestBody() training: Training) {
+  public async createTraining(@requestBody() training: TrainingParams) {
     await this.trainingFabricController.createTraining(training);
   }
 

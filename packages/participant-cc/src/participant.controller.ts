@@ -7,10 +7,6 @@ import {AbstractParticipantController} from "./abstractParticipant.controller";
 @Controller('careerAdvisor')
 export class CareerAdvisorParticipantController extends AbstractParticipantController<CareerAdvisorParticipant> {
 
-    @Invokable()
-    public async getParticipantById(@Param(yup.string())id: string): Promise<CareerAdvisorParticipant> {
-        return await this._getParticipantById(id);
-    }
 
     @Invokable()
     public async register(@Param(yup.string())
@@ -24,6 +20,11 @@ export class CareerAdvisorParticipantController extends AbstractParticipantContr
         id: string, @Param(yup.string())
         newIdentity: string) {
         await super.changeIdentity(id, newIdentity);
+    }
+
+    @Invokable()
+    public async getParticipantById(@Param(yup.string())id: string): Promise<CareerAdvisorParticipant> {
+        return await this._getParticipantById(id);
     }
 
     public build(params: { name: string; id: string; msp: any }): CareerAdvisorParticipant {
