@@ -69,7 +69,7 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
                 trainingId,
                 `cannot submit an application for non existing training with the id: "${trainingId}"`
             );
-            self.checkThatCallerMatchesCareerAdvisor(existing.ownerId);
+            await self.checkThatCallerMatchesCareerAdvisor(existing.ownerId);
             await self.checkThatTrainingIsNotClosed(existing);
             await self.checkThatTrainingProcessIsInStatus(
                 existing,
@@ -112,7 +112,7 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
                 trainingId,
                 `cannot accept an application for non existing training with the id: "${trainingId}"`
             );
-            self.checkThatCallerMatchesTraningCompany(trainingCompanyId);
+            await self.checkThatCallerMatchesTraningCompany(trainingCompanyId);
             await self.checkThatTrainingIsNotClosed(
                 existing,
                 `cannot accept an application for a closed training with the id "${trainingId}"`
@@ -216,7 +216,7 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
                 trainingId,
                 `cannot start a non existing training with the id: "${trainingId}"`
             );
-            self.checkThatCallerMatchesTraningCompany(existing.trainingCompanyId);
+            await self.checkThatCallerMatchesTraningCompany(existing.trainingCompanyId);
             await self.checkThatTrainingIsNotClosed(
                 existing,
                 `cannot start a closed training with the id "${trainingId}"`
@@ -560,7 +560,7 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
         const participant = await TrainingCompanyParticipant.getOne(
             trainingCompanyId
         );
-        this.checkThatCallerMatchesParticipant(
+        await this.checkThatCallerMatchesParticipant(
             participant,
             trainingCompanyId,
             "Training company"
@@ -569,7 +569,7 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
 
     private async checkThatCallerMatchesInvestor(investorID: string) {
         const participant = await InvestorParticipant.getOne(investorID);
-        this.checkThatCallerMatchesParticipant(participant, investorID, "Investor");
+        await this.checkThatCallerMatchesParticipant(participant, investorID, "Investor");
     }
 
     private async checkThatCallerMatchesParticipant(
@@ -588,6 +588,8 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
                 `no active identity found for the ${participantTitle} participant with the id ${participantId}`
             );
         }
+        console.log(`Sender fingerprint ${this.sender}`);
+        console.log(`active fingerprint ${activeIdentity.fingerprint}`);
         if (this.sender !== activeIdentity.fingerprint) {
             throw new Error(
                 `the transaction caller identity "${
