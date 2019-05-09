@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 import {ConvectorModel, FlatConvectorModel, ReadOnly, Required, Validate} from '@worldsibu/convector-core-model';
-import {TrainingAppLifecycleStatus} from 'common-cc';
-import {AbstractTrainingConceptModel} from "common-cc/dist/src/abstractTrainingConcept.model";
+import {AbstractTrainingConceptModel, TrainingAppLifecycleStatus} from 'common-cc';
+
 
 export class x509Identities extends ConvectorModel<x509Identities> {
     @ReadOnly()

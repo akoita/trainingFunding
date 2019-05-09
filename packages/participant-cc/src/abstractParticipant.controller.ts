@@ -4,7 +4,7 @@ import {BaseStorage, ConvectorController, Param} from '@worldsibu/convector-core
 
 import {ClientIdentity} from 'fabric-shim';
 import {AbstractTrainingParticipantModel, x509Identities} from "./abstractTrainingParticipant.model";
-import {TrainingAppLifecycleStatus} from "common-cc/dist/src/abstractTrainingConcept.model";
+import {TrainingAppLifecycleStatus} from "common-cc";
 
 export abstract class AbstractParticipantController<T extends AbstractTrainingParticipantModel<T>> extends ConvectorController {
     get fullIdentity(): ClientIdentity {

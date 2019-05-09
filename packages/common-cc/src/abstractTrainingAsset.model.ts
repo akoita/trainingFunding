@@ -4,13 +4,6 @@ import {Param} from '@worldsibu/convector-core';
 import {AbstractTrainingConceptModel} from "./abstractTrainingConcept.model";
 
 
-export enum TrainingAppLifecycleStatus {
-    Open = "Open",
-    Closed = "Closed"
-}
-
-const trainingAppLifecycleStatusSchema = () => yup.string().oneOf(Object.keys(TrainingAppLifecycleStatus).map(k => TrainingAppLifecycleStatus[k]));
-
 export abstract class AbstractTrainingAsset<T extends AbstractTrainingConceptModel<any>> extends AbstractTrainingConceptModel<T> {
 
     @Required()

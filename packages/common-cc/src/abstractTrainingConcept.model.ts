@@ -13,7 +13,7 @@ export enum TrainingAppLifecycleStatus {
   Closed = "Closed"
 }
 
-const TrainingAppLifecycleStatusYupSchema = () =>
+export const TrainingAppLifecycleStatusYupSchema = () =>
   yup
     .string()
     .oneOf(

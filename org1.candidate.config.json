@@ -17,15 +17,47 @@
       "name": "common-cc",
       "version": "file:./packages/common-cc",
       "controller": "CommonController"
+    },
+    {
+      "name": "participant-cc",
+      "version": "file:./packages/participant-cc",
+      "controller": "CareerAdvisorParticipantController"
+    },
+    {
+      "name": "participant-cc",
+      "version": "file:./packages/participant-cc",
+      "controller": "TrainingCompanyParticipantController"
+    },
+    {
+      "name": "participant-cc",
+      "version": "file:./packages/participant-cc",
+      "controller": "InvestorParticipantController"
     }
   ],
   "policy": {
     "identities": [
-      { "role": { "name": "member", "mspId": "Org1MSP" }},
-      { "role": { "name": "member", "mspId": "Org2MSP" }}
+      {
+        "role": {
+          "name": "member",
+          "mspId": "Org1MSP"
+        }
+      },
+      {
+        "role": {
+          "name": "member",
+          "mspId": "Org2MSP"
+        }
+      }
     ],
     "policy": {
-      "1-of": [{ "signed-by": 0 }, { "signed-by": 1 }]
+      "1-of": [
+        {
+          "signed-by": 0
+        },
+        {
+          "signed-by": 1
+        }
+      ]
     }
   }
 }

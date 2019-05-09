@@ -16,7 +16,7 @@
     {
       "name": "common-cc",
       "version": "file:./packages/common-cc",
-      "controller": "CommonController"
+      "controller": "EmptyController"
     },
     {
       "name": "candidate-cc",
