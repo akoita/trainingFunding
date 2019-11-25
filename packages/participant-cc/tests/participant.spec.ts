@@ -123,7 +123,7 @@ describe('Participant', () => {
     });
 
 
-    it('should change the active idenity of a participant', async () => {
+    it('should change the active identity of a participant', async () => {
         //=======================   Create CareerAdvisorParticipant   ===========================
         await careerAdvisorParticipantCtrl.register('CareerAdvisor1', 'CareerAdvisor1Name');
         const careerAdvisor1 = await careerAdvisorParticipantCtrl.getParticipantById('CareerAdvisor1').then(result => {
@@ -160,7 +160,7 @@ describe('Participant', () => {
                                                    });
 
 
-        // admin idenity is required to change the idendity of a participant
+        // admin identity is required to change the idendity of a participant
         (mockAdapter.stub as any).usercert = fakeSecondAdminCert;
 
 

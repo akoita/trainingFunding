@@ -19,7 +19,7 @@ export interface CandidateParams {
 }
 
 const candidateParamsYupSchema = () =>
-  yup.object().shape({
+  yup.object({
     id: yup.string(),
     ownerId: yup.string(),
     firstName: yup.string(),
@@ -33,7 +33,7 @@ export class CandidateController extends ConvectorController<ChaincodeTx> {
     @Param(candidateParamsYupSchema())
     params: CandidateParams
   ) {
-    debugger;
+    // debugger;
 
     async function preconditions(self: CandidateController) {
       await self.checkThatCandidateIdDoesNotExists(params.id);

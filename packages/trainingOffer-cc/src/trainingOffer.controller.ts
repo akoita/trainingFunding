@@ -27,7 +27,7 @@ export interface TrainingOfferParams {
 }
 
 const trainingOfferParamsYupSchema = () =>
-  yup.object().shape({
+  yup.object({
     id: yup.string(),
     ownerId: yup.string(),
     title: yup.string(),

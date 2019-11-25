@@ -40,10 +40,6 @@ export class Training extends AbstractTrainingAsset<Training> {
 
   @ReadOnly()
   @Validate(yup.string())
-  trainingCompanyId: string;
-
-  @ReadOnly()
-  @Validate(yup.string())
   investorId: string;
 
   public withTrainingOfferId(trainingOfferId: string): this {
@@ -58,11 +54,6 @@ export class Training extends AbstractTrainingAsset<Training> {
 
   public withTrainingProcessStatus(processStatus: TrainingProcessStatus): this {
     this.trainingProcessStatus = processStatus;
-    return this;
-  }
-
-  public withTrainingCompanyId(trainingCompanyId: string): this {
-    this.trainingCompanyId = trainingCompanyId;
     return this;
   }
 

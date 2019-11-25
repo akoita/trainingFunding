@@ -51,15 +51,9 @@ describe("Training", () => {
   let candidateCtrl: ConvectorControllerClient<CandidateController>;
   let trainingOfferCtrl: ConvectorControllerClient<TrainingOfferController>;
   // participants controllers
-  let careerAdvisorParticipantCtrl: ConvectorControllerClient<
-    CareerAdvisorParticipantController
-  >;
-  let trainingCompanyParticipantCtrl: ConvectorControllerClient<
-    TrainingCompanyParticipantController
-  >;
-  let investorParticipantCtrl: ConvectorControllerClient<
-    InvestorParticipantController
-  >;
+  let careerAdvisorParticipantCtrl: ConvectorControllerClient<CareerAdvisorParticipantController>;
+  let trainingCompanyParticipantCtrl: ConvectorControllerClient<TrainingCompanyParticipantController>;
+  let investorParticipantCtrl: ConvectorControllerClient<InvestorParticipantController>;
 
   let abouBlockchainTraining: TrainingParams;
   let abouHyperledgerTraining: TrainingParams;
@@ -352,9 +346,7 @@ describe("Training", () => {
         .createTraining(abouBlockchainTraining)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
-      `a new training can't be linked to a non existing candidate with id: "${
-        abouBlockchainTraining.candidateId
-      }"`
+      `a new training can't be linked to a non existing candidate with id: "${abouBlockchainTraining.candidateId}"`
     );
   });
 
@@ -365,9 +357,7 @@ describe("Training", () => {
         .createTraining(abouBlockchainTraining)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
-      `a new training can't be linked to a non existing training offer with id: "${
-        abouBlockchainTraining.trainingOfferId
-      }"`
+      `a new training can't be linked to a non existing training offer with id: "${abouBlockchainTraining.trainingOfferId}"`
     );
   });
 
@@ -381,9 +371,7 @@ describe("Training", () => {
         .createTraining(abouBlockchainTraining)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
-      `a new training can't linked to a closed candidate - closed candidate id: "${
-        abouBlockchainTraining.candidateId
-      }"`
+      `a new training can't linked to a closed candidate - closed candidate id: "${abouBlockchainTraining.candidateId}"`
     );
   });
 
@@ -397,9 +385,7 @@ describe("Training", () => {
         .createTraining(abouBlockchainTraining)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
-      `a new training can't linked to a closed training offer - closed training offer id: "${
-        abouBlockchainTraining.trainingOfferId
-      }"`
+      `a new training can't linked to a closed training offer - closed training offer id: "${abouBlockchainTraining.trainingOfferId}"`
     );
   });
 
@@ -428,9 +414,7 @@ describe("Training", () => {
         .closeTraining(abouBlockchainTraining.id)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
-      `cannot close a non existing training with the id: "${
-        abouBlockchainTraining.id
-      }"`
+      `cannot close a non existing training with the id: "${abouBlockchainTraining.id}"`
     );
   });
 
@@ -456,9 +440,7 @@ describe("Training", () => {
         .closeTraining(abouBlockchainTraining.id)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
-      `cannot close an already closed training with the id: "${
-        abouBlockchainTraining.id
-      }"`
+      `cannot close an already closed training with the id: "${abouBlockchainTraining.id}"`
     );
   });
 
@@ -501,9 +483,7 @@ describe("Training", () => {
         .submitTrainingApplication(abouBlockchainTraining.id)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
-      `the training with the id "${
-        abouBlockchainTraining.id
-      }" is not expected to be closed`
+      `the training with the id "${abouBlockchainTraining.id}" is not expected to be closed`
     );
   });
 
@@ -513,9 +493,7 @@ describe("Training", () => {
         .submitTrainingApplication(abouBlockchainTraining.id)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
-      `cannot submit an application for non existing training with the id: "${
-        abouBlockchainTraining.id
-      }"`
+      `cannot submit an application for non existing training with the id: "${abouBlockchainTraining.id}"`
     );
   });
 
@@ -594,10 +572,7 @@ describe("Training", () => {
       TrainingProcessStatus.Submitted
     );
 
-    await trainingCtrl.acceptApplication(
-      abouBlockchainTraining.id,
-      "TrainingCompany1"
-    );
+    await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
     const accepted = await trainingCtrl
       .getTrainingById(abouBlockchainTraining.id)
       .then(result => new Training(result));
@@ -616,7 +591,7 @@ describe("Training", () => {
 
     await expect(
       trainingCtrl
-        .acceptApplication(abouBlockchainTraining.id, "TrainingCompany1")
+        .acceptApplication(abouBlockchainTraining.id)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
       'cannot start fund training with the id: "' +
@@ -644,24 +619,20 @@ describe("Training", () => {
 
     await expect(
       trainingCtrl
-        .acceptApplication(abouBlockchainTraining.id, "TrainingCompany1")
+        .acceptApplication(abouBlockchainTraining.id)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
-      `cannot accept an application for a closed training with the id "${
-        abouBlockchainTraining.id
-      }"`
+      `cannot accept an application for a closed training with the id "${abouBlockchainTraining.id}"`
     );
   });
 
   it("should throw an exception when trying to accept an application for an non existing training", async () => {
     await expect(
       trainingCtrl
-        .acceptApplication(abouBlockchainTraining.id, "TrainingCompany1")
+        .acceptApplication(abouBlockchainTraining.id)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
-      `cannot accept an application for non existing training with the id: "${
-        abouBlockchainTraining.id
-      }"`
+      `cannot accept an application for non existing training with the id: "${abouBlockchainTraining.id}"`
     );
   });
 
@@ -691,7 +662,7 @@ describe("Training", () => {
 
     await expect(
       trainingCtrl
-        .acceptApplication(abouBlockchainTraining.id, "TrainingCompany1")
+        .acceptApplication(abouBlockchainTraining.id)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
       'cannot accept an application for the training with the id: "' +
@@ -729,7 +700,7 @@ describe("Training", () => {
 
     await expect(
       trainingCtrl
-        .acceptApplication(abouBlockchainTraining.id, "TrainingCompany1")
+        .acceptApplication(abouBlockchainTraining.id)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
       'cannot accept an application for the training with the id: "' +
@@ -758,10 +729,7 @@ describe("Training", () => {
       TrainingProcessStatus.Submitted
     );
 
-    await trainingCtrl.acceptApplication(
-      abouBlockchainTraining.id,
-      "TrainingCompany1"
-    );
+    await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
     const accepted = await trainingCtrl
       .getTrainingById(abouBlockchainTraining.id)
       .then(result => new Training(result));
@@ -827,9 +795,7 @@ describe("Training", () => {
         .fundTraining(abouBlockchainTraining.id, "TrainingCompany1")
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
-      `cannot fund a non existing training with the id: "${
-        abouBlockchainTraining.id
-      }"`
+      `cannot fund a non existing training with the id: "${abouBlockchainTraining.id}"`
     );
   });
 
@@ -848,10 +814,7 @@ describe("Training", () => {
       TrainingProcessStatus.Submitted
     );
 
-    await trainingCtrl.acceptApplication(
-      abouBlockchainTraining.id,
-      "TrainingCompany1"
-    );
+    await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
     const accepted = await trainingCtrl
       .getTrainingById(abouBlockchainTraining.id)
       .then(result => new Training(result));
@@ -898,10 +861,7 @@ describe("Training", () => {
       TrainingProcessStatus.Submitted
     );
 
-    await trainingCtrl.acceptApplication(
-      abouBlockchainTraining.id,
-      "TrainingCompany1"
-    );
+    await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
     const accepted = await trainingCtrl
       .getTrainingById(abouBlockchainTraining.id)
       .then(result => new Training(result));
@@ -950,10 +910,7 @@ describe("Training", () => {
       TrainingProcessStatus.Submitted
     );
 
-    await trainingCtrl.acceptApplication(
-      abouBlockchainTraining.id,
-      "TrainingCompany1"
-    );
+    await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
     const accepted = await trainingCtrl
       .getTrainingById(abouBlockchainTraining.id)
       .then(result => new Training(result));
@@ -994,10 +951,7 @@ describe("Training", () => {
       TrainingProcessStatus.Submitted
     );
 
-    await trainingCtrl.acceptApplication(
-      abouBlockchainTraining.id,
-      "TrainingCompany1"
-    );
+    await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
     const accepted = await trainingCtrl
       .getTrainingById(abouBlockchainTraining.id)
       .then(result => new Training(result));
@@ -1025,16 +979,14 @@ describe("Training", () => {
         .startTraining(abouBlockchainTraining.id)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
-      `cannot start a closed training with the id "${
-        abouBlockchainTraining.id
-      }"`
+      `cannot start a closed training with the id "${abouBlockchainTraining.id}"`
     );
   });
 
   it("should throw an exception when trying to start a training not funded", async () => {
     await candidateCtrl.createCandidate(abou);
     await trainingOfferCtrl.createTrainingOffer(blockchainOffer);
-
+    console.log(abouBlockchainTraining.id);
     await trainingCtrl.createTraining(abouBlockchainTraining);
 
     await expect(
@@ -1058,9 +1010,7 @@ describe("Training", () => {
         .startTraining(abouBlockchainTraining.id)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
-      `cannot start a non existing training with the id: "${
-        abouBlockchainTraining.id
-      }"`
+      `cannot start a non existing training with the id: "${abouBlockchainTraining.id}"`
     );
   });
 
@@ -1079,10 +1029,7 @@ describe("Training", () => {
       TrainingProcessStatus.Submitted
     );
 
-    await trainingCtrl.acceptApplication(
-      abouBlockchainTraining.id,
-      "TrainingCompany1"
-    );
+    await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
     const accepted = await trainingCtrl
       .getTrainingById(abouBlockchainTraining.id)
       .then(result => new Training(result));
@@ -1136,10 +1083,7 @@ describe("Training", () => {
       TrainingProcessStatus.Submitted
     );
 
-    await trainingCtrl.acceptApplication(
-      abouBlockchainTraining.id,
-      "TrainingCompany1"
-    );
+    await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
     const accepted = await trainingCtrl
       .getTrainingById(abouBlockchainTraining.id)
       .then(result => new Training(result));
@@ -1196,10 +1140,7 @@ describe("Training", () => {
       TrainingProcessStatus.Submitted
     );
 
-    await trainingCtrl.acceptApplication(
-      abouBlockchainTraining.id,
-      "TrainingCompany1"
-    );
+    await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
     const accepted = await trainingCtrl
       .getTrainingById(abouBlockchainTraining.id)
       .then(result => new Training(result));
@@ -1249,10 +1190,7 @@ describe("Training", () => {
       TrainingProcessStatus.Submitted
     );
 
-    await trainingCtrl.acceptApplication(
-      abouBlockchainTraining.id,
-      "TrainingCompany1"
-    );
+    await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
     const accepted = await trainingCtrl
       .getTrainingById(abouBlockchainTraining.id)
       .then(result => new Training(result));
@@ -1289,9 +1227,7 @@ describe("Training", () => {
         .certifyTraining(abouBlockchainTraining.id)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
-      `cannot certify a closed training with the id "${
-        abouBlockchainTraining.id
-      }"`
+      `cannot certify a closed training with the id "${abouBlockchainTraining.id}"`
     );
   });
 
@@ -1322,9 +1258,7 @@ describe("Training", () => {
         .certifyTraining(abouBlockchainTraining.id)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
-      `cannot certify a non existing training with the id: "${
-        abouBlockchainTraining.id
-      }"`
+      `cannot certify a non existing training with the id: "${abouBlockchainTraining.id}"`
     );
   });
 
@@ -1343,10 +1277,7 @@ describe("Training", () => {
       TrainingProcessStatus.Submitted
     );
 
-    await trainingCtrl.acceptApplication(
-      abouBlockchainTraining.id,
-      "TrainingCompany1"
-    );
+    await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
     const accepted = await trainingCtrl
       .getTrainingById(abouBlockchainTraining.id)
       .then(result => new Training(result));
@@ -1409,10 +1340,7 @@ describe("Training", () => {
       TrainingProcessStatus.Submitted
     );
 
-    await trainingCtrl.acceptApplication(
-      abouBlockchainTraining.id,
-      "TrainingCompany1"
-    );
+    await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
     const accepted = await trainingCtrl
       .getTrainingById(abouBlockchainTraining.id)
       .then(result => new Training(result));
@@ -1477,10 +1405,7 @@ describe("Training", () => {
       TrainingProcessStatus.Submitted
     );
 
-    await trainingCtrl.acceptApplication(
-      abouBlockchainTraining.id,
-      "TrainingCompany1"
-    );
+    await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
     const accepted = await trainingCtrl
       .getTrainingById(abouBlockchainTraining.id)
       .then(result => new Training(result));
@@ -1530,10 +1455,7 @@ describe("Training", () => {
       TrainingProcessStatus.Submitted
     );
 
-    await trainingCtrl.acceptApplication(
-      abouBlockchainTraining.id,
-      "TrainingCompany1"
-    );
+    await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
     const accepted = await trainingCtrl
       .getTrainingById(abouBlockchainTraining.id)
       .then(result => new Training(result));
@@ -1601,9 +1523,7 @@ describe("Training", () => {
         .failTraining(abouBlockchainTraining.id)
         .catch(ex => ex.responses[0].error.message)
     ).to.be.eventually.equal(
-      `cannot fail a non existing training with the id: "${
-        abouBlockchainTraining.id
-      }"`
+      `cannot fail a non existing training with the id: "${abouBlockchainTraining.id}"`
     );
   });
 
@@ -1622,10 +1542,7 @@ describe("Training", () => {
       TrainingProcessStatus.Submitted
     );
 
-    await trainingCtrl.acceptApplication(
-      abouBlockchainTraining.id,
-      "TrainingCompany1"
-    );
+    await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
     const accepted = await trainingCtrl
       .getTrainingById(abouBlockchainTraining.id)
       .then(result => new Training(result));
@@ -1688,10 +1605,7 @@ describe("Training", () => {
       TrainingProcessStatus.Submitted
     );
 
-    await trainingCtrl.acceptApplication(
-      abouBlockchainTraining.id,
-      "TrainingCompany1"
-    );
+    await trainingCtrl.acceptApplication(abouBlockchainTraining.id);
     const accepted = await trainingCtrl
       .getTrainingById(abouBlockchainTraining.id)
       .then(result => new Training(result));
@@ -1831,7 +1745,9 @@ describe("Training", () => {
     await expect(
       trainingCtrl
         .getTrainingsByProcessStatus([TrainingProcessStatus.NotSubmitted])
-        .then(result => result.map(training => extractTrainingParams(new Training(training))))
+        .then(result =>
+          result.map(training => extractTrainingParams(new Training(training)))
+        )
     ).to.have.eventually.same.deep.members([abouBlockchainTraining]);
     await expect(
       trainingCtrl
@@ -1844,7 +1760,9 @@ describe("Training", () => {
     await expect(
       trainingCtrl
         .getTrainingsByProcessStatus([TrainingProcessStatus.NotSubmitted])
-        .then(result => result.map(training => extractTrainingParams(new Training(training))))
+        .then(result =>
+          result.map(training => extractTrainingParams(new Training(training)))
+        )
     ).to.have.eventually.same.deep.members([
       abouHyperledgerTraining,
       abouBlockchainTraining
@@ -1854,7 +1772,9 @@ describe("Training", () => {
     await expect(
       trainingCtrl
         .getTrainingsByProcessStatus([TrainingProcessStatus.NotSubmitted])
-        .then(result => result.map(training => extractTrainingParams(new Training(training))))
+        .then(result =>
+          result.map(training => extractTrainingParams(new Training(training)))
+        )
     ).to.have.eventually.same.deep.members([abouBlockchainTraining]);
     await expect(
       trainingCtrl

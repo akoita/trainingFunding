@@ -69,10 +69,7 @@ export class TrainingWebController {
     @param.query.string('id') trainingId: string,
     @param.query.string('companyId') companyId: string,
   ) {
-    await this.trainingFabricController.acceptApplication(
-      trainingId,
-      companyId,
-    );
+    await this.trainingFabricController.acceptApplication(trainingId);
   }
 
   @post('training/fund', {

@@ -104,15 +104,14 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
 
     @Invokable()
     public async acceptApplication(
-        @Param(yup.string()) trainingId: string,
-        @Param(yup.string()) trainingCompanyId: string
+        @Param(yup.string()) trainingId: string
     ) {
         async function precondition(self: TrainingController): Promise<Training> {
             const existing = await self.checkThatTrainingExistWithId(
                 trainingId,
                 `cannot accept an application for non existing training with the id: "${trainingId}"`
             );
-            await self.checkThatCallerMatchesTraningCompany(trainingCompanyId);
+            await self.checkThatCallerMatchesTrainingCompany(existing);
             await self.checkThatTrainingIsNotClosed(
                 existing,
                 `cannot accept an application for a closed training with the id "${trainingId}"`
@@ -152,7 +151,6 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
 
         const training = await precondition(this);
         training.trainingProcessStatus = TrainingProcessStatus.Accepted;
-        training.trainingCompanyId = trainingCompanyId;
         await training.save();
     }
 
@@ -216,7 +214,7 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
                 trainingId,
                 `cannot start a non existing training with the id: "${trainingId}"`
             );
-            await self.checkThatCallerMatchesTraningCompany(existing.trainingCompanyId);
+            await self.checkThatCallerMatchesTrainingCompany(existing);
             await self.checkThatTrainingIsNotClosed(
                 existing,
                 `cannot start a closed training with the id "${trainingId}"`
@@ -299,7 +297,7 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
                 existing.trainingOfferId +
                 '"'
             );
-            await self.checkThatCallerMatchesTraningCompany(existing.trainingCompanyId);
+            await self.checkThatCallerMatchesTrainingCompany(existing);
             return existing;
         }
 
@@ -348,7 +346,7 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
                 existing.trainingOfferId +
                 '"'
             );
-            await self.checkThatCallerMatchesTraningCompany(existing.trainingCompanyId);
+            await self.checkThatCallerMatchesTrainingCompany(existing);
             return existing;
         }
 
@@ -554,15 +552,14 @@ export class TrainingController extends ConvectorController<ChaincodeTx> {
         );
     }
 
-    private async checkThatCallerMatchesTraningCompany(
-        trainingCompanyId: string
+    private async checkThatCallerMatchesTrainingCompany(
+        training: Training
     ) {
-        const participant = await TrainingCompanyParticipant.getOne(
-            trainingCompanyId
-        );
+        const trainingOffer = await TrainingOffer.getOne(training.trainingOfferId);
+        const participant = await TrainingCompanyParticipant.getOne(trainingOffer.ownerId);
         await this.checkThatCallerMatchesParticipant(
             participant,
-            trainingCompanyId,
+            trainingOffer.ownerId,
             "Training company"
         );
     }
