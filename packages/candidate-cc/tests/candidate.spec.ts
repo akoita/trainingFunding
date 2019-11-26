@@ -104,14 +104,14 @@ describe("Candidate", () => {
     };
   });
 
-  it("should create a Training a default model", async () => {
+  it("should create a candidate default model", async () => {
     await candidateCtrl.createCandidate(abou);
     const justSavedModel = await Candidate.getOne(abou.id);
     expect(justSavedModel).to.include(abou);
     expect(justSavedModel.status).to.be.equal(TrainingAppLifecycleStatus.Open);
   });
 
-  it("should fail to create a training when the participant doesn't exist ", async () => {
+  it("should fail to create a createCandidate when the participant doesn't exist ", async () => {
     abou.ownerId = "CareerAdvisor2";
     await expect(
       candidateCtrl
@@ -122,7 +122,7 @@ describe("Candidate", () => {
     );
   });
 
-  it("should fail to create a Training a default model when the owner identity doesn't match the caller identity", async () => {
+  it("should fail to create a createCandidate default model when the owner identity doesn't match the caller identity", async () => {
     (adapter.stub as any).usercert = fakeSecondParticipantCert;
     await expect(
       candidateCtrl
