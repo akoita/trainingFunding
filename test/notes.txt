@@ -1,4 +1,9 @@
-export CANDIDATE1='{"type":"io.worldsibu.candidate","id":"c1","firstName":"Aboubakar","lastName":"Koïta","created":1554525542493,"modified":1554525542493,"status":"Open"}'
+export CAREER_ADVISOR1='careerAdvisor1 careerAdvisor1Name'
+export TRANING_COMPANY1='trainingCompany1 trainingCompany1Name'
+export INVESTOR1='Investor1 Investor1Name'
+
+
+export CANDIDATE1='{"type":"io.worldsibu.candidate","id":"c1","firstName":"Aboubakar","lastName":"Koïta","status":"Open"}'
 export CANDIDATE2='{"type":"io.worldsibu.candidate","id":"c2","firstName":"Soumaya","lastName":"Koïta","created":1554525542494,"modified":1554525542494,"status":"Open"}'
 export CANDIDATE3='{"type":"io.worldsibu.candidate","id":"c3","firstName":"Dede","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
 export CANDIDATE4='{"type":"io.worldsibu.candidate","id":"c4","firstName":"Bafanta","lastName":"Koïta","created":1554525542495,"modified":1554525542495,"status":"Open"}'
@@ -16,11 +21,24 @@ export TRAINING4='{"id":"t4","type":"io.worldsibu.training","trainingOfferId":"t
 export TRAINING5='{"id":"t5","type":"io.worldsibu.training","trainingOfferId":"to3","candidateId":"c3","trainingProcessStatus":"NotSubmitted","created":1555771546983,"modified":1555771546983,"status":"Open"}'
 ==================================================================================
 
+npm run cc:start -- training
+
 npm run cc:start -- candidate
 
 npm run cc:start -- trainingOffer
 
-npm run cc:start -- training
+
+
+==============================================================
+
+hurl invoke training careerAdvisor_register $CAREER_ADVISOR1
+hurl invoke training careerAdvisor_getParticipantById "careerAdvisor1"
+
+hurl invoke training trainingCompany_register $TRANING_COMPANY1
+hurl invoke training trainingCompany_getParticipantById "trainingCompany1"
+
+hurl invoke training investor_register $INVESTOR1
+hurl invoke training investor_getParticipantById "Investor1"
 
 ==============================================================
 
