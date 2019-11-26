@@ -3,7 +3,7 @@ import {ConvectorModel, FlatConvectorModel, ReadOnly, Required, Validate} from '
 import {AbstractTrainingConceptModel, TrainingAppLifecycleStatus} from 'common-cc';
 
 
-export class x509Identities extends ConvectorModel<x509Identities> {
+export class X509Identities extends ConvectorModel<X509Identities> {
     @ReadOnly()
     public readonly type = 'io.worldsibu.examples.x509identity';
 
@@ -15,8 +15,8 @@ export class x509Identities extends ConvectorModel<x509Identities> {
     @Validate(yup.string().oneOf(Object.keys(TrainingAppLifecycleStatus).map(k => TrainingAppLifecycleStatus[k])))
     public status: TrainingAppLifecycleStatus;
 
-    public static build(param: { fingerprint: string; status: TrainingAppLifecycleStatus }): x509Identities {
-        const x509Identities1 = new x509Identities();
+    public static build(param: { fingerprint: string; status: TrainingAppLifecycleStatus }): X509Identities {
+        const x509Identities1 = new X509Identities();
         x509Identities1.fingerprint = param.fingerprint;
         x509Identities1.status = param.status;
         return x509Identities1;
@@ -34,10 +34,10 @@ export abstract class AbstractTrainingParticipantModel<T extends AbstractTrainin
     @Validate(yup.string())
     public msp: string;
 
-    @Validate(yup.array(x509Identities.schema()))
-    public identities: Array<FlatConvectorModel<x509Identities>>;
+    @Validate(yup.array(X509Identities.schema()))
+    public identities: Array<FlatConvectorModel<X509Identities>>;
 
-    public findActiveIdentity(): FlatConvectorModel<x509Identities> {
+    public findActiveIdentity(): FlatConvectorModel<X509Identities> {
         return this.identities.find(identity => identity.status === TrainingAppLifecycleStatus.Open);
     }
 

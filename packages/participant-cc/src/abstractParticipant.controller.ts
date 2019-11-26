@@ -3,7 +3,7 @@ import * as yup from 'yup';
 import {BaseStorage, ConvectorController, Param} from '@worldsibu/convector-core';
 
 import {ClientIdentity} from 'fabric-shim';
-import {AbstractTrainingParticipantModel, x509Identities} from "./abstractTrainingParticipant.model";
+import {AbstractTrainingParticipantModel, X509Identities} from "./abstractTrainingParticipant.model";
 import {TrainingAppLifecycleStatus} from "common-cc";
 
 export abstract class AbstractParticipantController<T extends AbstractTrainingParticipantModel<T>> extends ConvectorController {
@@ -23,7 +23,7 @@ export abstract class AbstractParticipantController<T extends AbstractTrainingPa
                                            }).withStatus(
                 TrainingAppLifecycleStatus.Open);
             // Create a new identity
-            participant.identities = [x509Identities.build({
+            participant.identities = [X509Identities.build({
                                                                fingerprint: this.sender,
                                                                status: TrainingAppLifecycleStatus.Open
                                                            })];
@@ -61,7 +61,7 @@ export abstract class AbstractParticipantController<T extends AbstractTrainingPa
         });
 
         // Set the enrolling identity
-        existing.identities.push(x509Identities.build({
+        existing.identities.push(X509Identities.build({
                                                           fingerprint: newIdentity,
                                                           status: TrainingAppLifecycleStatus.Open
                                                       }));
