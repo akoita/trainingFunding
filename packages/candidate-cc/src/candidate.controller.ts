@@ -20,10 +20,10 @@ export interface CandidateParams {
 
 const candidateParamsYupSchema = () =>
   yup.object({
-    id: yup.string(),
-    ownerId: yup.string(),
-    firstName: yup.string(),
-    lastName: yup.string()
+    id: yup.string().required(),
+    ownerId: yup.string().required(),
+    firstName: yup.string().required(),
+    lastName: yup.string().required()
   });
 
 @Controller("candidate")

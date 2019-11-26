@@ -1,74 +1,94 @@
-import * as yup from 'yup';
+import * as yup from "yup";
 
-import {BaseStorage, ConvectorController, Param} from '@worldsibu/convector-core';
+import {
+  BaseStorage,
+  ConvectorController,
+  Param
+} from "@worldsibu/convector-core";
 
-import {ClientIdentity} from 'fabric-shim';
-import {AbstractTrainingParticipantModel, X509Identities} from "./abstractTrainingParticipant.model";
-import {TrainingAppLifecycleStatus} from "common-cc";
+import { ClientIdentity } from "fabric-shim";
+import {
+  AbstractTrainingParticipantModel,
+  X509Identities
+} from "./abstractTrainingParticipant.model";
+import { TrainingAppLifecycleStatus } from "common-cc";
 
-export abstract class AbstractParticipantController<T extends AbstractTrainingParticipantModel<T>> extends ConvectorController {
-    get fullIdentity(): ClientIdentity {
-        const stub = (BaseStorage.current as any).stubHelper;
-        return new ClientIdentity(stub.getStub());
-    };
+export abstract class AbstractParticipantController<
+  T extends AbstractTrainingParticipantModel<T>
+> extends ConvectorController {
+  get fullIdentity(): ClientIdentity {
+    const stub = (BaseStorage.current as any).stubHelper;
+    return new ClientIdentity(stub.getStub());
+  }
 
-    protected async register(participantId: string, participantName: string) {
-        // Retrieve to see if exists
-        const existing = await this._getParticipantById(participantId);
-        if (!existing || !existing.id) {
-            const participant = this.build({
-                                               id: participantId,
-                                               name: participantName,
-                                               msp: this.fullIdentity.getMSPID(),
-                                           }).withStatus(
-                TrainingAppLifecycleStatus.Open);
-            // Create a new identity
-            participant.identities = [X509Identities.build({
-                                                               fingerprint: this.sender,
-                                                               status: TrainingAppLifecycleStatus.Open
-                                                           })];
-            await participant.save();
-        } else {
-            throw new Error(`a participant already exists with the id "${participantId}"`);
-        }
+  protected async register(
+    @Param(yup.string()) participantId: string,
+    @Param(yup.string()) participantName: string
+  ) {
+    // Retrieve to see if exists
+    const existing = await this._getParticipantById(participantId);
+    if (!existing || !existing.id) {
+      const participant = this.build({
+        id: participantId,
+        name: participantName,
+        msp: this.fullIdentity.getMSPID()
+      }).withStatus(TrainingAppLifecycleStatus.Open);
+      // Create a new identity
+      participant.identities = [
+        X509Identities.build({
+          fingerprint: this.sender,
+          status: TrainingAppLifecycleStatus.Open
+        })
+      ];
+      await participant.save();
+    } else {
+      throw new Error(
+        `a participant already exists with the id "${participantId}"`
+      );
+    }
+  }
+
+  protected async changeIdentity(
+    @Param(yup.string())
+    id: string,
+    @Param(yup.string())
+    newIdentity: string
+  ) {
+    // Check permissions
+    let isAdmin = this.fullIdentity.getAttributeValue("admin");
+    let requesterMSP = this.fullIdentity.getMSPID();
+
+    // Retrieve to see if exists
+    const existing = await this._getParticipantById(id);
+    if (!existing || !existing.id) {
+      throw new Error("No identity exists with that ID");
     }
 
-    protected async changeIdentity(@Param(yup.string())
-        id: string, @Param(yup.string())
-        newIdentity: string) {
-        // Check permissions
-        let isAdmin = this.fullIdentity.getAttributeValue('admin');
-        let requesterMSP = this.fullIdentity.getMSPID();
-
-        // Retrieve to see if exists
-        const existing = await this._getParticipantById(id);
-        if (!existing || !existing.id) {
-            throw new Error('No identity exists with that ID');
-        }
-
-        if (existing.msp != requesterMSP) {
-            throw new Error('Unathorized. MSPs do not match');
-        }
-
-        if (!isAdmin) {
-            throw new Error('Unathorized. Requester identity is not an admin');
-        }
-
-        // Disable previous identities!
-        existing.identities = existing.identities.map(identity => {
-            identity.status = TrainingAppLifecycleStatus.Closed;
-            return identity;
-        });
-
-        // Set the enrolling identity
-        existing.identities.push(X509Identities.build({
-                                                          fingerprint: newIdentity,
-                                                          status: TrainingAppLifecycleStatus.Open
-                                                      }));
-        await existing.save();
+    if (existing.msp != requesterMSP) {
+      throw new Error("Unathorized. MSPs do not match");
     }
 
-    protected abstract async _getParticipantById(id: string): Promise<T>;
+    if (!isAdmin) {
+      throw new Error("Unathorized. Requester identity is not an admin");
+    }
 
-    protected abstract build(params: { name: string; id: string; msp: any }): T;
+    // Disable previous identities!
+    existing.identities = existing.identities.map(identity => {
+      identity.status = TrainingAppLifecycleStatus.Closed;
+      return identity;
+    });
+
+    // Set the enrolling identity
+    existing.identities.push(
+      X509Identities.build({
+        fingerprint: newIdentity,
+        status: TrainingAppLifecycleStatus.Open
+      })
+    );
+    await existing.save();
+  }
+
+  protected abstract async _getParticipantById(id: string): Promise<T>;
+
+  protected abstract build(params: { name: string; id: string; msp: any }): T;
 }

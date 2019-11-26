@@ -28,9 +28,9 @@ export interface TrainingOfferParams {
 
 const trainingOfferParamsYupSchema = () =>
   yup.object({
-    id: yup.string(),
-    ownerId: yup.string(),
-    title: yup.string(),
+    id: yup.string().required(),
+    ownerId: yup.string().required(),
+    title: yup.string().required(),
     domain: trainingDomainYupSchema(),
     level: trainingOfferLevelYupSchema()
   });
@@ -214,11 +214,7 @@ export class TrainingOfferController extends ConvectorController<ChaincodeTx> {
     }
     if (this.sender !== activeIdentity.fingerprint) {
       throw new Error(
-        `the transaction caller identity "${
-          this.sender
-        }" does not match Training company  participant active identity "${
-          activeIdentity.fingerprint
-        }"`
+        `the transaction caller identity "${this.sender}" does not match Training company  participant active identity "${activeIdentity.fingerprint}"`
       );
     }
   }
