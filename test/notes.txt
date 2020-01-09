@@ -1,3 +1,10 @@
+
+npm install -g @worldsibu/convector-cli
+
+npm i -g @worldsibu/hurley
+
+npm i
+=======================================================================
 export CAREER_ADVISOR1='careerAdvisor1 careerAdvisor1Name'
 export TRANING_COMPANY1='trainingCompany1 trainingCompany1Name'
 export INVESTOR1='Investor1 Investor1Name'
