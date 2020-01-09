@@ -4,6 +4,8 @@ npm install -g @worldsibu/convector-cli
 npm i -g @worldsibu/hurley
 
 npm i
+
+hurl new
 =======================================================================
 export CAREER_ADVISOR1='careerAdvisor1 careerAdvisor1Name'
 export TRANING_COMPANY1='trainingCompany1 trainingCompany1Name'
